@@ -9,46 +9,48 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { supabase } from "@/utils/supabase";
 
-const SignUp = () => {
-  const [email, setEmail] = useState("");
+const Otp = () => {
+  const { email } = useLocalSearchParams<{ email: string }>();
+  if (!email) return null;
+
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const signUpWithEmail = async () => {
+  const verifyOtp = async () => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.verifyOtp({
       email,
-      options: {
-        shouldCreateUser: true,
-      },
+      token,
+      type: "email",
     });
     if (error) {
       alert(error.message);
     } else {
-      router.push({ pathname: "/otp", params: { email } });
+      alert("SignIn successful");
     }
     setLoading(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+      <Text style={styles.title}>Verify Your OTP</Text>
       <Text style={styles.description}>
-        Enter the email you wish to be associated with your account
+        Enter the OTP you received on your email address
       </Text>
       <TextInput
-        placeholder="Email"
+        placeholder="OTP"
         style={styles.textInput}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
+        value={token}
+        onChangeText={(text) => setToken(text)}
       />
       <View style={styles.dontHaveAccountContainer}>
-        <Text style={{ color: Colors.gray }}>Already have an account? </Text>
+        <Text style={{ color: Colors.gray }}>Haven't received OTP? </Text>
         <Link href={""}>
           <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-            Sign In
+            Placeholder
           </Text>
         </Link>
       </View>
@@ -60,16 +62,16 @@ const SignUp = () => {
         <TouchableOpacity
           style={styles.signInButton}
           disabled={loading}
-          onPress={() => signUpWithEmail()}
+          onPress={() => verifyOtp()}
         >
-          <Text style={{ color: "white" }}>Create Account</Text>
+          <Text style={{ color: "white" }}>Verify</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default SignUp;
+export default Otp;
 
 const styles = StyleSheet.create({
   container: {

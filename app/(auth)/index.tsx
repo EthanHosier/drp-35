@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
 
 const Index = () => {
@@ -27,7 +27,7 @@ const Index = () => {
     if (error) {
       alert(error.message);
     } else {
-      alert("Check your email for the OTP!");
+      router.push({ pathname: "/otp", params: { email } });
     }
     setLoading(false);
   };
