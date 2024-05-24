@@ -42,7 +42,7 @@ const Otp = () => {
     if (error) {
       alert(error.message);
     } else {
-      alert("SignIn successful");
+      router.navigate("/(tabs)");
     }
     setLoading(false);
   };
