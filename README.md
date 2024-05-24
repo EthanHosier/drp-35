@@ -12,7 +12,7 @@ Install dependencies:
 npm i
 ```
 
---
+---
 
 Start the project:
 
