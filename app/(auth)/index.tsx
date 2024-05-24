@@ -7,18 +7,43 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
+import { supabase } from "@/utils/supabase";
 
 const Index = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const signInWithEmail = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+      },
+    });
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Check your email for the OTP!");
+    }
+    setLoading(false);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.description}>
         Enter the email associated with your account
       </Text>
-      <TextInput placeholder="Email" style={styles.textInput} />
+      <TextInput
+        placeholder="Email"
+        style={styles.textInput}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
       <View style={styles.dontHaveAccountContainer}>
         <Text style={{ color: Colors.gray }}>Don't have an account yet? </Text>
         <Link href={"signup"}>
@@ -32,7 +57,11 @@ const Index = () => {
         style={{ flex: 1 }}
         keyboardVerticalOffset={120}
       >
-        <TouchableOpacity style={styles.signInButton}>
+        <TouchableOpacity
+          style={styles.signInButton}
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        >
           <Text style={{ color: "white" }}>Sign In</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
