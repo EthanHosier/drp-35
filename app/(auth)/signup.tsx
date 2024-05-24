@@ -11,19 +11,19 @@ import React from "react";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
 
-const Index = () => {
+const SignUp = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.title}>Create Account</Text>
       <Text style={styles.description}>
-        Enter the email associated with your account
+        Enter the email you wish to be associated with your account
       </Text>
       <TextInput placeholder="Email" style={styles.textInput} />
       <View style={styles.dontHaveAccountContainer}>
-        <Text style={{ color: Colors.gray }}>Don't have an account yet? </Text>
-        <Link href={"signup"}>
+        <Text style={{ color: Colors.gray }}>Already have an account? </Text>
+        <Link href={""}>
           <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-            Sign Up
+            Sign In
           </Text>
         </Link>
       </View>
@@ -33,14 +33,14 @@ const Index = () => {
         keyboardVerticalOffset={120}
       >
         <TouchableOpacity style={styles.signInButton}>
-          <Text style={{ color: "white" }}>Sign In</Text>
+          <Text style={{ color: "white" }}>Create Account</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default Index;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
