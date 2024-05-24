@@ -17,6 +17,7 @@ npm i
 ## Start the project
 
 Run with expo:
+
 ```bash
 npx expo start
 ```
