@@ -7,17 +7,30 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import Colors from "@/constants/Colors";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { supabase } from "@/utils/supabase";
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from "react-native-confirmation-code-field";
+const CELL_COUNT = 6;
 
 const Otp = () => {
-  const { email } = useLocalSearchParams<{ email: string }>();
-  if (!email) return null;
-
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const ref = useBlurOnFulfill({ value: token, cellCount: CELL_COUNT });
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value: token,
+    setValue: setToken,
+  });
+
+  const { email } = useLocalSearchParams<{ email: string }>();
+  if (!email) return null;
 
   const verifyOtp = async () => {
     setLoading(true);
@@ -40,12 +53,43 @@ const Otp = () => {
       <Text style={styles.description}>
         Enter the OTP you received on your email address
       </Text>
-      <TextInput
-        placeholder="OTP"
-        style={styles.textInput}
+
+      <CodeField
+        ref={ref}
+        {...props}
+        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
         value={token}
-        onChangeText={(text) => setToken(text)}
+        onChangeText={setToken}
+        cellCount={CELL_COUNT}
+        rootStyle={styles.codeFieldRoot}
+        keyboardType="number-pad"
+        textContentType="oneTimeCode"
+        autoComplete={
+          Platform.select({
+            android: "sms-otp",
+            default: "one-time-code",
+          }) as any
+        }
+        testID="my-code-input"
+        renderCell={({ index, symbol, isFocused }) => (
+          <Fragment key={index}>
+            <View
+              // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
+              onLayout={getCellOnLayoutHandler(index)}
+              key={index}
+              style={[styles.cellRoot, isFocused && styles.focusCell]}
+            >
+              <Text style={styles.cellText}>
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            </View>
+            {index === 2 ? (
+              <View key={`separator-${index}`} style={styles.seperator} />
+            ) : null}
+          </Fragment>
+        )}
       />
+
       <View style={styles.dontHaveAccountContainer}>
         <Text style={{ color: Colors.gray }}>Haven't received OTP? </Text>
         <Link href={""}>
@@ -74,6 +118,35 @@ const Otp = () => {
 export default Otp;
 
 const styles = StyleSheet.create({
+  codeFieldRoot: {
+    marginVertical: 20,
+    marginLeft: "auto",
+    marginRight: "auto",
+    gap: 12,
+  },
+  cellRoot: {
+    width: 45,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.lightGray,
+    borderRadius: 8,
+  },
+  focusCell: {
+    paddingBottom: 8,
+  },
+  seperator: {
+    height: 2,
+    width: 10,
+    backgroundColor: Colors.gray,
+    alignSelf: "center",
+  },
+  cellText: {
+    color: "#000",
+    fontSize: 36,
+    textAlign: "center",
+  },
+
   container: {
     padding: 24,
     backgroundColor: Colors.background,
