@@ -17,12 +17,22 @@ const Badge: React.FC<BadgeProps> = ({ text, selectable }) => {
         disabled={!selectable}
         style={[
           defaultStyles.pillButtonSmall,
-          { backgroundColor: selected ? Colors.primary : Colors.lightGray },
+          {
+            borderColor: selected ? Colors.primary : Colors.lightGray,
+            borderWidth: 1,
+            backgroundColor: selected ? Colors.primary : "transparent",
+          },
         ]}
         onPress={() => setSelected(!selected)}
         activeOpacity={0.8}
       >
-        <Text style={{ color: selected ? "white" : "black" }}>{text}</Text>
+        <Text
+          style={{
+            color: selected ? "white" : "black",
+          }}
+        >
+          {text}
+        </Text>
       </TouchableOpacity>
     </View>
   );
