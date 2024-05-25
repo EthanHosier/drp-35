@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
+import { defaultStyles } from "@/constants/DefaultStyles";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +37,7 @@ const SignUp = () => {
   return (
     <SafeAreaView style={{ backgroundColor: Colors.background }}>
       <View style={styles.container}>
-        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.title}>Sign Up</Text>
         <Text style={styles.description}>
           Enter the email you wish to be associated with your account
         </Text>
@@ -60,7 +61,7 @@ const SignUp = () => {
           keyboardVerticalOffset={70}
         >
           <TouchableOpacity
-            style={styles.signInButton}
+            style={[defaultStyles.pillButton, styles.signInButton]}
             disabled={loading}
             onPress={() => signUpWithEmail()}
           >
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
   signInButton: {
     backgroundColor: Colors.primary,
     padding: 16,
-    borderRadius: 8,
     marginTop: "auto",
     alignItems: "center",
   },

@@ -8,5 +8,5 @@ export default {
   background: "#FCFCFC",
   dark: "#242526",
   gray: "#B0B5C2",
-  lightGray: "#EBEEF5",
+  lightGray: "#EBECF6",
 };

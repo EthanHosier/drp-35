@@ -18,6 +18,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
+import { defaultStyles } from "@/constants/DefaultStyles";
 const CELL_COUNT = 6;
 
 const Otp = () => {
@@ -49,69 +50,71 @@ const Otp = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Verify Your OTP</Text>
-      <Text style={styles.description}>
-        Enter the OTP you received on your email address
-      </Text>
+    <SafeAreaView style={{ backgroundColor: Colors.background }}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Verify Your OTP</Text>
+        <Text style={styles.description}>
+          Enter the OTP you received on your email address
+        </Text>
 
-      <CodeField
-        ref={ref}
-        {...props}
-        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-        value={token}
-        onChangeText={setToken}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        autoComplete={
-          Platform.select({
-            android: "sms-otp",
-            default: "one-time-code",
-          }) as any
-        }
-        testID="my-code-input"
-        renderCell={({ index, symbol, isFocused }) => (
-          <Fragment key={index}>
-            <View
-              // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
-              onLayout={getCellOnLayoutHandler(index)}
-              key={index}
-              style={[styles.cellRoot, isFocused && styles.focusCell]}
-            >
-              <Text style={styles.cellText}>
-                {symbol || (isFocused ? <Cursor /> : null)}
-              </Text>
-            </View>
-            {index === 2 ? (
-              <View key={`separator-${index}`} style={styles.seperator} />
-            ) : null}
-          </Fragment>
-        )}
-      />
+        <CodeField
+          ref={ref}
+          {...props}
+          // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+          value={token}
+          onChangeText={setToken}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          autoComplete={
+            Platform.select({
+              android: "sms-otp",
+              default: "one-time-code",
+            }) as any
+          }
+          testID="my-code-input"
+          renderCell={({ index, symbol, isFocused }) => (
+            <Fragment key={index}>
+              <View
+                // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
+                onLayout={getCellOnLayoutHandler(index)}
+                key={index}
+                style={[styles.cellRoot, isFocused && styles.focusCell]}
+              >
+                <Text style={styles.cellText}>
+                  {symbol || (isFocused ? <Cursor /> : null)}
+                </Text>
+              </View>
+              {index === 2 ? (
+                <View key={`separator-${index}`} style={styles.seperator} />
+              ) : null}
+            </Fragment>
+          )}
+        />
 
-      <View style={styles.dontHaveAccountContainer}>
-        <Text style={{ color: Colors.gray }}>Haven't received OTP? </Text>
-        <Link href={""}>
-          <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-            Placeholder
-          </Text>
-        </Link>
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={120}
-      >
-        <TouchableOpacity
-          style={styles.signInButton}
-          disabled={loading}
-          onPress={() => verifyOtp()}
+        <View style={styles.dontHaveAccountContainer}>
+          <Text style={{ color: Colors.gray }}>Haven't received OTP? </Text>
+          <Link href={""}>
+            <Text style={{ color: Colors.primary, fontWeight: 600 }}>
+              Placeholder
+            </Text>
+          </Link>
+        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={120}
         >
-          <Text style={{ color: "white" }}>Verify</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={[defaultStyles.pillButton, styles.signInButton]}
+            disabled={loading}
+            onPress={() => verifyOtp()}
+          >
+            <Text style={{ color: "white" }}>Verify</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -175,7 +178,6 @@ const styles = StyleSheet.create({
   signInButton: {
     backgroundColor: Colors.primary,
     padding: 16,
-    borderRadius: 8,
     marginTop: "auto",
     alignItems: "center",
   },
