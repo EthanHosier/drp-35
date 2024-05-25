@@ -35,43 +35,39 @@ const Index = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: Colors.background }}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.description}>
-          Enter the email associated with your account
-        </Text>
-        <TextInput
-          placeholder="Email"
-          style={styles.textInput}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <View style={styles.dontHaveAccountContainer}>
-          <Text style={{ color: Colors.gray }}>
-            Don't have an account yet?{" "}
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.description}>
+        Enter the email associated with your account
+      </Text>
+      <TextInput
+        placeholder="Email"
+        style={styles.textInput}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
+      <View style={styles.dontHaveAccountContainer}>
+        <Text style={{ color: Colors.gray }}>Don't have an account yet? </Text>
+        <Link href={"signup"}>
+          <Text style={{ color: Colors.primary, fontWeight: 600 }}>
+            Sign Up
           </Text>
-          <Link href={"signup"}>
-            <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-              Sign Up
-            </Text>
-          </Link>
-        </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={60}
-        >
-          <TouchableOpacity
-            style={[defaultStyles.pillButton, styles.signInButton]}
-            disabled={loading}
-            onPress={() => signInWithEmail()}
-          >
-            <Text style={{ color: "white", fontSize: 16 }}>Sign In</Text>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
+        </Link>
       </View>
-    </SafeAreaView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={60}
+      >
+        <TouchableOpacity
+          style={[defaultStyles.pillButton, styles.signInButton]}
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        >
+          <Text style={{ color: "white", fontSize: 16 }}>Sign In</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 

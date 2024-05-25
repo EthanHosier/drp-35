@@ -35,41 +35,39 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor: Colors.background }}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign Up</Text>
-        <Text style={styles.description}>
-          Enter the email you wish to be associated with your account
-        </Text>
-        <TextInput
-          placeholder="Email"
-          style={styles.textInput}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <View style={styles.dontHaveAccountContainer}>
-          <Text style={{ color: Colors.gray }}>Already have an account? </Text>
-          <Link href={"/signin"}>
-            <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-              Sign In
-            </Text>
-          </Link>
-        </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={70}
-        >
-          <TouchableOpacity
-            style={[defaultStyles.pillButton, styles.signInButton]}
-            disabled={loading}
-            onPress={() => signUpWithEmail()}
-          >
-            <Text style={{ color: "white" }}>Create Account</Text>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.description}>
+        Enter the email you wish to be associated with your account
+      </Text>
+      <TextInput
+        placeholder="Email"
+        style={styles.textInput}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
+      <View style={styles.dontHaveAccountContainer}>
+        <Text style={{ color: Colors.gray }}>Already have an account? </Text>
+        <Link href={"/signin"}>
+          <Text style={{ color: Colors.primary, fontWeight: 600 }}>
+            Sign In
+          </Text>
+        </Link>
       </View>
-    </SafeAreaView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={70}
+      >
+        <TouchableOpacity
+          style={[defaultStyles.pillButton, styles.signInButton]}
+          disabled={loading}
+          onPress={() => signUpWithEmail()}
+        >
+          <Text style={{ color: "white" }}>Create Account</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
