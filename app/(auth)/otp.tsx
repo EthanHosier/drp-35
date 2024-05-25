@@ -51,9 +51,9 @@ const Otp = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Verify Your OTP</Text>
+      <Text style={styles.title}>6-Digit Code</Text>
       <Text style={styles.description}>
-        Enter the OTP you received on your email address
+        Enter the 6-digit code you received on your email address
       </Text>
 
       <CodeField
@@ -103,7 +103,7 @@ const Otp = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={120}
+        keyboardVerticalOffset={70}
       >
         <TouchableOpacity
           style={[defaultStyles.pillButton, styles.signInButton]}
