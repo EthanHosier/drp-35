@@ -110,7 +110,7 @@ const Otp = () => {
           disabled={loading}
           onPress={() => verifyOtp()}
         >
-          <Text style={{ color: "white" }}>Verify</Text>
+          <Text style={{ color: "white", fontSize: 16 }}>Verify</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>

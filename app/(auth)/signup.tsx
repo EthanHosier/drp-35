@@ -64,7 +64,7 @@ const SignUp = () => {
           disabled={loading}
           onPress={() => signUpWithEmail()}
         >
-          <Text style={{ color: "white" }}>Create Account</Text>
+          <Text style={{ color: "white", fontSize: 16 }}>Create Account</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
