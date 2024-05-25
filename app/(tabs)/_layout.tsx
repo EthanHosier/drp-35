@@ -24,9 +24,8 @@ const Layout = () => {
         options={{
           title: "One",
           tabBarIcon: ({ size, color }) => (
-            <AntDesign name="downcircleo" size={24} color="black" />
+            <AntDesign name="downcircleo" size={size} color={color} />
           ),
-          headerTransparent: true,
         }}
       />
       <Tabs.Screen
@@ -34,7 +33,7 @@ const Layout = () => {
         options={{
           title: "Two",
           tabBarIcon: ({ size, color }) => (
-            <AntDesign name="downcircleo" size={24} color="black" />
+            <AntDesign name="downcircleo" size={size} color={color} />
           ),
         }}
       />
