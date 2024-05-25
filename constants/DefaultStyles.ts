@@ -58,4 +58,10 @@ export const defaultStyles = StyleSheet.create({
     borderRadius: 16,
     gap: 20,
   },
+  textInput: {
+    backgroundColor: Colors.lightGray,
+    width: "100%",
+    padding: 16,
+    borderRadius: 8,
+  },
 });

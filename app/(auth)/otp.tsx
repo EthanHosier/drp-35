@@ -44,7 +44,7 @@ const Otp = () => {
     if (error) {
       alert(error.message);
     } else {
-      router.navigate("/(tabs)/one");
+      router.navigate("/(authenticated)/one");
     }
     setLoading(false);
   };
