@@ -45,6 +45,7 @@ const SignUp = () => {
         style={styles.textInput}
         value={email}
         onChangeText={(text) => setEmail(text)}
+        keyboardType="email-address"
       />
       <View style={styles.dontHaveAccountContainer}>
         <Text style={{ color: Colors.gray }}>Already have an account? </Text>

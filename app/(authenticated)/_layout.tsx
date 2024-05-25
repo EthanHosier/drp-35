@@ -1,8 +1,9 @@
 import React from "react";
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Layout = () => {
   return (
@@ -33,9 +34,9 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="profile"
         options={{
-          title: "Two",
+          title: "Profile",
           tabBarIcon: ({ size, color, focused }) =>
             focused ? (
               <FontAwesome name="user-circle" size={size + 1} color={color} />

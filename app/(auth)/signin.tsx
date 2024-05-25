@@ -41,6 +41,7 @@ const Index = () => {
       </Text>
       <TextInput
         placeholder="Email"
+        keyboardType="email-address"
         style={styles.textInput}
         value={email}
         onChangeText={(text) => setEmail(text)}
