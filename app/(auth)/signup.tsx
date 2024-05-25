@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -34,38 +34,40 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
-      <Text style={styles.description}>
-        Enter the email you wish to be associated with your account
-      </Text>
-      <TextInput
-        placeholder="Email"
-        style={styles.textInput}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <View style={styles.dontHaveAccountContainer}>
-        <Text style={{ color: Colors.gray }}>Already have an account? </Text>
-        <Link href={""}>
-          <Text style={{ color: Colors.primary, fontWeight: 600 }}>
-            Sign In
-          </Text>
-        </Link>
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={120}
-      >
-        <TouchableOpacity
-          style={styles.signInButton}
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
+    <SafeAreaView style={{ backgroundColor: Colors.background }}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.description}>
+          Enter the email you wish to be associated with your account
+        </Text>
+        <TextInput
+          placeholder="Email"
+          style={styles.textInput}
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <View style={styles.dontHaveAccountContainer}>
+          <Text style={{ color: Colors.gray }}>Already have an account? </Text>
+          <Link href={"/signin"}>
+            <Text style={{ color: Colors.primary, fontWeight: 600 }}>
+              Sign In
+            </Text>
+          </Link>
+        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={70}
         >
-          <Text style={{ color: "white" }}>Create Account</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={styles.signInButton}
+            disabled={loading}
+            onPress={() => signUpWithEmail()}
+          >
+            <Text style={{ color: "white" }}>Create Account</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };

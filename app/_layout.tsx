@@ -77,7 +77,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
         {session && session.user ? (
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         ) : (

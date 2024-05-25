@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, Fragment } from "react";
 import Colors from "@/constants/Colors";
@@ -17,7 +18,6 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import { SafeAreaView } from "react-native-safe-area-context";
 const CELL_COUNT = 6;
 
 const Otp = () => {
