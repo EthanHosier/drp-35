@@ -1,21 +1,21 @@
 import React from "react";
 import { Tabs } from "expo-router";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 
 const Layout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
+        tabBarActiveTintColor: Colors.dark,
         tabBarStyle: {
-          backgroundColor: "transparent",
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           elevation: 0,
-          borderTopWidth: 0,
+          borderTopWidth: StyleSheet.hairlineWidth,
         },
       }}
     >
@@ -23,18 +23,26 @@ const Layout = () => {
         name="one"
         options={{
           title: "One",
-          tabBarIcon: ({ size, color }) => (
-            <AntDesign name="downcircleo" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color, focused }) =>
+            focused ? (
+              <FontAwesome name="user-circle" size={size + 1} color={color} />
+            ) : (
+              <FontAwesome name="user-circle-o" size={size} color={color} />
+            ),
+          tabBarLabel: "",
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
           title: "Two",
-          tabBarIcon: ({ size, color }) => (
-            <AntDesign name="downcircleo" size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color, focused }) =>
+            focused ? (
+              <FontAwesome name="user-circle" size={size + 1} color={color} />
+            ) : (
+              <FontAwesome name="user-circle-o" size={size} color={color} />
+            ),
+          tabBarLabel: "",
         }}
       />
     </Tabs>
