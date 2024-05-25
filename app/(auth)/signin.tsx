@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
@@ -60,7 +59,11 @@ const Index = () => {
         keyboardVerticalOffset={60}
       >
         <TouchableOpacity
-          style={[defaultStyles.pillButton, styles.signInButton]}
+          style={[
+            defaultStyles.pillButton,
+            styles.signInButton,
+            loading && { opacity: 0.5 },
+          ]}
           disabled={loading}
           onPress={() => signInWithEmail()}
         >

@@ -60,7 +60,11 @@ const SignUp = () => {
         keyboardVerticalOffset={70}
       >
         <TouchableOpacity
-          style={[defaultStyles.pillButton, styles.signInButton]}
+          style={[
+            defaultStyles.pillButton,
+            styles.signInButton,
+            loading && { opacity: 0.5 },
+          ]}
           disabled={loading}
           onPress={() => signUpWithEmail()}
         >
