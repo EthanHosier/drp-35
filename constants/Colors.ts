@@ -3,7 +3,7 @@ const tintColorDark = "#fff";
 
 export default {
   // NEED TO CHANGE THESE
-  primary: "#7A5FCCD4",
+  primary: "#7A5FCC",
   primaryMuted: "#C9C8FA",
   background: "#FCFCFC",
   dark: "#242526",
