@@ -17,6 +17,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
+import { SafeAreaView } from "react-native-safe-area-context";
 const CELL_COUNT = 6;
 
 const Otp = () => {
@@ -48,7 +49,7 @@ const Otp = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Verify Your OTP</Text>
       <Text style={styles.description}>
         Enter the OTP you received on your email address
@@ -111,7 +112,7 @@ const Otp = () => {
           <Text style={{ color: "white" }}>Verify</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 

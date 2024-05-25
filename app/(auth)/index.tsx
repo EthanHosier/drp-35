@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Index = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ const Index = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <Text style={styles.description}>
         Enter the email associated with your account
@@ -65,7 +66,7 @@ const Index = () => {
           <Text style={{ color: "white" }}>Sign In</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 
