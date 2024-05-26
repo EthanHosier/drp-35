@@ -5,22 +5,23 @@ import Colors from "@/constants/Colors";
 
 interface BadgeProps {
   text: string;
-  selectable?: boolean;
+  selected: boolean;
 }
 
-const Badge: React.FC<BadgeProps> = ({ text, selectable }) => {
-  const [selected, setSelected] = useState(false);
+const Badge: React.FC<BadgeProps> = ({ text, selected: wasSelected }) => {
+  const [selected, setSelected] = useState(wasSelected);
 
   return (
     <View>
       <TouchableOpacity
-        disabled={!selectable}
         style={[
           defaultStyles.pillButtonSmall,
           {
             borderColor: selected ? Colors.primary : Colors.lightGray,
             borderWidth: 1,
-            backgroundColor: selected ? Colors.primary : "transparent",
+            backgroundColor: "transparent",
+            height: 24,
+            paddingHorizontal: 8,
           },
         ]}
         onPress={() => setSelected(!selected)}
@@ -28,7 +29,7 @@ const Badge: React.FC<BadgeProps> = ({ text, selectable }) => {
       >
         <Text
           style={{
-            color: selected ? "white" : "black",
+            fontSize: 14,
           }}
         >
           {text}

@@ -36,6 +36,32 @@ const Layout = () => {
           ),
         }}
       />
+      <Stack.Screen
+        name="skills"
+        options={{
+          title: "",
+          presentation: "fullScreenModal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          ),
+          contentStyle: { marginBottom: StyleSheet.hairlineWidth },
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Save
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </Stack>
   );
 };
