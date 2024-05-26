@@ -4,6 +4,7 @@ import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { formatDate } from "@/utils/utils";
+import { Link } from "expo-router";
 
 interface ChatPreviewProps {
   name: string;
@@ -21,38 +22,40 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   unreadMessages,
 }) => {
   return (
-    <TouchableOpacity style={styles.chatContainer}>
-      <Image source={imgUrl} style={styles.userPic} />
-      <View style={{ marginRight: "auto", marginTop: 8 }}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.message}>{message}</Text>
-      </View>
-      <View style={{ marginTop: 8 }}>
-        <Text
-          style={{ color: unreadMessages > 0 ? Colors.primary : Colors.gray }}
-        >
-          {formatDate(date)}
-        </Text>
-        {unreadMessages > 0 && (
-          <View
-            style={{
-              backgroundColor: Colors.primary,
-              borderRadius: 10,
-              width: 20,
-              height: 20,
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: "auto",
-              marginTop: 4,
-            }}
+    <Link asChild href={"/chats/1"}>
+      <TouchableOpacity style={styles.chatContainer}>
+        <Image source={imgUrl} style={styles.userPic} />
+        <View style={{ marginRight: "auto", marginTop: 8 }}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.message}>{message}</Text>
+        </View>
+        <View style={{ marginTop: 8 }}>
+          <Text
+            style={{ color: unreadMessages > 0 ? Colors.primary : Colors.gray }}
           >
-            <Text style={{ color: "white", fontSize: 12 }}>
-              {unreadMessages}
-            </Text>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
+            {formatDate(date)}
+          </Text>
+          {unreadMessages > 0 && (
+            <View
+              style={{
+                backgroundColor: Colors.primary,
+                borderRadius: 10,
+                width: 20,
+                height: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                marginLeft: "auto",
+                marginTop: 4,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {unreadMessages}
+              </Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    </Link>
   );
 };
 

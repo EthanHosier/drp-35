@@ -1,11 +1,12 @@
 import React from "react";
-import { Stack, Tabs } from "expo-router";
+import { Stack, Tabs, useSegments } from "expo-router";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import { NavigationContainer } from "@react-navigation/native";
 
 const Layout = () => {
+  const segments = useSegments();
   return (
     <Tabs
       screenOptions={{
@@ -20,7 +21,15 @@ const Layout = () => {
         },
       }}
     >
-      <Tabs.Screen name="chats" options={{ headerShown: false }} />
+      <Tabs.Screen
+        name="chats"
+        options={{
+          headerShown: false,
+          tabBarStyle: {
+            display: segments[2] === "[chatId]" ? "none" : "flex",
+          },
+        }}
+      />
       <Tabs.Screen
         name="one"
         options={{
