@@ -20,8 +20,11 @@ export default ProjectPreview;
 const styles = StyleSheet.create({
   preview: {
     backgroundColor: Colors.primaryMuted,
-    margin: 10,
+    margin: 1,
     borderRadius: 10,
-    height: 60
+    height: 60,
+    width: 500,
+    maxWidth: "100%",
+    paddingHorizontal: 10,
   }
 })
