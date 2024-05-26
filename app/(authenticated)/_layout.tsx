@@ -1,9 +1,8 @@
 import React from "react";
-import { Stack, Tabs, useSegments } from "expo-router";
-import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Tabs, useSegments } from "expo-router";
+import {Feather, FontAwesome, FontAwesome5} from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
-import { NavigationContainer } from "@react-navigation/native";
 
 const Layout = () => {
   const segments = useSegments();
@@ -42,6 +41,19 @@ const Layout = () => {
             ),
           tabBarLabel: "",
         }}
+      />
+      <Tabs.Screen
+          name="ongoing-projects"
+          options={{
+            title: "Ongoing Projects",
+            tabBarIcon: ({ size, color, focused }) =>
+                focused ? (
+                    <FontAwesome5 name="archive" size={size + 1} color={color} />
+                ) : (
+                    <Feather name="archive" size={size} color={color} />
+                ),
+            tabBarLabel: "",
+          }}
       />
       <Tabs.Screen
         name="profile"
