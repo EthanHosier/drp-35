@@ -46,7 +46,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
               marginTop: 4,
             }}
           >
-            <Text style={{ color: "white", fontSize: 14 }}>
+            <Text style={{ color: "white", fontSize: 12 }}>
               {unreadMessages}
             </Text>
           </View>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginTop: 16,
+    paddingHorizontal: 16,
   },
   name: {
     fontWeight: "600",
