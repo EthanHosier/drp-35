@@ -51,8 +51,45 @@ const SKILLS = [
   "Rust",
 ];
 
+const PROGRESS = 0.8;
+
 const FirstRoute = () => (
   <ScrollView contentContainerStyle={styles1.container}>
+    <View style={[styles1.fieldsContainer, { paddingBottom: 12 }]}>
+      <View
+        style={{
+          marginTop: 16,
+          width: "100%",
+          height: 8,
+          borderRadius: 4,
+          backgroundColor: Colors.lightGray,
+        }}
+      >
+        <View
+          style={{
+            width: `${PROGRESS * 100}%`,
+            height: "100%",
+            backgroundColor: Colors.primary,
+            borderRadius: 4,
+          }}
+        />
+      </View>
+      <Text
+        style={{
+          marginTop: 12,
+          fontSize: 18,
+          fontWeight: "600",
+          color: Colors.dark,
+        }}
+      >
+        Your profile is {PROGRESS * 100}% complete!
+      </Text>
+      <Text style={{ marginTop: 4, fontSize: 12, color: Colors.gray }}>
+        Complete your profile to increase your chances of optimal
+        collaborations!
+      </Text>
+    </View>
+
     <TouchableOpacity>
       <Image
         source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
@@ -62,7 +99,7 @@ const FirstRoute = () => (
         <AntDesign name="edit" size={24} color={Colors.primary} />
       </View>
     </TouchableOpacity>
-    <View style={styles1.fieldsContainer}>
+    <View style={[styles1.fieldsContainer, { paddingBottom: 20 }]}>
       {TEXT_FIELDS.map((field, i) => (
         <>
           <Text style={{ fontSize: 16, fontWeight: "500", marginTop: 16 }}>
@@ -84,6 +121,7 @@ const FirstRoute = () => (
         </>
       ))}
     </View>
+    <View></View>
   </ScrollView>
 );
 
