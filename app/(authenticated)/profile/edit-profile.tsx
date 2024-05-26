@@ -1,18 +1,16 @@
+import Colors from "@/constants/Colors";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import * as React from "react";
 import {
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-import React from "react";
-import { Image } from "expo-image";
-import Colors from "@/constants/Colors";
-import { defaultStyles } from "@/constants/DefaultStyles";
-import Badge from "@/components/profile/badge";
-import { Stack } from "expo-router";
+import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 const TEXT_FIELDS = [
   "Full Name",
@@ -53,95 +51,116 @@ const SKILLS = [
   "Rust",
 ];
 
-const EditProfile = () => {
-  return (
-    <>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{
-          alignItems: "center",
-          padding: 24,
-        }}
-      >
-        <Image
-          source={
-            "https://i.pinimg.com/236x/30/bc/74/30bc74c40ec71c440c9c11202772edb9.jpg"
-          }
-          style={styles.image}
-        />
-
-        <TouchableOpacity
-          style={[
-            defaultStyles.pillButton,
-            {
-              backgroundColor: Colors.lightGray,
-              width: 132,
-              height: 36,
-              marginTop: 16,
-            },
-          ]}
-        >
-          <Text style={{ fontWeight: "600", fontSize: 12 }}>
-            Edit Profile Photo
+const FirstRoute = () => (
+  <ScrollView contentContainerStyle={styles1.container}>
+    <TouchableOpacity>
+      <Image
+        source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
+        style={styles1.img}
+      />
+      <View style={styles1.editPhotoBtn}>
+        <AntDesign name="edit" size={24} color={Colors.primary} />
+      </View>
+    </TouchableOpacity>
+    <View style={styles1.fieldsContainer}>
+      {TEXT_FIELDS.map((field, i) => (
+        <>
+          <Text style={{ fontSize: 16, fontWeight: "500", marginTop: 16 }}>
+            {field}
           </Text>
-        </TouchableOpacity>
-
-        {TEXT_FIELDS.map((e, i) => (
-          <View style={{ width: "100%" }} key={i}>
-            <Text style={styles.attributeTitle}>{e}</Text>
-            <TextInput
-              style={[styles.textInput]}
-              placeholder={e}
-              placeholderTextColor={Colors.gray}
-            />
-          </View>
-        ))}
-
-        <View style={{ width: "100%" }}>
-          <Text style={styles.attributeTitle}>Skills</Text>
-          <View
+          <TextInput
             style={{
-              marginTop: 16,
-              flexWrap: "wrap",
+              marginTop: 8,
               width: "100%",
-              flexDirection: "row",
-              gap: 8,
+              height: 40,
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+              padding: 8,
+              borderRadius: 12,
             }}
-          >
-            {SKILLS.map((e, i) => (
-              <Badge text={e} key={i} selectable />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-    </>
-  );
-};
+            placeholderTextColor={Colors.gray}
+            placeholder={field}
+          />
+        </>
+      ))}
+    </View>
+  </ScrollView>
+);
 
-export default EditProfile;
-
-const styles = StyleSheet.create({
+const styles1 = StyleSheet.create({
   container: {
-    backgroundColor: Colors.background,
-    height: "100%",
+    flex: 1,
+    alignItems: "center",
+    paddingHorizontal: 8,
   },
-  textInput: {
-    marginTop: 8,
-    borderColor: Colors.lightGray,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 16,
-    width: "100%",
+  editPhotoBtn: {
+    marginTop: -48,
+    marginLeft: 80,
+    height: 48,
+    width: 48,
+    backgroundColor: "white",
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  image: {
-    width: 250,
-    height: 250,
-    borderRadius: 10,
-    resizeMode: "cover",
-  },
-  attributeTitle: {
-    fontSize: 16,
-    fontWeight: "500",
+  img: {
     marginTop: 20,
+    width: 144,
+    height: 144,
+    borderRadius: 72,
+  },
+  fieldsContainer: {
+    marginTop: 24,
+    width: "100%",
+    paddingHorizontal: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
   },
 });
+
+const SecondRoute = () => <View style={{ flex: 1 }} />;
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+
+export default function TabViewExample() {
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "first", title: "Edit" },
+    { key: "second", title: "View" },
+  ]);
+
+  return (
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      renderTabBar={(props) => (
+        <TabBar
+          {...props}
+          style={{ backgroundColor: "white" }}
+          indicatorStyle={{
+            backgroundColor: Colors.primary,
+            width: 75, // Change this to the desired indicator width
+            marginLeft: (layout.width / routes.length - 75) / 2, // Center the indicator
+          }}
+          renderLabel={({ route, focused }) => (
+            <Text
+              style={{
+                color: focused ? Colors.primary : "black",
+                fontWeight: "600",
+              }}
+            >
+              {route.title}
+            </Text>
+          )}
+        />
+      )}
+    />
+  );
+}
