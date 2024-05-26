@@ -25,7 +25,7 @@ const OngoingProjects = () => {
 const LinkButton = ({text, href}: {text: string, href: string}) => {
   return (
       <Link
-        href={href}
+        href={'/(authenticated)/ongoing-projects/' + href}
         style={[
           defaultStyles.pillButton,
           {flex: 1, backgroundColor: Colors.primary},
