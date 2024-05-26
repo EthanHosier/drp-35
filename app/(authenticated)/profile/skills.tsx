@@ -168,6 +168,7 @@ const Skills = () => {
               gap: 8,
               flexDirection: "row",
               alignItems: "center",
+              marginBottom: 16,
             },
           ]}
         >
@@ -177,7 +178,7 @@ const Skills = () => {
 
         <ScrollView
           contentContainerStyle={{
-            marginTop: 32,
+            marginTop: 8,
             flexWrap: "wrap",
             width: "100%",
             flexDirection: "row",
