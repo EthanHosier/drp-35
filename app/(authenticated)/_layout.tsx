@@ -20,6 +20,7 @@ const Layout = () => {
         },
       }}
     >
+      <Tabs.Screen name="chats" options={{ headerShown: false }} />
       <Tabs.Screen
         name="one"
         options={{
