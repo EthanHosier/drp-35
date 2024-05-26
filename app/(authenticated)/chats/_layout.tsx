@@ -8,7 +8,9 @@ const Layout = () => {
       <Stack.Screen
         name="messages"
         options={{
-          title: "Messages",
+          title: "",
+
+          headerLargeTitle: true,
         }}
       />
     </Stack>

@@ -17,6 +17,8 @@ import {
 } from "react-native-gesture-handler";
 import ChatPreview from "@/components/chats/chat-preview";
 import Colors from "@/constants/Colors";
+import { FontAwesome } from "@expo/vector-icons";
+import { Stack } from "expo-router";
 
 const windowDimensions = Dimensions.get("window");
 const BUTTON_WIDTH = 80;
@@ -89,6 +91,48 @@ const CHATS: ChatPreview[] = [
     unreadMessages: 0,
     date: new Date(2020, 10, 12), // November 12, 2020
   },
+  {
+    name: "Alice Smith",
+    message: "Hey, what's up?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "John Doe",
+    message: "Hey, what's up?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "Bob Smith",
+    message: "Hello, how are you?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "Jane Doe",
+    message: "Hi, how's it going?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "Alice Smith",
+    message: "Hey, what's up?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "John Doe",
+    message: "Hey, what's up?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
+  {
+    name: "Bob Smith",
+    message: "Hello, how are you?",
+    unreadMessages: 0,
+    date: new Date(2020, 10, 12), // November 12, 2020
+  },
 ];
 
 export default function SwipeableListExample() {
@@ -97,28 +141,19 @@ export default function SwipeableListExample() {
   }
 
   return (
-    <View style={s.container}>
-      <ScrollView>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 8,
-            paddingHorizontal: 16,
-          }}
+    <>
+      <Stack.Screen options={{ title: "Messages" }} />
+      <View style={[s.container]}>
+        <ScrollView
+          style={{ marginTop: 90 }}
+          contentContainerStyle={{ marginTop: 48, paddingBottom: 148 }}
         >
-          <Text style={s.messagesHeader}>Messages</Text>
-          <TouchableOpacity>
-            <Text style={s.requests}>Requests</Text>
-          </TouchableOpacity>
-        </View>
-
-        {CHATS.map((chat, i) => (
-          <ListItem key={i} item={chat} onRemove={onRemove} />
-        ))}
-      </ScrollView>
-    </View>
+          {CHATS.map((chat, i) => (
+            <ListItem key={i} item={chat} onRemove={onRemove} />
+          ))}
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
@@ -236,7 +271,7 @@ function Button({ item }: { item: ButtonData }) {
   return (
     <View style={[s.button, { backgroundColor: item.backgroundColor }]}>
       <TouchableOpacity onPress={item.onPress} style={s.buttonInner}>
-        <Text style={{ color: item.color }}>{item.title}</Text>
+        <FontAwesome name="trash" size={28} color={"white"} />
       </TouchableOpacity>
     </View>
   );
