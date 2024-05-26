@@ -1,22 +1,33 @@
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {defaultStyles} from "@/constants/DefaultStyles";
 import Colors from "@/constants/Colors";
 import {Link} from "expo-router";
+import ProjectPreview from "@/components/projects/project-preview";
+
+const placeholderProjects = Array.from(
+    {length: 20},
+    (_, i) => i
+);
 
 const OngoingProjects = () => {
   return (
-      <SafeAreaView style={styles.main}>
+      <View style={styles.main}>
         <Text style={styles.title}>Projects you've joined</Text>
         <ScrollView contentContainerStyle={styles.projects}>
-          <Text>placeholder</Text>
+          {placeholderProjects.map((i) => (
+              <ProjectPreview
+                  name={'Example Project' + i}
+                  description={`This is project number ${i}'s description.`}
+                  key={i}
+              />
+          ))}
         </ScrollView>
         <View style={styles.buttons}>
           <LinkButton text="Add Project" href="add-project" />
           <LinkButton text="Join Project" href="join-project" />
         </View>
-      </SafeAreaView>
+      </View>
   );
 };
 
@@ -49,11 +60,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 20,
+    marginTop: 20,
   },
   projects:{
     flex: 1,
     alignItems: "center",
-    paddingHorizontal: 20,
     marginBottom: 20,
   },
   button: {
