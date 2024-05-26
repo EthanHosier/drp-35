@@ -314,15 +314,15 @@ const Page = () => {
               {...props}
               textStyle={{
                 right: {
-                  color: "#000",
+                  color: "#fff",
                 },
               }}
               wrapperStyle={{
                 left: {
-                  backgroundColor: "#fff",
+                  backgroundColor: Colors.lightGray,
                 },
                 right: {
-                  backgroundColor: Colors.lightGray,
+                  backgroundColor: Colors.primary,
                 },
               }}
             />

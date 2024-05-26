@@ -23,12 +23,12 @@ const ReplyMessageBar = ({ clearReply, message }: ReplyMessageBarProps) => {
           exiting={FadeOutDown}
         >
           <View
-            style={{ height: 50, width: 6, backgroundColor: "#89BC0C" }}
+            style={{ height: 50, width: 6, backgroundColor: Colors.primary }}
           ></View>
           <View style={{ flexDirection: "column" }}>
             <Text
               style={{
-                color: "#89BC0C",
+                color: Colors.primary,
                 paddingLeft: 10,
                 paddingTop: 5,
                 fontWeight: "600",
