@@ -24,6 +24,7 @@ const Layout = () => {
         name="chats"
         options={{
           headerShown: false,
+
           tabBarStyle: {
             display: segments[2] === "[chatId]" ? "none" : "flex",
           },

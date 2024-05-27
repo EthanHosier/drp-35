@@ -24,7 +24,6 @@ const Layout = () => {
               </Text>
             </TouchableOpacity>
           ),
-          contentStyle: { marginBottom: StyleSheet.hairlineWidth },
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
@@ -34,6 +33,7 @@ const Layout = () => {
               </Text>
             </TouchableOpacity>
           ),
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen
@@ -50,7 +50,6 @@ const Layout = () => {
               </Text>
             </TouchableOpacity>
           ),
-          contentStyle: { marginBottom: StyleSheet.hairlineWidth },
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
