@@ -5,12 +5,22 @@ import Colors from "@/constants/Colors";
 import {supabase} from "@/utils/supabase";
 import {router} from "expo-router";
 
+// Same as defined in the HTML spec
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+
+const VALID_DOMAINS = ["ic.ac.uk", "imperial.ac.uk"];
+
 const SignUpButton = (
     { shouldCreateUser, email }: {shouldCreateUser: boolean, email: string}
 ) => {
   const [loading, setLoading] = useState(false);
 
   const signUpWithEmail = async () => {
+    const matches = EMAIL_REGEX.exec(email);
+    if (!matches || !VALID_DOMAINS.includes(matches[1])) {
+      alert("Please enter a valid student email address.");
+      return;
+    }
 
     setLoading(true);
 
