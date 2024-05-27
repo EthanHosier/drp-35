@@ -9,7 +9,7 @@ const Layout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name="view-profile" />
+      <Stack.Screen name="view-profile" options={{ headerShown: false }} />
       <Stack.Screen
         name="edit-profile"
         options={{
@@ -56,7 +56,7 @@ const Layout = () => {
               <Text
                 style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
               >
-                Save
+                Done
               </Text>
             </TouchableOpacity>
           ),
