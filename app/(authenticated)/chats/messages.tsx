@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, View, Text, Dimensions, Alert } from "react-native";
+import React, {useState} from "react";
+import {StyleSheet, View, Dimensions, Alert, Text, TextInput} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
@@ -135,7 +135,9 @@ const CHATS: ChatPreview[] = [
   },
 ];
 
-export default function SwipeableListExample() {
+export default function MessagesList() {
+  const [search, setSearch] = useState("");
+
   function onRemove() {
     Alert.alert("Removed");
   }
@@ -144,12 +146,37 @@ export default function SwipeableListExample() {
     <>
       <Stack.Screen options={{ title: "Messages" }} />
       <View style={[s.container]}>
+        <View>
+          <TextInput
+            style={{
+              marginTop: 8,
+              marginHorizontal: 8,
+              width: "100%",
+              height: 40,
+              borderWidth: 1,
+              borderColor: Colors.lightGray,
+              padding: 8,
+              borderRadius: 12,
+            }}
+            placeholderTextColor={Colors.gray}
+            placeholder='Search'
+            onChangeText={(e) => setSearch(e)}
+          />
+        </View>
+        <Text style={{
+          fontSize: 15,
+          fontWeight: "600",
+          color: Colors.gray,
+          marginHorizontal: 12,
+        }}>
+          {(search.length > 0) ? `Search results for "${search}"` : "All messages" }
+        </Text>
         <ScrollView
-          style={{ marginTop: 90 }}
-          contentContainerStyle={{ marginTop: 48, paddingBottom: 148 }}
+          contentContainerStyle={{ paddingBottom: 10 }}
         >
-          {CHATS.map((chat, i) => (
-            <ListItem key={i} item={chat} onRemove={onRemove} />
+          {CHATS.filter((chat) => chat.name.includes(search))
+            .map((chat, i) => (
+              <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
           ))}
         </ScrollView>
       </View>
@@ -177,10 +204,11 @@ const timingConfig = {
 };
 
 type ListItemProps = {
+  id: number;
   item: ChatPreview;
   onRemove: () => void;
 };
-function ListItem({ item, onRemove }: ListItemProps) {
+function ListItem({ id, item, onRemove }: ListItemProps) {
   const isRemoving = useSharedValue(false);
   const translateX = useSharedValue(0);
 
@@ -251,7 +279,7 @@ function ListItem({ item, onRemove }: ListItemProps) {
     <View style={s.item}>
       <PanGestureHandler activeOffsetX={[-10, 10]} onGestureEvent={handler}>
         <Animated.View style={styles}>
-          <ListItemContent item={item} />
+          <ListItemContent id={id} item={item} />
 
           <View style={s.buttonsContainer}>
             <Button item={removeButton} />
@@ -277,9 +305,10 @@ function Button({ item }: { item: ButtonData }) {
   );
 }
 
-function ListItemContent({ item }: { item: ChatPreview }) {
+function ListItemContent({ id, item }: { id: number, item: ChatPreview }) {
   return (
     <ChatPreview
+      id={id}
       {...item}
       imgUrl="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
     />

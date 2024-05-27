@@ -3,7 +3,7 @@ import ReplyMessageBar from "@/components/chats/reply-message-bar";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import {
   GiftedChat,
@@ -225,17 +225,7 @@ const Page = () => {
             name: message.from ? "You" : "Bob",
           },
         };
-      }),
-      {
-        _id: 0,
-        system: true,
-        text: "All your base are belong to us",
-        createdAt: new Date(),
-        user: {
-          _id: 0,
-          name: "Bot",
-        },
-      },
+      })
     ]);
   }, []);
 
@@ -253,7 +243,7 @@ const Page = () => {
         renderActions={() => (
           <View
             style={{
-              height: 44,
+              height: 47,
               justifyContent: "center",
               alignItems: "center",
               left: 5,

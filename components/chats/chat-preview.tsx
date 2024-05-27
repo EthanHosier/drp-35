@@ -7,6 +7,7 @@ import { formatDate } from "@/utils/utils";
 import { Link } from "expo-router";
 
 interface ChatPreviewProps {
+  id: number,
   name: string;
   message: string;
   imgUrl: string;
@@ -15,6 +16,7 @@ interface ChatPreviewProps {
 }
 
 const ChatPreview: React.FC<ChatPreviewProps> = ({
+  id,
   name,
   message,
   imgUrl,
@@ -22,7 +24,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
   unreadMessages,
 }) => {
   return (
-    <Link asChild href={"/chats/1"}>
+    <Link asChild href={`/chats/${id}`}>
       <TouchableOpacity style={styles.chatContainer}>
         <Image source={imgUrl} style={styles.userPic} />
         <View style={{ marginRight: "auto", marginTop: 8 }}>
