@@ -18,3 +18,22 @@ export function formatDate(date: Date): string {
     return `${day}/${month}/${year}`;
   }
 }
+
+export function getMonthAbbreviation(date: Date): string {
+  const monthAbbreviations = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthIndex = date.getMonth();
+  return monthAbbreviations[monthIndex];
+}

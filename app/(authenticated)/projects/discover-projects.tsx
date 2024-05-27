@@ -7,6 +7,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
+import { BlurView } from "expo-blur";
 
 export type Project = {
   name: string;
@@ -64,7 +65,18 @@ const DiscoverProjects = () => {
                   marginTop: 12,
                 }}
               >
-                <Ionicons name="add" size={32} color={Colors.primary} />
+                <View style={{ borderRadius: 8, overflow: "hidden" }}>
+                  <BlurView
+                    tint="extraLight"
+                    style={{
+                      backgroundColor: "rgba(0,0,0,0.05)",
+                      borderRadius: 8,
+                    }}
+                    intensity={80}
+                  >
+                    <Ionicons name="add" size={32} color={Colors.primary} />
+                  </BlurView>
+                </View>
               </TouchableOpacity>
               <View style={{ marginTop: 24 }}>
                 <Text style={{ fontSize: 32, fontWeight: "bold" }}>
@@ -86,6 +98,7 @@ const DiscoverProjects = () => {
                 <TextInput
                   style={{ flex: 1, marginLeft: 8, fontSize: 16 }}
                   placeholder="Search for a project"
+                  cursorColor={Colors.primary}
                 />
               </View>
               <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
