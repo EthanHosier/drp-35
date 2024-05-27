@@ -15,7 +15,7 @@ const ReplyMessageBar = ({ clearReply, message }: ReplyMessageBarProps) => {
       {message !== null && (
         <Animated.View
           style={{
-            height: 50,
+            height: 70,
             flexDirection: "row",
             backgroundColor: "#E4E9EB",
           }}
@@ -23,9 +23,9 @@ const ReplyMessageBar = ({ clearReply, message }: ReplyMessageBarProps) => {
           exiting={FadeOutDown}
         >
           <View
-            style={{ height: 50, width: 6, backgroundColor: Colors.primary }}
+            style={{ height: 70, width: 6, backgroundColor: Colors.primary }}
           ></View>
-          <View style={{ flexDirection: "column" }}>
+          <View style={{ flexDirection: "column", flex: 1 }}>
             <Text
               style={{
                 color: Colors.primary,
@@ -39,15 +39,14 @@ const ReplyMessageBar = ({ clearReply, message }: ReplyMessageBarProps) => {
             </Text>
             <Text
               style={{ color: Colors.gray, paddingLeft: 10, paddingTop: 5 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
             >
-              {message!.text.length > 40
-                ? message?.text.substring(0, 40) + "..."
-                : message?.text}
+              {message?.text}
             </Text>
           </View>
           <View
             style={{
-              flex: 1,
               justifyContent: "center",
               alignItems: "flex-end",
               paddingRight: 10,
