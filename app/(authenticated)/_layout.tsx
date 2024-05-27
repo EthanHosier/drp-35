@@ -1,6 +1,11 @@
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
-import {Feather, FontAwesome, FontAwesome5, MaterialCommunityIcons} from "@expo/vector-icons";
+import {
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { BlurView } from "expo-blur";
 
@@ -37,10 +42,18 @@ const Layout = () => {
             display: segments[2] === "[chatId]" ? "none" : "flex",
           },
           tabBarIcon: ({ size, color, focused }) =>
-              focused ? (
-              <MaterialCommunityIcons name="message-text" size={size + 1} color={color} />
+            focused ? (
+              <MaterialCommunityIcons
+                name="message-text"
+                size={size + 1}
+                color={color}
+              />
             ) : (
-              <MaterialCommunityIcons name="message-text-outline" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="message-text-outline"
+                size={size}
+                color={color}
+              />
             ),
           tabBarLabel: "",
         }}
@@ -72,19 +85,7 @@ const Layout = () => {
           tabBarLabel: "",
         }}
       />
-      <Tabs.Screen
-        name="ongoing-projects"
-        options={{
-          title: "Ongoing Projects",
-          tabBarIcon: ({ size, color, focused }) =>
-            focused ? (
-              <FontAwesome5 name="archive" size={size + 1} color={color} />
-            ) : (
-              <Feather name="archive" size={size} color={color} />
-            ),
-          tabBarLabel: "",
-        }}
-      />
+
       <Tabs.Screen
         name="profile"
         options={{
