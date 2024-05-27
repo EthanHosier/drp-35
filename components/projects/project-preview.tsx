@@ -4,7 +4,7 @@ import { Project } from "@/app/(authenticated)/projects/discover-projects";
 import { Link } from "expo-router";
 import { Image, ImageBackground } from "expo-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { getMonthAbbreviation } from "@/utils/utils";
 import { BlurView } from "expo-blur";
@@ -39,21 +39,19 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                   }}
                   intensity={20}
                 >
-                  <View>
-                    <Text style={{ color: "#fff", fontSize: 12 }}>
-                      {getMonthAbbreviation(project.date)}
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#fff",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        fontSize: 18,
-                      }}
-                    >
-                      {project.date.getDate()}
-                    </Text>
-                  </View>
+                  <Text style={{ color: "#fff", fontSize: 12 }}>
+                    {getMonthAbbreviation(project.date)}
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#fff",
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: 18,
+                    }}
+                  >
+                    {project.date.getDate()}
+                  </Text>
                 </BlurView>
               </View>
             </Image>
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     top: 0,
-    borderRadius: 32,
+    borderRadius: 24,
     padding: 16,
   },
 });

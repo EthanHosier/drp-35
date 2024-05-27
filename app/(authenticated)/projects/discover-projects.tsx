@@ -9,11 +9,17 @@ import { Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
 
+export type ProjectTheme = {
+  name: string;
+  color: string;
+};
+
 export type Project = {
   name: string;
   date: Date;
   image: string;
   groupSize: number;
+  theme: ProjectTheme;
 };
 
 const PROJECTS: Project[] = [
@@ -23,6 +29,10 @@ const PROJECTS: Project[] = [
     image:
       "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
     groupSize: 5,
+    theme: {
+      color: "#339933",
+      name: "Workshops",
+    },
   },
   {
     name: "Guided tour at the museum",
@@ -30,6 +40,10 @@ const PROJECTS: Project[] = [
     image:
       "https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg",
     groupSize: 5,
+    theme: {
+      color: "#FFC0CB",
+      name: "Arts & Culture",
+    },
   },
   {
     name: "Guided tour at the museum",
@@ -37,6 +51,10 @@ const PROJECTS: Project[] = [
     image:
       "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
     groupSize: 5,
+    theme: {
+      color: "#339933",
+      name: "Workshops",
+    },
   },
   {
     name: "Guided tour at the museum",
@@ -44,6 +62,10 @@ const PROJECTS: Project[] = [
     image:
       "https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg",
     groupSize: 5,
+    theme: {
+      color: "#FFC0CB",
+      name: "Arts & Culture",
+    },
   },
 ];
 
