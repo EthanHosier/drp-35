@@ -44,6 +44,20 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
+        name="projects"
+        options={{
+          headerShown: false,
+          title: "Projects",
+          tabBarIcon: ({ size, color, focused }) =>
+            focused ? (
+              <FontAwesome name="user-circle" size={size + 1} color={color} />
+            ) : (
+              <FontAwesome name="user-circle-o" size={size} color={color} />
+            ),
+          tabBarLabel: "",
+        }}
+      />
+      <Tabs.Screen
         name="ongoing-projects"
         options={{
           title: "Ongoing Projects",
