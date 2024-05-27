@@ -126,7 +126,7 @@ const FirstRoute = () => (
 
 const styles1 = StyleSheet.create({
   scrollContainer: {
-    paddingHorizontal: 8,
+    padding: 8,
     paddingBottom: 40,
   },
   editPhotoBtn: {
@@ -148,7 +148,7 @@ const styles1 = StyleSheet.create({
     alignSelf: "center",
   },
   fieldsContainer: {
-    marginTop: 24,
+    marginTop: 16,
     width: "100%",
     paddingHorizontal: 20,
     backgroundColor: "white",
@@ -161,7 +161,26 @@ const styles1 = StyleSheet.create({
   },
 });
 
-const SecondRoute = () => <View style={{ flex: 1 }} />;
+const SecondRoute = () => (
+  <View style={{ flex: 1 }}>
+    <ScrollView
+      contentContainerStyle={[styles1.scrollContainer, { padding: 16 }]}
+    >
+      <Image
+        source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
+        style={styles2.img}
+      />
+    </ScrollView>
+  </View>
+);
+
+const styles2 = StyleSheet.create({
+  img: {
+    width: "100%",
+    aspectRatio: 1, //#endregion
+    borderRadius: 12,
+  },
+});
 
 const renderScene = SceneMap({
   first: FirstRoute,

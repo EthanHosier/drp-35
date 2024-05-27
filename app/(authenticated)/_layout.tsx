@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, useSegments } from "expo-router";
-import {Feather, FontAwesome, FontAwesome5} from "@expo/vector-icons";
+import { Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 
@@ -43,17 +43,17 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-          name="ongoing-projects"
-          options={{
-            title: "Ongoing Projects",
-            tabBarIcon: ({ size, color, focused }) =>
-                focused ? (
-                    <FontAwesome5 name="archive" size={size + 1} color={color} />
-                ) : (
-                    <Feather name="archive" size={size} color={color} />
-                ),
-            tabBarLabel: "",
-          }}
+        name="ongoing-projects"
+        options={{
+          title: "Ongoing Projects",
+          tabBarIcon: ({ size, color, focused }) =>
+            focused ? (
+              <FontAwesome5 name="archive" size={size + 1} color={color} />
+            ) : (
+              <Feather name="archive" size={size} color={color} />
+            ),
+          tabBarLabel: "",
+        }}
       />
       <Tabs.Screen
         name="profile"
