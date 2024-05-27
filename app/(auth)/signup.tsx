@@ -13,26 +13,10 @@ import Colors from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import SignUpButton from "@/components/auth/SignUpButton";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const signUpWithEmail = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-      },
-    });
-    if (error) {
-      alert(error.message);
-    } else {
-      router.push({ pathname: "/otp", params: { email } });
-    }
-    setLoading(false);
-  };
 
   return (
     <View style={styles.container}>
@@ -55,23 +39,7 @@ const SignUp = () => {
           </Text>
         </Link>
       </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={70}
-      >
-        <TouchableOpacity
-          style={[
-            defaultStyles.pillButton,
-            styles.signInButton,
-            loading && { opacity: 0.5 },
-          ]}
-          disabled={loading}
-          onPress={() => signUpWithEmail()}
-        >
-          <Text style={{ color: "white", fontSize: 16 }}>Create Account</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      <SignUpButton shouldCreateUser={true} email={email}/>
     </View>
   );
 };
@@ -102,11 +70,5 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginTop: 24,
-  },
-  signInButton: {
-    backgroundColor: Colors.primary,
-    padding: 16,
-    marginTop: "auto",
-    alignItems: "center",
   },
 });
