@@ -229,10 +229,13 @@ const Page = () => {
     ]);
   }, []);
 
-  const onSend = useCallback((messages = []) => {
+  const onSend = useCallback((messages: IMessage[] = []) => {
     setMessages((previousMessages: any[]) =>
-      GiftedChat.append(previousMessages, messages)
+      GiftedChat.append(previousMessages, messages.map(
+        (message) => ({...message, replyMessage: replyMessage})
+      ))
     );
+    setReplyMessage(null);
   }, []);
 
   const renderInputToolbar = (props: any) => {
