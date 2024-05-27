@@ -53,7 +53,7 @@ const DiscoverProjects = () => {
         // Background Linear Gradient
         colors={[Colors.primaryMuted, "#fff"]}
         style={{ height: "100%" }}
-        locations={[0, 0.9]} // Adjust the second value to make the transition earlier or later
+        locations={[0, 1]} // Adjust the second value to make the transition earlier or later
       >
         <SafeAreaView>
           <ScrollView contentContainerStyle={{ height: "100%" }}>
@@ -61,6 +61,7 @@ const DiscoverProjects = () => {
               <TouchableOpacity
                 style={{
                   alignSelf: "flex-end",
+                  marginTop: 12,
                 }}
               >
                 <Ionicons name="add" size={32} color={Colors.primary} />
