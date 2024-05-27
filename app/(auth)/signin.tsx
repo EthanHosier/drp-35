@@ -12,6 +12,7 @@ import Colors from "@/constants/Colors";
 import { Link, router } from "expo-router";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import SignUpButton from "@/components/auth/SignUpButton";
 
 const Index = () => {
   const [email, setEmail] = useState("");
@@ -54,23 +55,7 @@ const Index = () => {
           </Text>
         </Link>
       </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={60}
-      >
-        <TouchableOpacity
-          style={[
-            defaultStyles.pillButton,
-            styles.signInButton,
-            loading && { opacity: 0.5 },
-          ]}
-          disabled={loading}
-          onPress={() => signInWithEmail()}
-        >
-          <Text style={{ color: "white", fontSize: 16 }}>Sign In</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      <SignUpButton shouldCreateUser={false} email={email} />
     </View>
   );
 };
