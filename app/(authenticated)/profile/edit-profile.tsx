@@ -25,7 +25,10 @@ const EditTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
         {progress < 1.0 && (
           <View style={[styles.fieldsContainer, { paddingBottom: 12 }]}>
             <View
@@ -172,6 +175,7 @@ const styles = StyleSheet.create({
 const ViewTab = () => (
   <View style={{ flex: 1, backgroundColor: Colors.background }}>
     <ScrollView
+      showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         backgroundColor: Colors.background,
         paddingBottom: 48,
