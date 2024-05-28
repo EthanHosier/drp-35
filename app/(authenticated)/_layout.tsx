@@ -44,14 +44,14 @@ const Layout = () => {
           },
           tabBarIcon: ({ size, color, focused }) =>
             focused ? (
-              <MaterialCommunityIcons
-                name="message-text"
+              <Ionicons
+                name="chatbubble-ellipses"
                 size={size + 1}
                 color={color}
               />
             ) : (
-              <MaterialCommunityIcons
-                name="message-text-outline"
+              <Ionicons
+                name="chatbubble-ellipses-outline"
                 size={size}
                 color={color}
               />
