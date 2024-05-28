@@ -6,6 +6,10 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen name="discover-projects" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="[projectId]"
+        options={{ presentation: "modal", headerShown: false }}
+      />
     </Stack>
   );
 };
