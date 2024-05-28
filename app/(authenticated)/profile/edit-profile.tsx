@@ -244,7 +244,7 @@ const ViewTab = () => (
                 justifyContent: "center",
               }}
             >
-              <Text>{skill}</Text>
+              <Text style={{ fontWeight: "500" }}>{skill}</Text>
             </View>
           )
         )}
