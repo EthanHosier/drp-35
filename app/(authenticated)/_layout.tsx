@@ -4,6 +4,7 @@ import {
   Feather,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
@@ -66,9 +67,9 @@ const Layout = () => {
           title: "Projects",
           tabBarIcon: ({ size, color, focused }) =>
             focused ? (
-              <FontAwesome name="user-circle" size={size + 1} color={color} />
+              <Ionicons name="compass" size={size + 1 + 4} color={color} />
             ) : (
-              <FontAwesome name="user-circle-o" size={size} color={color} />
+              <Ionicons name="compass-outline" size={size + 4} color={color} />
             ),
           tabBarLabel: "",
         }}
