@@ -8,6 +8,7 @@ import { defaultStyles } from "@/constants/DefaultStyles";
 import { Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
+import {router} from "expo-router";
 
 export type ProjectTheme = {
   name: string;
@@ -86,6 +87,7 @@ const DiscoverProjects = () => {
                   alignSelf: "flex-end",
                   marginTop: 12,
                 }}
+                onPress={() => router.navigate("/(authenticated)/projects/add-project")}
               >
                 <View style={{ borderRadius: 8, overflow: "hidden" }}>
                   <BlurView
