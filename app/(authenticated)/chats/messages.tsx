@@ -1,5 +1,13 @@
-import React, {useState} from "react";
-import {StyleSheet, View, Dimensions, Alert, Text, TextInput} from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Alert,
+  Text,
+  TextInput,
+  Platform,
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedGestureHandler,
@@ -19,6 +27,7 @@ import ChatPreview from "@/components/chats/chat-preview";
 import Colors from "@/constants/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Stack } from "expo-router";
+import { defaultStyles } from "@/constants/DefaultStyles";
 
 const windowDimensions = Dimensions.get("window");
 const BUTTON_WIDTH = 80;
@@ -146,37 +155,35 @@ export default function MessagesList() {
     <>
       <Stack.Screen options={{ title: "Messages" }} />
       <View style={[s.container]}>
-        <View>
-          <TextInput
-            style={{
-              marginTop: 8,
-              marginHorizontal: 8,
-              width: "100%",
-              height: 40,
-              borderWidth: 1,
-              borderColor: Colors.lightGray,
-              padding: 8,
-              borderRadius: 12,
-            }}
-            placeholderTextColor={Colors.gray}
-            placeholder='Search'
-            onChangeText={(e) => setSearch(e)}
-          />
-        </View>
-        <Text style={{
-          fontSize: 15,
-          fontWeight: "600",
-          color: Colors.gray,
-          marginHorizontal: 12,
-        }}>
-          {(search.length > 0) ? `Search results for "${search}"` : "All messages" }
-        </Text>
-        <ScrollView
-          contentContainerStyle={{ paddingBottom: 10 }}
-        >
-          {CHATS.filter((chat) => chat.name.includes(search))
-            .map((chat, i) => (
-              <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
+        <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
+          <View style={{ paddingHorizontal: 16 }}>
+            <TextInput
+              style={[
+                defaultStyles.textInput,
+                {
+                  marginTop: Platform.OS === "android" ? 8 : 164,
+                },
+              ]}
+              placeholderTextColor={Colors.gray}
+              placeholder="Search"
+              onChangeText={(e) => setSearch(e)}
+            />
+            <Text
+              style={{
+                marginTop: 4,
+                marginBottom: 8,
+                fontWeight: "600",
+                color: Colors.gray,
+              }}
+            >
+              {search.length > 0
+                ? `Search results for "${search}"`
+                : "All messages"}
+            </Text>
+          </View>
+
+          {CHATS.filter((chat) => chat.name.includes(search)).map((chat, i) => (
+            <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
           ))}
         </ScrollView>
       </View>
@@ -305,7 +312,7 @@ function Button({ item }: { item: ButtonData }) {
   );
 }
 
-function ListItemContent({ id, item }: { id: number, item: ChatPreview }) {
+function ListItemContent({ id, item }: { id: number; item: ChatPreview }) {
   return (
     <ChatPreview
       id={id}
