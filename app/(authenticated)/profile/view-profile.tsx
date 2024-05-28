@@ -116,6 +116,7 @@ const ViewProfile = () => {
               flexDirection: "row",
               alignItems: "center",
             }}
+            key={i}
           >
             <Image
               source={project.image}

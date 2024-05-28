@@ -24,105 +24,115 @@ const TEXT_FIELDS = [
   "Website",
 ];
 
-const PROGRESS = 0.8;
+const FirstRoute = () => {
 
-const FirstRoute = () => (
-  <View style={{ flex: 1 }}>
-    <ScrollView contentContainerStyle={styles1.scrollContainer}>
-      <View style={[styles1.fieldsContainer, { paddingBottom: 12 }]}>
-        <View
-          style={{
-            marginTop: 16,
-            width: "100%",
-            height: 8,
-            borderRadius: 4,
-            backgroundColor: Colors.lightGray,
-          }}
-        >
-          <View
-            style={{
-              width: `${PROGRESS * 100}%`,
-              height: "100%",
-              backgroundColor: Colors.primary,
-              borderRadius: 4,
-            }}
-          />
-        </View>
-        <Text
-          style={{
-            marginTop: 12,
-            fontSize: 18,
-            fontWeight: "600",
-            color: Colors.dark,
-          }}
-        >
-          Your profile is {PROGRESS * 100}% complete!
-        </Text>
-        <Text style={{ marginTop: 4, fontSize: 12, color: Colors.gray }}>
-          Complete your profile to increase your chances of optimal
-          collaborations!
-        </Text>
-      </View>
+  const [progress, setProgress] = React.useState(0);
+  const [details, setDetails] = React.useState(new Array(TEXT_FIELDS.length).fill(''));
 
-      <TouchableOpacity>
-        <Image
-          source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
-          style={styles1.img}
-        />
-        <View style={styles1.editPhotoBtn}>
-          <AntDesign name="edit" size={24} color={Colors.primary} />
-        </View>
-      </TouchableOpacity>
-      <View style={[styles1.fieldsContainer, { paddingBottom: 20 }]}>
-        {TEXT_FIELDS.map((field, i) => (
-          <View key={i}>
-            <Text style={{ fontSize: 16, fontWeight: "500", marginTop: 16 }}>
-              {field}
-            </Text>
-            <TextInput
-              style={{
-                marginTop: 8,
-                width: "100%",
-                height: 40,
-                borderWidth: 1,
-                borderColor: Colors.lightGray,
-                padding: 8,
-                borderRadius: 12,
-              }}
-              placeholderTextColor={Colors.gray}
-              placeholder={field}
-            />
-          </View>
-        ))}
-      </View>
-      <Link
-        asChild
-        href="/(authenticated)/profile/skills"
-        style={[
-          styles1.fieldsContainer,
-          { paddingBottom: 20, paddingRight: 32 },
-        ]}
-      >
-        <TouchableOpacity>
-          <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
-            Skills
-          </Text>
-          <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles1.skillsText}
+  return (
+      <View style={{flex: 1}}>
+        <ScrollView contentContainerStyle={styles1.scrollContainer}>
+          {(progress < 1.0) && <View style={[styles1.fieldsContainer, {paddingBottom: 12}]}>
+            <View
+                style={{
+                  marginTop: 16,
+                  width: "100%",
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: Colors.lightGray,
+                }}
             >
-              Java, C, Python, JavaScript, HTML, CSS, SQL, TypeScript, React,
-              Node.js
+              <View
+                  style={{
+                    width: `${progress * 100}%`,
+                    height: "100%",
+                    backgroundColor: Colors.primary,
+                    borderRadius: 4,
+                  }}
+              />
+            </View>
+            <Text
+                style={{
+                  marginTop: 12,
+                  fontSize: 18,
+                  fontWeight: "600",
+                  color: Colors.dark,
+                }}
+            >
+              Your profile is {Math.round(progress * 100)}% complete!
             </Text>
-            <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
+            <Text style={{marginTop: 4, fontSize: 12, color: Colors.gray}}>
+              Complete your profile to increase your chances of optimal
+              collaborations!
+            </Text>
+          </View>}
+
+          <TouchableOpacity>
+            <Image
+                source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
+                style={styles1.img}
+            />
+            <View style={styles1.editPhotoBtn}>
+              <AntDesign name="edit" size={24} color={Colors.primary}/>
+            </View>
+          </TouchableOpacity>
+          <View style={[styles1.fieldsContainer, {paddingBottom: 20}]}>
+            {TEXT_FIELDS.map((field, i) => (
+                <View key={i}>
+                  <Text style={{fontSize: 16, fontWeight: "500", marginTop: 16}}>
+                    {field}
+                  </Text>
+                  <TextInput
+                      style={{
+                        marginTop: 8,
+                        width: "100%",
+                        height: 40,
+                        borderWidth: 1,
+                        borderColor: Colors.lightGray,
+                        padding: 8,
+                        borderRadius: 12,
+                      }}
+                      placeholderTextColor={Colors.gray}
+                      placeholder={field}
+                      onChangeText={(text) => {
+                        const newDetails = [...details];
+                        newDetails[i] = text;
+                        setDetails(newDetails);
+                        setProgress(newDetails.filter((d) => d).length / TEXT_FIELDS.length);
+                      }}
+                  />
+                </View>
+            ))}
           </View>
-        </TouchableOpacity>
-      </Link>
-    </ScrollView>
-  </View>
-);
+          <Link
+              asChild
+              href="/(authenticated)/profile/skills"
+              style={[
+                styles1.fieldsContainer,
+                {paddingBottom: 20, paddingRight: 32},
+              ]}
+          >
+            <TouchableOpacity>
+              <Text style={{fontSize: 16, fontWeight: "600", marginTop: 16}}>
+                Skills
+              </Text>
+              <View style={{flexDirection: "row", gap: 8, marginTop: 4}}>
+                <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles1.skillsText}
+                >
+                  Java, C, Python, JavaScript, HTML, CSS, SQL, TypeScript, React,
+                  Node.js
+                </Text>
+                <FontAwesome name="chevron-right" size={16} color={Colors.dark}/>
+              </View>
+            </TouchableOpacity>
+          </Link>
+        </ScrollView>
+      </View>
+  )
+};
 
 const styles1 = StyleSheet.create({
   scrollContainer: {
