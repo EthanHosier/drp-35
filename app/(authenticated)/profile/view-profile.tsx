@@ -3,8 +3,10 @@ import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { supabase } from "@/utils/supabase";
+import { defaultStyles } from "@/constants/DefaultStyles";
 
 type Project = {
   title: string;
@@ -54,6 +56,7 @@ const ViewProfile = () => {
           style={{
             flexDirection: "row",
             gap: 16,
+            marginTop: 16,
             backgroundColor: Colors.background,
             padding: 8,
             borderRadius: 12,
@@ -96,12 +99,22 @@ const ViewProfile = () => {
                 color={Colors.primary}
                 style={{
                   alignSelf: "center",
-                  paddingRight: 16,
+
                   paddingVertical: 16,
                 }}
               />
             </TouchableOpacity>
           </Link>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => supabase.auth.signOut()}
+          >
+            <Ionicons
+              name="settings-outline"
+              size={24}
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
         </View>
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Projects

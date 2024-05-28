@@ -68,7 +68,7 @@ function RootLayoutNav() {
           router.navigate("");
           return;
         }
-        router.navigate("one");
+        router.navigate("projects");
       }
     );
 
