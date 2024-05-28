@@ -65,7 +65,7 @@ const ProfileCard = () => {
         </View>
       </View>
       {TEXT_FIELDS.slice(2, -1).map((field, index) => (
-          <View key={index}>
+          <View key={index} style={styles.detailContainer}>
             <Text style={{ fontSize: 16, color: "white", marginHorizontal: 20 }}>
               {field}
             </Text>
@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingBottom: 40,
     justifyContent: "center",
-    backgroundColor: Colors.primary,
+    backgroundColor: "#988bff",
   },
   imgContainer: {
     marginVertical: 16,
     alignItems: "flex-start",
     borderRadius: 20,
-    backgroundColor: Colors.primaryMuted,
+    backgroundColor: Colors.primary,
   },
   img: {
     width: "100%",
@@ -106,8 +106,12 @@ const styles = StyleSheet.create({
     color: "white",
     flex: 1,
   },
-  fieldsContainer: {
+  detailContainer: {
+    borderRadius: 20,
     marginBottom: 16,
+    backgroundColor: Colors.primary,
+  },
+  fieldsContainer: {
     width: "100%",
     paddingHorizontal: 10,
     borderRadius: 20,
@@ -115,12 +119,11 @@ const styles = StyleSheet.create({
   },
   fieldsText: {
     fontSize: 16,
-    color: "white",
+    color: Colors.dark,
     flex: 2,
     padding: 8
   },
   link: {
-    color: Colors.dark,
     textDecorationLine: "underline",
   }
 });
