@@ -13,26 +13,18 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import ProfileCard, {TEXT_FIELDS} from "@/components/profile/profile-card";
 
-const TEXT_FIELDS = [
-  "Full Name",
-  "Pronouns",
-  "University",
-  "Course",
-  "LinkedIn",
-  "GitHub",
-  "Website",
-];
+const EditTab = () => {
 
-const FirstRoute = () => {
-
-  const [progress, setProgress] = React.useState(0);
-  const [details, setDetails] = React.useState(new Array(TEXT_FIELDS.length).fill(''));
+  const [progress, setProgress] = React.useState<number>(0);
+  const [details, setDetails] =
+      React.useState(new Array(TEXT_FIELDS.length).fill(''));
 
   return (
       <View style={{flex: 1}}>
-        <ScrollView contentContainerStyle={styles1.scrollContainer}>
-          {(progress < 1.0) && <View style={[styles1.fieldsContainer, {paddingBottom: 12}]}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {(progress < 1.0) && <View style={[styles.fieldsContainer, {paddingBottom: 12}]}>
             <View
                 style={{
                   marginTop: 16,
@@ -70,13 +62,13 @@ const FirstRoute = () => {
           <TouchableOpacity>
             <Image
                 source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
-                style={styles1.img}
+                style={styles.img}
             />
-            <View style={styles1.editPhotoBtn}>
+            <View style={styles.editPhotoBtn}>
               <AntDesign name="edit" size={24} color={Colors.primary}/>
             </View>
           </TouchableOpacity>
-          <View style={[styles1.fieldsContainer, {paddingBottom: 20}]}>
+          <View style={[styles.fieldsContainer, {paddingBottom: 20}]}>
             {TEXT_FIELDS.map((field, i) => (
                 <View key={i}>
                   <Text style={{fontSize: 16, fontWeight: "500", marginTop: 16}}>
@@ -108,7 +100,7 @@ const FirstRoute = () => {
               asChild
               href="/(authenticated)/profile/skills"
               style={[
-                styles1.fieldsContainer,
+                styles.fieldsContainer,
                 {paddingBottom: 20, paddingRight: 32},
               ]}
           >
@@ -120,7 +112,7 @@ const FirstRoute = () => {
                 <Text
                     numberOfLines={1}
                     ellipsizeMode="tail"
-                    style={styles1.skillsText}
+                    style={styles.skillsText}
                 >
                   Java, C, Python, JavaScript, HTML, CSS, SQL, TypeScript, React,
                   Node.js
@@ -134,7 +126,7 @@ const FirstRoute = () => {
   )
 };
 
-const styles1 = StyleSheet.create({
+const styles = StyleSheet.create({
   scrollContainer: {
     padding: 8,
     paddingBottom: 40,
@@ -171,33 +163,16 @@ const styles1 = StyleSheet.create({
   },
 });
 
-const SecondRoute = () => (
-  <View style={{ flex: 1 }}>
-    <ScrollView
-      contentContainerStyle={[styles1.scrollContainer, { padding: 16 }]}
-    >
-      <Image
-        source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
-        style={styles2.img}
-      />
-    </ScrollView>
-  </View>
+const ViewTab = () => (
+  <ProfileCard />
 );
 
-const styles2 = StyleSheet.create({
-  img: {
-    width: "100%",
-    aspectRatio: 1, //#endregion
-    borderRadius: 12,
-  },
-});
-
 const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
+  first: EditTab,
+  second: ViewTab,
 });
 
-export default function TabViewExample() {
+export default function ProfileTabs() {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
