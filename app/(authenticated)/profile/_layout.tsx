@@ -5,11 +5,14 @@ import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { useUserIdStore } from "@/utils/store/user-id-store";
+import { decode } from "base64-arraybuffer";
 
 const Layout = () => {
   const router = useRouter();
   const userId = useUserIdStore((state) => state.userId);
-  const setImage = useProfileStore((state) => state.setImage);
+  const imageBase64 = useProfileStore((state) => state.imageBase64);
+  const imageMimeType = useProfileStore((state) => state.imageMimeType);
+  const setImageUri = useProfileStore((state) => state.setImageUri);
 
   useEffect(() => {
     const getImage = async () => {
@@ -21,11 +24,25 @@ const Layout = () => {
       const fr = new FileReader();
       fr.readAsDataURL(data!);
       fr.onload = () => {
-        setImage(fr.result as string);
+        setImageUri(fr.result as string);
       };
     };
     getImage();
   }, []);
+
+  const saveProfile = async () => {
+    const { error } = await supabase.storage
+      .from("profilepics")
+      .upload(userId, decode(imageBase64), {
+        contentType: imageMimeType,
+        upsert: true,
+      });
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    router.back();
+  };
 
   return (
     <Stack>
@@ -46,7 +63,7 @@ const Layout = () => {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={router.back}>
+            <TouchableOpacity onPress={saveProfile}>
               <Text
                 style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
               >

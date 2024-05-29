@@ -17,13 +17,27 @@ import ProfileCard, { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { useProfileStore } from "@/utils/store/profile-store";
+import * as ImagePicker from "expo-image-picker";
 
 const EditTab = () => {
   const [progress, setProgress] = React.useState<number>(0);
   const [details, setDetails] = React.useState(
     new Array(TEXT_FIELDS.length).fill("")
   );
-  const image = useProfileStore((state) => state.image);
+  const image = useProfileStore((state) => state.imageUri);
+  const setImageFromPicker = useProfileStore(
+    (state) => state.setImageFromPicker
+  );
+
+  const pickImage = async () => {
+    const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true,
+    });
+    if (canceled) return;
+    setImageFromPicker(assets[0]);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,7 +82,7 @@ const EditTab = () => {
           </View>
         )}
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={pickImage}>
           <Image
             source={
               image
@@ -179,7 +193,7 @@ const styles = StyleSheet.create({
 });
 
 const ViewTab = () => {
-  const image = useProfileStore((state) => state.image);
+  const image = useProfileStore((state) => state.imageUri);
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView

@@ -45,7 +45,7 @@ const PROJECTS: Project[] = [
 ];
 
 const ViewProfile = () => {
-  const image = useProfileStore((state) => state.image);
+  const image = useProfileStore((state) => state.imageUri);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>

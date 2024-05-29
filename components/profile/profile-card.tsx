@@ -52,7 +52,7 @@ const ProfileCard = () => {
     );
   };
 
-  const image = useProfileStore((state) => state.image);
+  const image = useProfileStore((state) => state.imageUri);
 
   return (
     <View style={{ flex: 1 }}>
