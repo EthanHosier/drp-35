@@ -2,8 +2,9 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
-import { useProfileStore, useUserIdStore } from "@/utils/store";
 import { supabase } from "@/utils/supabase";
+import { useProfileStore } from "@/utils/store/profile-store";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const Layout = () => {
   const router = useRouter();

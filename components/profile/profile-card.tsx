@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, StyleSheet, View, Text, Linking } from "react-native";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { useProfileStore } from "@/utils/store";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 export const TEXT_FIELDS = [
   "Full Name",

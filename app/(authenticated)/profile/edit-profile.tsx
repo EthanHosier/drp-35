@@ -16,7 +16,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import ProfileCard, { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { useProfileStore } from "@/utils/store";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 const EditTab = () => {
   const [progress, setProgress] = React.useState<number>(0);

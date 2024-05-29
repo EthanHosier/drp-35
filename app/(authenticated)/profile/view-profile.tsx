@@ -7,7 +7,7 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import { useProfileStore } from "@/utils/store";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 type Project = {
   title: string;

@@ -9,8 +9,8 @@ import {
 } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { BlurView } from "expo-blur";
-import { useUserIdStore } from "@/utils/store";
 import { supabase } from "@/utils/supabase";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const Layout = () => {
   const segments = useSegments();
