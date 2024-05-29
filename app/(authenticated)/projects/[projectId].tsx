@@ -4,6 +4,7 @@ import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import TinderSwipe from "@/components/projects/tinder-swipe";
 
 const ProjectId = () => {
   return (
@@ -38,6 +39,7 @@ const ProjectId = () => {
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex ea commodo consequat.
         </Text>
+        <TinderSwipe />
       </ScrollView>
     </View>
   );
