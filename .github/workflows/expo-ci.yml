@@ -31,7 +31,7 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: ${{ secrets.MYTOKEN }}
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Cache node modules
         uses: actions/cache@v3
