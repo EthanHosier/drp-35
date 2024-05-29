@@ -44,7 +44,7 @@ const Otp = () => {
     if (error) {
       alert(error.message);
     } else {
-      router.navigate("/(authenticated)/discover-projects");
+      router.navigate("/(authenticated)/projects/discover-projects");
     }
     setLoading(false);
   };
