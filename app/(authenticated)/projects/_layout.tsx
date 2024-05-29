@@ -36,7 +36,19 @@ const Layout = () => {
       />
       <Stack.Screen
         name="[projectId]"
-        options={{ presentation: "modal", headerShown: false }}
+        options={{
+          presentation: "fullScreenModal",
+          title: "View Project",
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
       />
     </Stack>
   );
