@@ -7,6 +7,7 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import { useProfileStore } from "@/utils/store";
 
 type Project = {
   title: string;
@@ -44,6 +45,8 @@ const PROJECTS: Project[] = [
 ];
 
 const ViewProfile = () => {
+  const image = useProfileStore((state) => state.image);
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -64,7 +67,11 @@ const ViewProfile = () => {
           }}
         >
           <Image
-            source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
+            source={
+              image
+                ? { uri: image }
+                : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+            }
             style={styles.img}
           />
           <View>

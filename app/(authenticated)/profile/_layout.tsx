@@ -1,10 +1,30 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
+import { useProfileStore, useUserIdStore } from "@/utils/store";
+import { supabase } from "@/utils/supabase";
 
 const Layout = () => {
   const router = useRouter();
+  const userId = useUserIdStore((state) => state.userId);
+  const setImage = useProfileStore((state) => state.setImage);
+
+  useEffect(() => {
+    const getImage = async () => {
+      const { data, error } = await supabase.storage
+        .from("profilepics")
+        .download(userId);
+      if (error) return;
+
+      const fr = new FileReader();
+      fr.readAsDataURL(data!);
+      fr.onload = () => {
+        setImage(fr.result as string);
+      };
+    };
+    getImage();
+  }, []);
 
   return (
     <Stack>
