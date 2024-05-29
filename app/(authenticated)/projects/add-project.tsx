@@ -99,7 +99,8 @@ const AddProjectPage = () => {
             />
           </View>
         </View>
-
+      </View>
+      <View style={[styles.fieldsContainer]}>
         <Text style={styles.fieldLabel}>Start Date & Time</Text>
         <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
           <RNDateTimePicker
@@ -198,6 +199,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "white",
     borderRadius: 20,
+    paddingBottom: 20,
   },
   fieldLabel: {
     fontSize: 16,
