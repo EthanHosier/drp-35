@@ -37,47 +37,56 @@ const AddProjectPage = () => {
       </View>
       <View style={styles.imgContainer}>
         <TouchableOpacity onPress={() => alert("TODO")} style={{height: 200}}>
-          <Image
-              source="https://t4.ftcdn.net/jpg/01/64/16/59/360_F_164165971_ELxPPwdwHYEhg4vZ3F4Ej7OmZVzqq4Ov.jpg"
-              style={styles.image}
-          />
+          {(projectFields.img === "")
+              ? <Text
+                  style={{textAlign: "center", textAlignVertical: "center", fontSize: 24, color: Colors.gray}}
+              >
+                Upload an Image
+              </Text>
+              : <Image
+                  source={projectFields.img}
+                  style={styles.image}
+              />
+          }
         </TouchableOpacity>
       </View>
-      <ProjectField
-          label={PROJECT_FIELDS[0]}
-          value={projectFields["name"]}
-          onChange={(text: string) => setProjectFields({...projectFields, name: text})}
-      />
-      <ProjectField
-          label={PROJECT_FIELDS[1]}
-          value={projectFields["description"]}
-          style={{height: 100}}
-          onChange={(text: string) => setProjectFields({...projectFields, description: text})}
-      />
-      <View style={{flexDirection: "row", gap: 8, width: "100%"}}>
-        <View style={{flex: 1}}>
-          <Text style={styles.fieldLabel}>{PROJECT_FIELDS[2]}</Text>
-          <ProjectField
-              label={'0'}
-              value={projectFields["minGroupSize"].toString()}
-              onChange={(text: string) => setProjectFields({...projectFields, minGroupSize: parseInt(text)})}
-          />
+      <View style={styles.fieldsContainer}>
+        <ProjectField
+            label={PROJECT_FIELDS[0]}
+            value={projectFields["name"]}
+            onChange={(text: string) => setProjectFields({...projectFields, name: text})}
+        />
+        <ProjectField
+            label={PROJECT_FIELDS[1]}
+            value={projectFields["description"]}
+            style={{height: 100}}
+            onChange={(text: string) => setProjectFields({...projectFields, description: text})}
+        />
+        <View style={{flexDirection: "row", gap: 8, width: "100%"}}>
+          <View style={{flex: 1}}>
+            <ProjectField
+                label={PROJECT_FIELDS[2]}
+                placeholder={'0'}
+                value={projectFields["minGroupSize"].toString()}
+                onChange={(text: string) => setProjectFields({...projectFields, minGroupSize: parseInt(text)})}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <ProjectField
+                placeholder={'0'}
+                label={PROJECT_FIELDS[3]}
+                value={projectFields["maxGroupSize"].toString()}
+                onChange={(text: string) => setProjectFields({...projectFields, maxGroupSize: parseInt(text)})}
+            />
+          </View>
         </View>
-        <View style={{flex: 1}}>
-          <Text style={styles.fieldLabel}>{PROJECT_FIELDS[3]}</Text>
-          <ProjectField
-              label={'0'}
-              value={projectFields["maxGroupSize"].toString()}
-              onChange={(text: string) => setProjectFields({...projectFields, maxGroupSize: parseInt(text)})}
-          />
-        </View>
+        <ProjectField // TODO: date picker
+            label={PROJECT_FIELDS[4]}
+            value={""}
+            placeholder={""}
+            onChange={(text: string) => {}}
+        />
       </View>
-      <ProjectField // TODO: date picker
-          label={PROJECT_FIELDS[4]}
-          value={"Start Date"}
-          style={{height: 100}}
-          onChange={(text: string) => setProjectFields({...projectFields, description: text})}
-      />
       <View style={styles.button}>
         <TouchableOpacity onPress={() => alert("TODO")}>
           <Text style={{color: "white", fontSize: 24, fontWeight: "700"}}>Submit</Text>
@@ -87,21 +96,28 @@ const AddProjectPage = () => {
   );
 }
 
-const ProjectField = (
-    {label, value, onChange, style}:
-        {label: string, value: string, height?: number, onChange: (value: any) => void, style?: any}
+const ProjectField = ({label, placeholder = label, value, onChange, style}:
+    {
+      label: string,
+      placeholder?: string,
+      value: string,
+      height?: number,
+      onChange: (value: any) => void,
+      style?: any
+    }
 ) => {
-  return (
+  return (<>
+    <Text style={styles.fieldLabel}>{label}</Text>
     <View style={styles.fieldContainer}>
       <TextInput
-        style={[styles.fieldInput, style]}
-        value={value}
-        onChangeText={onChange}
-        placeholder={label}
-        placeholderTextColor={Colors.gray}
+          style={[styles.fieldInput, style]}
+          value={value}
+          onChangeText={onChange}
+          placeholder={placeholder}
+          placeholderTextColor={Colors.gray}
       />
     </View>
-  );
+  </>);
 }
 
 const styles = StyleSheet.create({
@@ -143,17 +159,28 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 16,
   },
+  fieldsContainer: {
+    marginTop: 16,
+    width: "100%",
+    paddingHorizontal: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    paddingTop: 4,
+    paddingBottom: 12,
+    marginBottom: 20,
+  },
   fieldContainer: {
     padding: 8,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.gray,
-    marginBottom: 16,
+    marginBottom: 8,
+    marginTop: 8,
   },
   fieldLabel: {
-    paddingLeft: 8,
-    fontSize: 12,
-  },
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 16 },
   fieldInput: {
     fontSize: 16,
     color: "black",
