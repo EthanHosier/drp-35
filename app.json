@@ -37,7 +37,11 @@
         "origin": false
       },
       "eas": {
+<<<<<<< HEAD
         "projectId": "30d3ca80-279a-42bd-8656-e7f3e44d9cf4"
+=======
+        "projectId": "879aa524-6cf1-4125-b6f0-4b6aa1133abc"
+>>>>>>> 24e75ef8e9fab70f5d72e222f12e2764115ebd74
       }
     }
   }
