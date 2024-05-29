@@ -55,7 +55,7 @@ const Index = () => {
           </Text>
         </Link>
       </View>
-      <SignUpButton shouldCreateUser={false} email={email} />
+      <SignUpButton signIn shouldCreateUser={false} email={email} />
     </View>
   );
 };

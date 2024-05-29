@@ -1,18 +1,30 @@
-import React, {useState} from 'react';
-import {KeyboardAvoidingView, Platform, Text, TouchableOpacity, StyleSheet} from "react-native";
-import {defaultStyles} from "@/constants/DefaultStyles";
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { defaultStyles } from "@/constants/DefaultStyles";
 import Colors from "@/constants/Colors";
-import {supabase} from "@/utils/supabase";
-import {router} from "expo-router";
+import { supabase } from "@/utils/supabase";
+import { router } from "expo-router";
 
 // Same as defined in the HTML spec
 const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
 const VALID_DOMAINS = ["ic.ac.uk", "imperial.ac.uk"];
 
-const SignUpButton = (
-    { shouldCreateUser, email }: {shouldCreateUser: boolean, email: string}
-) => {
+const SignUpButton = ({
+  shouldCreateUser,
+  email,
+  signIn,
+}: {
+  shouldCreateUser: boolean;
+  email: string;
+  signIn: boolean | undefined;
+}) => {
   const [loading, setLoading] = useState(false);
 
   const signUpWithEmail = async () => {
@@ -39,23 +51,25 @@ const SignUpButton = (
   };
 
   return (
-      <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-          keyboardVerticalOffset={70}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={70}
+    >
+      <TouchableOpacity
+        style={[
+          defaultStyles.pillButton,
+          styles.signInButton,
+          loading && { opacity: 0.5 },
+        ]}
+        disabled={loading}
+        onPress={() => signUpWithEmail()}
       >
-        <TouchableOpacity
-            style={[
-              defaultStyles.pillButton,
-              styles.signInButton,
-              loading && { opacity: 0.5 },
-            ]}
-            disabled={loading}
-            onPress={() => signUpWithEmail()}
-        >
-          <Text style={{ color: "white", fontSize: 16 }}>Create Account</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        <Text style={{ color: "white", fontSize: 16 }}>
+          {signIn ? "Sign In" : "Create Account"}
+        </Text>
+      </TouchableOpacity>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -68,4 +82,4 @@ const styles = StyleSheet.create({
     marginTop: "auto",
     alignItems: "center",
   },
-}) ;
+});
