@@ -13,6 +13,7 @@ const Layout = () => {
   const imageBase64 = useProfileStore((state) => state.imageBase64);
   const imageMimeType = useProfileStore((state) => state.imageMimeType);
   const setImageUri = useProfileStore((state) => state.setImageUri);
+  const setFullName = useProfileStore((state) => state.setFullName);
 
   useEffect(() => {
     const getImage = async () => {
@@ -28,6 +29,19 @@ const Layout = () => {
       };
     };
     getImage();
+
+    const getFullName = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .single();
+      if (error) {
+        setFullName("User");
+        return;
+      }
+      setFullName(data.full_name);
+    };
+    getFullName();
   }, []);
 
   const saveProfile = async () => {

@@ -194,6 +194,8 @@ const styles = StyleSheet.create({
 
 const ViewTab = () => {
   const image = useProfileStore((state) => state.imageUri);
+  const fullName = useProfileStore((state) => state.fullName);
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -223,7 +225,7 @@ const ViewTab = () => {
             <Text
               style={{ fontWeight: "bold", fontSize: 24, color: Colors.dark }}
             >
-              Ethan Hosier
+              {fullName}
             </Text>
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
               He/Him

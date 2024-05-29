@@ -46,6 +46,7 @@ const PROJECTS: Project[] = [
 
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
+  const fullName = useProfileStore((state) => state.fullName);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -75,9 +76,7 @@ const ViewProfile = () => {
             style={styles.img}
           />
           <View>
-            <Text style={{ fontSize: 16, fontWeight: "500" }}>
-              Ethan Hosier
-            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "500" }}>{fullName}</Text>
             <Text style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}>
               Pro User
             </Text>
