@@ -116,11 +116,7 @@ const ViewProfile = () => {
             style={{ alignSelf: "flex-end" }}
             onPress={() => supabase.auth.signOut()}
           >
-            <Ionicons
-              name="settings-outline"
-              size={24}
-              color={Colors.primary}
-            />
+            <Ionicons name="log-out-outline" size={24} color={Colors.primary} />
           </TouchableOpacity>
         </View>
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
