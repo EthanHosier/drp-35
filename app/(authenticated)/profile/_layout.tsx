@@ -13,6 +13,8 @@ const Layout = () => {
   const imageBase64 = useProfileStore((state) => state.imageBase64);
   const imageMimeType = useProfileStore((state) => state.imageMimeType);
   const setImageUri = useProfileStore((state) => state.setImageUri);
+  const { fullName, pronouns, university, course, linkedin, github, website } =
+    useProfileStore();
 
   useEffect(() => {
     const getImage = async () => {
@@ -31,14 +33,31 @@ const Layout = () => {
   }, []);
 
   const saveProfile = async () => {
-    const { error } = await supabase.storage
+    const { error } = await supabase.from("profiles").upsert({
+      user_id: userId,
+      full_name: fullName,
+      pronouns,
+      university,
+      course,
+      linkedin,
+      github,
+      website,
+    });
+
+    if (error) alert(error.message);
+
+    if (imageBase64 === "") {
+      router.back();
+      return;
+    }
+    const { error: picError } = await supabase.storage
       .from("profilepics")
       .upload(userId, decode(imageBase64), {
         contentType: imageMimeType,
         upsert: true,
       });
-    if (error) {
-      alert(error.message);
+    if (picError) {
+      alert(picError.message);
       return;
     }
     router.back();

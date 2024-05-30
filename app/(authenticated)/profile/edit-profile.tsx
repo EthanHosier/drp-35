@@ -2,7 +2,6 @@ import Colors from "@/constants/Colors";
 import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import * as React from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -16,18 +15,26 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import ProfileCard, { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { useProfileStore } from "@/utils/store/profile-store";
+import { useDetails, useProfileStore } from "@/utils/store/profile-store";
 import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 
 const EditTab = () => {
-  const [progress, setProgress] = React.useState<number>(0);
-  const [details, setDetails] = React.useState(
-    new Array(TEXT_FIELDS.length).fill("")
-  );
+  const [progress, setProgress] = useState<number>(0);
+  const details = useDetails();
+  const setDetails = useProfileStore((state) => state.setDetails);
   const image = useProfileStore((state) => state.imageUri);
   const setImageFromPicker = useProfileStore(
     (state) => state.setImageFromPicker
   );
+  const setFullName = useProfileStore((state) => state.setFullName);
+  const setPronouns = useProfileStore((state) => state.setPronouns);
+  const setUniversity = useProfileStore((state) => state.setUniversity);
+  const setCourse = useProfileStore((state) => state.setCourse);
+  const setLinkedin = useProfileStore((state) => state.setLinkedin);
+  const setGithub = useProfileStore((state) => state.setGithub);
+  const setWebsite = useProfileStore((state) => state.setWebsite);
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -38,6 +45,21 @@ const EditTab = () => {
     if (canceled) return;
     setImageFromPicker(assets[0]);
   };
+
+  useEffect(() => {
+    const getDetails = async () => {
+      const { data, error } = await supabase.from("profiles").select().single();
+      if (error) return;
+      setFullName(data.full_name);
+      setPronouns(data.pronouns);
+      setUniversity(data.university);
+      setCourse(data.course);
+      setLinkedin(data.linkedin);
+      setGithub(data.github);
+      setWebsite(data.website);
+    };
+    getDetails();
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -111,6 +133,7 @@ const EditTab = () => {
                   padding: 8,
                   borderRadius: 12,
                 }}
+                value={details[i]}
                 placeholderTextColor={Colors.gray}
                 placeholder={field}
                 onChangeText={(text) => {
