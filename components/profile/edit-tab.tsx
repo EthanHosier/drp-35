@@ -15,6 +15,8 @@ import { useDetails, useProfileStore } from "@/utils/store/profile-store";
 import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 
 const EditTab = () => {
   const [progress, setProgress] = useState<number>(0);
@@ -62,7 +64,7 @@ const EditTab = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
+      <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
@@ -172,7 +174,7 @@ const EditTab = () => {
             </View>
           </TouchableOpacity>
         </Link>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
