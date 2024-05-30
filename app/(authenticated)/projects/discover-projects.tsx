@@ -8,7 +8,8 @@ import { defaultStyles } from "@/constants/DefaultStyles";
 import { Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
-import {router} from "expo-router";
+import { router } from "expo-router";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 export type ProjectTheme = {
   name: string;
@@ -71,6 +72,8 @@ const PROJECTS: Project[] = [
 ];
 
 const DiscoverProjects = () => {
+  const fullName = useProfileStore((state) => state.fullName);
+
   return (
     <View>
       <LinearGradient
@@ -87,7 +90,9 @@ const DiscoverProjects = () => {
                   alignSelf: "flex-end",
                   marginTop: 12,
                 }}
-                onPress={() => router.navigate("/(authenticated)/projects/add-project")}
+                onPress={() =>
+                  router.navigate("/(authenticated)/projects/add-project")
+                }
               >
                 <View style={{ borderRadius: 8, overflow: "hidden" }}>
                   <BlurView
@@ -104,7 +109,7 @@ const DiscoverProjects = () => {
               </TouchableOpacity>
               <View style={{ marginTop: 24 }}>
                 <Text style={{ fontSize: 32, fontWeight: "bold" }}>
-                  Hello, Ethan
+                  Hello, {fullName}
                 </Text>
                 <Text
                   style={{

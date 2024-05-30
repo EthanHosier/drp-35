@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, useSegments } from "expo-router";
 import {
   Feather,
@@ -9,9 +9,44 @@ import {
 } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { BlurView } from "expo-blur";
+import { supabase } from "@/utils/supabase";
+import { useUserIdStore } from "@/utils/store/user-id-store";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 const Layout = () => {
   const segments = useSegments();
+  const setUserId = useUserIdStore((state) => state.setUserId);
+  const setFullName = useProfileStore((state) => state.setFullName);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        alert("User not found");
+        return;
+      }
+      setUserId(user.id);
+    };
+
+    const getFullName = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .single();
+      if (error) {
+        setFullName("User");
+        return;
+      }
+      setFullName(data.full_name);
+    };
+
+    getUserId().then(() => {
+      getFullName();
+    });
+  }, []);
+
   return (
     <Tabs
       screenOptions={{

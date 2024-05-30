@@ -16,12 +16,28 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import ProfileCard, { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
+import { useProfileStore } from "@/utils/store/profile-store";
+import * as ImagePicker from "expo-image-picker";
 
 const EditTab = () => {
   const [progress, setProgress] = React.useState<number>(0);
   const [details, setDetails] = React.useState(
     new Array(TEXT_FIELDS.length).fill("")
   );
+  const image = useProfileStore((state) => state.imageUri);
+  const setImageFromPicker = useProfileStore(
+    (state) => state.setImageFromPicker
+  );
+
+  const pickImage = async () => {
+    const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true,
+    });
+    if (canceled) return;
+    setImageFromPicker(assets[0]);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -66,9 +82,13 @@ const EditTab = () => {
           </View>
         )}
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={pickImage}>
           <Image
-            source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
+            source={
+              image
+                ? { uri: image }
+                : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+            }
             style={styles.img}
           />
           <View style={styles.editPhotoBtn}>
@@ -172,131 +192,136 @@ const styles = StyleSheet.create({
   },
 });
 
-const ViewTab = () => (
-  <View style={{ flex: 1, backgroundColor: Colors.background }}>
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        backgroundColor: Colors.background,
-        paddingBottom: 48,
-      }}
-    >
-      <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
-        <Image
-          source={"https://avatars.githubusercontent.com/u/80335311?v=4"}
-          style={styles2.img}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: 16,
-            gap: 8,
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{ fontWeight: "bold", fontSize: 24, color: Colors.dark }}
-          >
-            Ethan Hosier
-          </Text>
-          <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
-            He/Him
-          </Text>
-        </View>
+const ViewTab = () => {
+  const image = useProfileStore((state) => state.imageUri);
+  const fullName = useProfileStore((state) => state.fullName);
 
-        <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
-          <View style={styles2.attributeIconContainer}>
-            <Ionicons name="school-outline" size={24} color="black" />
-          </View>
-          <Text style={styles2.attributeText}>I go to Imperial</Text>
-        </View>
-
-        <View style={styles2.attributeContainer}>
-          <View style={styles2.attributeIconContainer}>
-            <Ionicons name="book-outline" size={24} color="black" />
-          </View>
-          <Text style={styles2.attributeText}>I study Computing</Text>
-        </View>
-
-        <Text style={{ marginTop: 24 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </Text>
-
-        <Text style={{ fontSize: 20, fontWeight: "600", marginTop: 24 }}>
-          I'm skilled at
-        </Text>
-      </View>
-
+  return (
+    <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
-        horizontal
-        contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          backgroundColor: Colors.background,
+          paddingBottom: 48,
+        }}
       >
-        {["Java", "Python", "JavaScript", "React", "Node.js"].map(
-          (skill, i) => (
-            <View
-              key={i}
-              style={{
-                backgroundColor: Colors.lightGray,
-                height: 32,
-                paddingHorizontal: 12,
-                borderRadius: 16,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+        <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
+          <Image
+            source={
+              image
+                ? { uri: image }
+                : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+            }
+            style={styles.img}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 16,
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ fontWeight: "bold", fontSize: 24, color: Colors.dark }}
             >
-              <Text style={{ fontWeight: "500" }}>{skill}</Text>
+              {fullName}
+            </Text>
+            <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
+              He/Him
+            </Text>
+          </View>
+          <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
+            <View style={styles2.attributeIconContainer}>
+              <Ionicons name="school-outline" size={24} color="black" />
             </View>
-          )
-        )}
+            <Text style={styles2.attributeText}>I go to Imperial</Text>
+          </View>
+          <View style={styles2.attributeContainer}>
+            <View style={styles2.attributeIconContainer}>
+              <Ionicons name="book-outline" size={24} color="black" />
+            </View>
+            <Text style={styles2.attributeText}>I study Computing</Text>
+          </View>
+          <Text style={{ marginTop: 24 }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </Text>
+          <Text style={{ fontSize: 20, fontWeight: "600", marginTop: 24 }}>
+            I'm skilled at
+          </Text>
+        </View>
+
+        <ScrollView
+          horizontal
+          contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {["Java", "Python", "JavaScript", "React", "Node.js"].map(
+            (skill, i) => (
+              <View
+                key={i}
+                style={{
+                  backgroundColor: Colors.lightGray,
+                  height: 32,
+                  paddingHorizontal: 12,
+                  borderRadius: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontWeight: "500" }}>{skill}</Text>
+              </View>
+            )
+          )}
+        </ScrollView>
+
+        <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
+          <TouchableOpacity style={styles2.attributeContainer}>
+            <View style={styles2.attributeIconContainer}>
+              <Feather name="github" size={24} color="black" />
+            </View>
+            <Text style={styles2.attributeText}>Github</Text>
+            <FontAwesome
+              style={{ marginLeft: "auto", marginRight: 16 }}
+              name="chevron-right"
+              size={16}
+              color={Colors.dark}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles2.attributeContainer}>
+            <View style={styles2.attributeIconContainer}>
+              <Feather name="linkedin" size={24} color="black" />
+            </View>
+            <Text style={styles2.attributeText}>LinkedIn</Text>
+            <FontAwesome
+              style={{ marginLeft: "auto", marginRight: 16 }}
+              name="chevron-right"
+              size={16}
+              color={Colors.dark}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles2.attributeContainer}>
+            <View style={styles2.attributeIconContainer}>
+              <Ionicons name="globe-outline" size={24} color="black" />
+            </View>
+            <Text style={styles2.attributeText}>Website</Text>
+            <FontAwesome
+              style={{ marginLeft: "auto", marginRight: 16 }}
+              name="chevron-right"
+              size={16}
+              color={Colors.dark}
+            />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-
-      <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
-        <TouchableOpacity style={styles2.attributeContainer}>
-          <View style={styles2.attributeIconContainer}>
-            <Feather name="github" size={24} color="black" />
-          </View>
-          <Text style={styles2.attributeText}>Github</Text>
-          <FontAwesome
-            style={{ marginLeft: "auto", marginRight: 16 }}
-            name="chevron-right"
-            size={16}
-            color={Colors.dark}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles2.attributeContainer}>
-          <View style={styles2.attributeIconContainer}>
-            <Feather name="linkedin" size={24} color="black" />
-          </View>
-          <Text style={styles2.attributeText}>LinkedIn</Text>
-          <FontAwesome
-            style={{ marginLeft: "auto", marginRight: 16 }}
-            name="chevron-right"
-            size={16}
-            color={Colors.dark}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles2.attributeContainer}>
-          <View style={styles2.attributeIconContainer}>
-            <Ionicons name="globe-outline" size={24} color="black" />
-          </View>
-          <Text style={styles2.attributeText}>Website</Text>
-          <FontAwesome
-            style={{ marginLeft: "auto", marginRight: 16 }}
-            name="chevron-right"
-            size={16}
-            color={Colors.dark}
-          />
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  </View>
-);
+    </View>
+  );
+};
 
 const styles2 = StyleSheet.create({
   img: {
