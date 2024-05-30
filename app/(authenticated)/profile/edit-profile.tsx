@@ -23,18 +23,18 @@ import { supabase } from "@/utils/supabase";
 const EditTab = () => {
   const [progress, setProgress] = useState<number>(0);
   const details = useDetails();
-  const setDetails = useProfileStore((state) => state.setDetails);
-  const image = useProfileStore((state) => state.imageUri);
-  const setImageFromPicker = useProfileStore(
-    (state) => state.setImageFromPicker
-  );
-  const setFullName = useProfileStore((state) => state.setFullName);
-  const setPronouns = useProfileStore((state) => state.setPronouns);
-  const setUniversity = useProfileStore((state) => state.setUniversity);
-  const setCourse = useProfileStore((state) => state.setCourse);
-  const setLinkedin = useProfileStore((state) => state.setLinkedin);
-  const setGithub = useProfileStore((state) => state.setGithub);
-  const setWebsite = useProfileStore((state) => state.setWebsite);
+  const {
+    imageUri,
+    setImageFromPicker,
+    setFullName,
+    setPronouns,
+    setUniversity,
+    setCourse,
+    setLinkedin,
+    setGithub,
+    setWebsite,
+    setDetails,
+  } = useProfileStore();
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -57,6 +57,9 @@ const EditTab = () => {
       setLinkedin(data.linkedin);
       setGithub(data.github);
       setWebsite(data.website);
+      setProgress(
+        Object.values(data).filter((d) => d).length / TEXT_FIELDS.length
+      );
     };
     getDetails();
   }, []);
@@ -107,8 +110,8 @@ const EditTab = () => {
         <TouchableOpacity onPress={pickImage}>
           <Image
             source={
-              image
-                ? { uri: image }
+              imageUri
+                ? { uri: imageUri }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}
@@ -216,8 +219,16 @@ const styles = StyleSheet.create({
 });
 
 const ViewTab = () => {
-  const image = useProfileStore((state) => state.imageUri);
-  const fullName = useProfileStore((state) => state.fullName);
+  const {
+    imageUri,
+    fullName,
+    pronouns,
+    university,
+    course,
+    linkedin,
+    github,
+    website,
+  } = useProfileStore();
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -231,8 +242,8 @@ const ViewTab = () => {
         <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
           <Image
             source={
-              image
-                ? { uri: image }
+              imageUri
+                ? { uri: imageUri }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}
@@ -251,20 +262,20 @@ const ViewTab = () => {
               {fullName}
             </Text>
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
-              He/Him
+              {pronouns}
             </Text>
           </View>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="school-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>I go to Imperial</Text>
+            <Text style={styles2.attributeText}>I go to {university}</Text>
           </View>
           <View style={styles2.attributeContainer}>
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="book-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>I study Computing</Text>
+            <Text style={styles2.attributeText}>I study {course}</Text>
           </View>
           <Text style={{ marginTop: 24 }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
@@ -306,7 +317,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Feather name="github" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>Github</Text>
+            <Text style={styles2.attributeText}>{github || "Github"}</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"
@@ -319,7 +330,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Feather name="linkedin" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>LinkedIn</Text>
+            <Text style={styles2.attributeText}>{linkedin || "LinkedIn"}</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"
@@ -332,7 +343,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="globe-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>Website</Text>
+            <Text style={styles2.attributeText}>{website || "Website"}</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"

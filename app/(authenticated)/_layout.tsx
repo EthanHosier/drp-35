@@ -35,10 +35,7 @@ const Layout = () => {
         .from("profiles")
         .select("full_name")
         .single();
-      if (error) {
-        setFullName("User");
-        return;
-      }
+      if (error) return;
       setFullName(data.full_name);
     };
 
