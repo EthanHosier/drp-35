@@ -1,9 +1,11 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
+import { sleep } from "@/utils/utils";
 
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
@@ -11,7 +13,28 @@ const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
 ];
 
+const NUM_CARDS = 3;
+
 const TinderSwipe = () => {
+  const OverlayLabelRight = useCallback(() => {
+    const [numSwipes, setNumSwipes] = useState(0);
+    return (
+      <View
+        style={[
+          styles.overlayLabelContainer,
+          {
+            backgroundColor: Colors.primary,
+            opacity: 0.7,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        ]}
+      >
+        <Ionicons name="happy-outline" size={80} color={Colors.background} />
+      </View>
+    );
+  }, []);
+
   const ref = useRef<SwiperCardRefType>();
 
   const renderCard = useCallback((image: ImageSourcePropType) => {
@@ -62,14 +85,20 @@ const TinderSwipe = () => {
       <Swiper
         translateXRange={[-100, 0, 100]}
         ref={ref}
+        disableTopSwipe
         cardStyle={styles.cardStyle}
         data={IMAGES}
         renderCard={renderCard}
         onSwipeRight={(cardIndex) => {
           console.log("cardIndex", cardIndex);
         }}
-        onSwipedAll={() => {
-          console.log("onSwipedAll");
+        onSwipedAll={async () => {
+          await sleep(100);
+          for (let i = 0; i < NUM_CARDS; i++) {
+            ref.current?.swipeBack();
+            console.log("swipeBack");
+            await sleep(50);
+          }
         }}
         onSwipeLeft={(cardIndex) => {
           console.log("onSwipeLeft", cardIndex);
@@ -86,6 +115,7 @@ const TinderSwipe = () => {
         onSwipeEnd={() => {
           console.log("onSwipeEnd");
         }}
+        OverlayLabelRight={OverlayLabelRight}
       />
     </View>
   );

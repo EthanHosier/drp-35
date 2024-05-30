@@ -37,3 +37,7 @@ export function getMonthAbbreviation(date: Date): string {
   const monthIndex = date.getMonth();
   return monthAbbreviations[monthIndex];
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
