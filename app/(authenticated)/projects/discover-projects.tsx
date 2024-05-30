@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
@@ -100,14 +100,29 @@ const DiscoverProjects = () => {
                     style={{
                       backgroundColor: "rgba(0,0,0,0.05)",
                       borderRadius: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingLeft: 8,
+                      paddingVertical: 4,
+                      paddingRight: 4,
+                      gap: 4,
                     }}
                     intensity={80}
                   >
-                    <Ionicons name="add" size={32} color={Colors.primary} />
+                    <Text
+                      style={{
+                        color: Colors.dark,
+                        fontWeight: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      Create
+                    </Text>
+                    <Entypo name="plus" size={24} color={Colors.primary} />
                   </BlurView>
                 </View>
               </TouchableOpacity>
-              <View style={{ marginTop: 24 }}>
+              <View style={{ marginTop: 32 }}>
                 <Text style={{ fontSize: 32, fontWeight: "bold" }}>
                   Hello, {fullName}
                 </Text>

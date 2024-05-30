@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Tabs, useSegments } from "expo-router";
+import { Tabs, useRouter, useSegments } from "expo-router";
 import {
   Feather,
   FontAwesome,
