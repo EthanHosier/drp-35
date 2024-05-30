@@ -10,14 +10,13 @@ import { sleep } from "@/utils/utils";
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
   require("@/assets/images/fp522.jpeg"),
-  require("@/assets/images/ccl422.jpeg"),
+  require("@/assets/images/tsy22.jpeg"),
 ];
 
 const NUM_CARDS = 3;
 
 const TinderSwipe = () => {
   const OverlayLabelRight = useCallback(() => {
-    const [numSwipes, setNumSwipes] = useState(0);
     return (
       <View
         style={[
