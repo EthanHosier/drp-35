@@ -1,16 +1,10 @@
 import Colors from "@/constants/Colors";
 import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useProfileStore } from "@/utils/store/profile-store";
 import React from "react";
-
 
 const ViewTab = () => {
   const {
@@ -154,9 +148,9 @@ const ViewTab = () => {
 const styles2 = StyleSheet.create({
   img: {
     marginTop: 20,
-    width: 144,
-    height: 144,
-    borderRadius: 72,
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 12,
     alignSelf: "center",
   },
   attributeContainer: {

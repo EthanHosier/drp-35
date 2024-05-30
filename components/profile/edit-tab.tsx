@@ -2,13 +2,7 @@ import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { useDetails, useProfileStore } from "@/utils/store/profile-store";
@@ -16,7 +10,6 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 
 const EditTab = () => {
   const [progress, setProgress] = useState<number>(0);
