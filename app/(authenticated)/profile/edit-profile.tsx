@@ -58,7 +58,7 @@ const EditTab = () => {
       setGithub(data.github);
       setWebsite(data.website);
       setProgress(
-        Object.values(data).filter((d) => d).length / TEXT_FIELDS.length
+        (Object.values(data).filter((d) => d).length - 1) / TEXT_FIELDS.length
       );
     };
     getDetails();
@@ -70,7 +70,7 @@ const EditTab = () => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        {progress < 1.0 && (
+        {
           <View style={[styles.fieldsContainer, { paddingBottom: 12 }]}>
             <View
               style={{
@@ -105,7 +105,7 @@ const EditTab = () => {
               collaborations!
             </Text>
           </View>
-        )}
+        }
 
         <TouchableOpacity onPress={pickImage}>
           <Image
