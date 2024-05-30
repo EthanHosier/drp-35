@@ -1,13 +1,9 @@
 import React, { useCallback, useRef } from "react";
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  type ImageSourcePropType,
-} from "react-native";
+import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
+import { Image } from "expo-image";
+import Colors from "@/constants/Colors";
 
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
@@ -20,12 +16,43 @@ const TinderSwipe = () => {
 
   const renderCard = useCallback((image: ImageSourcePropType) => {
     return (
-      <View style={styles.renderCardContainer}>
-        <Image
-          source={image}
-          style={styles.renderCardImage}
-          resizeMode="cover"
-        />
+      <View style={[styles.renderCardContainer, { height: "100%" }]}>
+        <Image source={image} style={styles.renderCardImage} resizeMode="cover">
+          <View
+            style={{
+              width: "100%",
+              backgroundColor: Colors.background,
+              alignSelf: "flex-end",
+              position: "absolute",
+              bottom: 0,
+              padding: 16,
+              paddingLeft: 24,
+              flexDirection: "row",
+              gap: 8,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontWeight: "600", fontSize: 20 }}>
+              Ethan Hosier
+            </Text>
+
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <View
+                style={{
+                  backgroundColor: Colors.lightGray,
+                  height: 32,
+                  paddingHorizontal: 12,
+                  borderRadius: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontWeight: "500" }}>🇺🇸 🇫🇷</Text>
+              </View>
+            </View>
+          </View>
+        </Image>
       </View>
     );
   }, []);
@@ -114,11 +141,11 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     borderRadius: 15,
+    position: "relative",
   },
   subContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
   overlayLabelContainer: {
     width: "100%",

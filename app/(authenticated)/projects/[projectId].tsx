@@ -5,43 +5,49 @@ import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
+import { SafeAreaView } from "react-native-safe-area-context";
+import InfoSheet from "@/components/projects/info-sheet";
 
 const ProjectId = () => {
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.background }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Image
-          source="https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg"
-          style={styles.img}
-        />
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 24,
-            color: Colors.dark,
-            marginTop: 16,
-          }}
-        >
-          Learn to code with Amelia
-        </Text>
-        <Text style={{ marginTop: 4, color: Colors.gray }}>
-          Fri, Dec 23, 4:00 PM
-        </Text>
-        <View style={[styles.attributeContainer, { marginTop: 24 }]}>
-          <View style={styles.attributeIconContainer}>
-            <Ionicons name="people-outline" size={24} color="black" />
-          </View>
-          <Text style={styles.attributeText}>4 Group Members</Text>
-        </View>
-        <Text style={{ marginTop: 24 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </Text>
-        <TinderSwipe />
-      </ScrollView>
-    </View>
+    // <View style={{ flex: 1, backgroundColor: Colors.background }}>
+    //   <ScrollView contentContainerStyle={styles.container}>
+    //     <Image
+    //       source="https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg"
+    //       style={styles.img}
+    //     />
+    //     <Text
+    //       style={{
+    //         fontWeight: "bold",
+    //         fontSize: 24,
+    //         color: Colors.dark,
+    //         marginTop: 16,
+    //       }}
+    //     >
+    //       Learn to code with Amelia
+    //     </Text>
+    //     <Text style={{ marginTop: 4, color: Colors.gray }}>
+    //       Fri, Dec 23, 4:00 PM
+    //     </Text>
+    //     <View style={[styles.attributeContainer, { marginTop: 24 }]}>
+    //       <View style={styles.attributeIconContainer}>
+    //         <Ionicons name="people-outline" size={24} color="black" />
+    //       </View>
+    //       <Text style={styles.attributeText}>4 Group Members</Text>
+    //     </View>
+    //     <Text style={{ marginTop: 24 }}>
+    //       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+    //       eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+    //       minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+    //       aliquip ex ea commodo consequat.
+    //     </Text>
+    //     <TinderSwipe />
+    //   </ScrollView>
+    // </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <TinderSwipe />
+      <InfoSheet />
+    </SafeAreaView>
   );
 };
 
