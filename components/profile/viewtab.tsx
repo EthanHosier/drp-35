@@ -105,7 +105,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Feather name="github" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>{"Github"}</Text>
+            <Text style={styles2.attributeText}>Github</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"
@@ -118,7 +118,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Feather name="linkedin" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>{"LinkedIn"}</Text>
+            <Text style={styles2.attributeText}>LinkedIn</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"
@@ -131,7 +131,7 @@ const ViewTab = () => {
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="globe-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>{"Website"}</Text>
+            <Text style={styles2.attributeText}>Website</Text>
             <FontAwesome
               style={{ marginLeft: "auto", marginRight: 16 }}
               name="chevron-right"
