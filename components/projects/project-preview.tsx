@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Project } from "@/app/(authenticated)/projects/discover-projects";
 import { Link } from "expo-router";
-import { Image, ImageBackground } from "expo-image";
+import { Image } from "expo-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { getMonthAbbreviation } from "@/utils/utils";
 import { BlurView } from "expo-blur";
+import { Project } from "@/utils/store/project-store";
 
 interface ProjectPreviewProps {
   project: Project;
@@ -40,7 +40,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                   intensity={20}
                 >
                   <Text style={{ color: "#fff", fontSize: 12 }}>
-                    {getMonthAbbreviation(project.date)}
+                    {getMonthAbbreviation(project.startDate)}
                   </Text>
                   <Text
                     style={{
@@ -50,7 +50,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                       fontSize: 18,
                     }}
                   >
-                    {project.date.getDate()}
+                    {project.startDate.getDate()}
                   </Text>
                 </BlurView>
               </View>
@@ -69,7 +69,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                 marginTop: 1,
               }}
             >
-              {project.groupSize} members
+              {project.minGroupSize}-{project.maxGroupSize} members
             </Text>
           </View>
         </TouchableOpacity>

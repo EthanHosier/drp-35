@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,69 +10,37 @@ import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useProfileStore } from "@/utils/store/profile-store";
-
-export type ProjectTheme = {
-  name: string;
-  color: string;
-};
-
-export type Project = {
-  name: string;
-  date: Date;
-  image: string;
-  groupSize: number;
-  theme: ProjectTheme;
-};
-
-const PROJECTS: Project[] = [
-  {
-    name: "Learn to code with Amelia",
-    date: new Date(),
-    image:
-      "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
-    groupSize: 5,
-    theme: {
-      color: "#339933",
-      name: "Workshops",
-    },
-  },
-  {
-    name: "Guided tour at the museum",
-    date: new Date(),
-    image:
-      "https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg",
-    groupSize: 5,
-    theme: {
-      color: "#FFC0CB",
-      name: "Arts & Culture",
-    },
-  },
-  {
-    name: "Guided tour at the museum",
-    date: new Date(),
-    image:
-      "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
-    groupSize: 5,
-    theme: {
-      color: "#339933",
-      name: "Workshops",
-    },
-  },
-  {
-    name: "Guided tour at the museum",
-    date: new Date(),
-    image:
-      "https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg",
-    groupSize: 5,
-    theme: {
-      color: "#FFC0CB",
-      name: "Arts & Culture",
-    },
-  },
-];
+import { supabase } from "@/utils/supabase";
+import { Project } from "@/utils/store/project-store";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
+
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const getProjects = async () => {
+      const { data, error } = await supabase.from("projects").select();
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      const processedData = data.map((project) => ({
+        ...project,
+        maxGroupSize: project.max_group_size,
+        minGroupSize: project.min_group_size,
+        projectId: project.project_id,
+        startDate: new Date(project.start_date),
+        startTime: project.start_time,
+        image:
+          "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
+      }));
+
+      setProjects(processedData);
+    };
+    getProjects();
+  }, []);
 
   return (
     <View>
@@ -133,7 +101,7 @@ const DiscoverProjects = () => {
                     color: Colors.primary,
                   }}
                 >
-                  There are 25 new projects in your area.
+                  There are {projects.length} new projects in your area.
                 </Text>
               </View>
               <View style={[defaultStyles.textInput, styles.textInputView]}>
@@ -156,7 +124,7 @@ const DiscoverProjects = () => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
               >
-                {PROJECTS.map((project, i) => (
+                {projects.map((project, i) => (
                   <ProjectPreview project={project} key={i} />
                 ))}
               </ScrollView>
