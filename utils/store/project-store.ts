@@ -4,7 +4,6 @@ export type Project = {
   minGroupSize: number;
   name: string;
   projectId: string;
-  startDate: Date;
-  startTime: string;
+  startDateTime: Date;
   image: string;
 };

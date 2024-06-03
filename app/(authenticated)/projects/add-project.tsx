@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import { router } from "expo-router";
 import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 
 const PROJECT_FIELDS = [
   "Name",
@@ -23,14 +22,20 @@ const PROJECT_FIELDS = [
 ];
 
 const AddProjectPage = () => {
-  const [projectFields, setProjectFields] = useState({
-    img: "",
-    name: "",
-    description: "",
-    minGroupSize: 0,
-    maxGroupSize: 0,
-    start: new Date(),
-  });
+  const {
+    image,
+    setImage,
+    name,
+    setName,
+    description,
+    setDescription,
+    minGroupSize,
+    setMinGroupSize,
+    maxGroupSize,
+    setMaxGroupSize,
+    startDateTime,
+    setStartDateTime,
+  } = useProjectFieldsStore();
 
   return (
     <ScrollView style={styles.container}>
@@ -43,14 +48,14 @@ const AddProjectPage = () => {
             justifyContent: "center",
           }}
         >
-          {projectFields.img === "" ? (
+          {image === "" ? (
             <MaterialCommunityIcons
               name="file-image-plus-outline"
               size={64}
               color={Colors.gray}
             />
           ) : (
-            <Image source={projectFields.img} style={styles.image} />
+            <Image source={image} style={styles.image} />
           )}
         </TouchableOpacity>
       </View>
@@ -58,44 +63,30 @@ const AddProjectPage = () => {
       <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
         <ProjectField
           label={PROJECT_FIELDS[0]}
-          value={projectFields["name"]}
-          onChange={(text: string) =>
-            setProjectFields({ ...projectFields, name: text })
-          }
+          value={name}
+          onChange={(text: string) => setName(text)}
         />
         <ProjectField
           label={PROJECT_FIELDS[1]}
-          value={projectFields["description"]}
+          value={description}
           style={{ height: 100 }}
-          onChange={(text: string) =>
-            setProjectFields({ ...projectFields, description: text })
-          }
+          onChange={(text: string) => setDescription(text)}
         />
         <View style={{ flexDirection: "row", gap: 8, width: "100%" }}>
           <View style={{ flex: 1 }}>
             <ProjectField
               label={PROJECT_FIELDS[2]}
               placeholder={"0"}
-              value={projectFields["minGroupSize"].toString()}
-              onChange={(text: string) =>
-                setProjectFields({
-                  ...projectFields,
-                  minGroupSize: parseInt(text),
-                })
-              }
+              value={minGroupSize}
+              onChange={(text: string) => setMinGroupSize(text)}
             />
           </View>
           <View style={{ flex: 1 }}>
             <ProjectField
               placeholder={"0"}
               label={PROJECT_FIELDS[3]}
-              value={projectFields["maxGroupSize"].toString()}
-              onChange={(text: string) =>
-                setProjectFields({
-                  ...projectFields,
-                  maxGroupSize: parseInt(text),
-                })
-              }
+              value={maxGroupSize}
+              onChange={(text: string) => setMaxGroupSize(text)}
             />
           </View>
         </View>
@@ -148,6 +139,8 @@ const ProjectField = ({
           borderRadius: 12,
         }}
         placeholder={placeholder}
+        onChangeText={onChange}
+        value={value}
       />
     </>
   );

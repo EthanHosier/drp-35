@@ -40,7 +40,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                   intensity={20}
                 >
                   <Text style={{ color: "#fff", fontSize: 12 }}>
-                    {getMonthAbbreviation(project.startDate)}
+                    {getMonthAbbreviation(project.startDateTime)}
                   </Text>
                   <Text
                     style={{
@@ -50,7 +50,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                       fontSize: 18,
                     }}
                   >
-                    {project.startDate.getDate()}
+                    {project.startDateTime.getDate()}
                   </Text>
                 </BlurView>
               </View>

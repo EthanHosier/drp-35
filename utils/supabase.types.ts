@@ -57,8 +57,7 @@ export type Database = {
           min_group_size: number;
           name: string;
           project_id: string;
-          start_date: string;
-          start_time: string;
+          start_date_time: string;
         };
         Insert: {
           description?: string;
@@ -66,8 +65,7 @@ export type Database = {
           min_group_size?: number;
           name: string;
           project_id?: string;
-          start_date: string;
-          start_time: string;
+          start_date_time: string;
         };
         Update: {
           description?: string;
@@ -75,8 +73,7 @@ export type Database = {
           min_group_size?: number;
           name?: string;
           project_id?: string;
-          start_date?: string;
-          start_time?: string;
+          start_date_time?: string;
         };
         Relationships: [];
       };

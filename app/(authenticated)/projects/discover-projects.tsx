@@ -31,8 +31,7 @@ const DiscoverProjects = () => {
         maxGroupSize: project.max_group_size,
         minGroupSize: project.min_group_size,
         projectId: project.project_id,
-        startDate: new Date(project.start_date),
-        startTime: project.start_time,
+        startDateTime: new Date(project.start_date_time),
         image:
           "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
       }));
