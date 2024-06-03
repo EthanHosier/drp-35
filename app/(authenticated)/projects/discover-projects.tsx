@@ -11,12 +11,12 @@ import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
-import { Project } from "@/utils/store/project-store";
+import { Project, useProjectsStore } from "@/utils/store/projects-store";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
 
-  const [projects, setProjects] = useState<Project[]>([]);
+  const { projects, setProjects } = useProjectsStore();
 
   useEffect(() => {
     const getProjects = async () => {

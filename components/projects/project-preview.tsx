@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { getMonthAbbreviation } from "@/utils/utils";
 import { BlurView } from "expo-blur";
-import { Project } from "@/utils/store/project-store";
+import { Project } from "@/utils/store/projects-store";
 
 interface ProjectPreviewProps {
   project: Project;

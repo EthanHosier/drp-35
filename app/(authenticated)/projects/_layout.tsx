@@ -5,6 +5,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
+import { useProjectsStore } from "@/utils/store/projects-store";
 
 const Layout = () => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const Layout = () => {
     maxGroupSize,
     startDateTime,
   } = useProjectFieldsStore();
+
+  const { projects, addProject } = useProjectsStore();
 
   const checkProjectFields: () => string = () => {
     if (!name) return "Name must not be empty";
@@ -33,18 +36,35 @@ const Layout = () => {
       alert(err);
       return;
     }
+    const min = parseInt(minGroupSize);
+    const max = parseInt(maxGroupSize);
 
-    const { error } = await supabase.from("projects").insert({
-      name,
-      description,
-      min_group_size: parseInt(minGroupSize),
-      max_group_size: parseInt(maxGroupSize),
-      start_date_time: startDateTime.toISOString(),
-    });
+    const { data, error } = await supabase
+      .from("projects")
+      .insert({
+        name,
+        description,
+        min_group_size: min,
+        max_group_size: max,
+        start_date_time: startDateTime.toISOString(),
+      })
+      .select("project_id")
+      .single();
     if (error) {
       alert(error.message);
       return;
     }
+
+    addProject({
+      name,
+      description,
+      minGroupSize: min,
+      maxGroupSize: max,
+      startDateTime,
+      image:
+        "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
+      projectId: data.project_id,
+    });
     router.back();
   };
 
