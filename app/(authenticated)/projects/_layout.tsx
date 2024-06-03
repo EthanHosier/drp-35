@@ -17,7 +17,23 @@ const Layout = () => {
     startDateTime,
   } = useProjectFieldsStore();
 
+  const checkProjectFields: () => string = () => {
+    if (!name) return "Name must not be empty";
+    const min = parseInt(minGroupSize);
+    const max = parseInt(maxGroupSize);
+    if (Number.isNaN(min) || Number.isNaN(max))
+      return "Group size must be an integer";
+    if (min > max) return "Max group size must not be less than min group size";
+    return "";
+  };
+
   const saveProject = async () => {
+    const err = checkProjectFields();
+    if (err) {
+      alert(err);
+      return;
+    }
+
     const { error } = await supabase.from("projects").insert({
       name,
       description,
