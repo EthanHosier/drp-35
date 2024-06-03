@@ -95,14 +95,11 @@ const AddProjectPage = () => {
         <Text style={styles.fieldLabel}>Start Date & Time</Text>
         <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
           <RNDateTimePicker
-            onChange={() => {}}
-            value={new Date()}
-            style={{ marginLeft: -8 }}
-          />
-          <RNDateTimePicker
-            onChange={() => {}}
-            value={new Date()}
-            mode="time"
+            onChange={(_, date) => {
+              setStartDateTime(date!);
+            }}
+            value={startDateTime}
+            mode="datetime"
             style={{ marginLeft: -10 }}
           />
         </View>
