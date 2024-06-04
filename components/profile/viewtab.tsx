@@ -8,6 +8,7 @@ import React from "react";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
 import { openBrowserAsync } from "expo-web-browser";
+import ExternalLink from "./external-link";
 
 const ViewTab = () => {
   const {
@@ -138,57 +139,27 @@ const ViewTab = () => {
 
         <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
           {github && (
-            <TouchableOpacity
-              style={styles2.attributeContainer}
-              onPress={() => openBrowserAsync(github)}
-            >
-              <View style={styles2.attributeIconContainer}>
-                <Feather name="github" size={24} color="black" />
-              </View>
-              <Text style={styles2.attributeText}>Github</Text>
-              <FontAwesome
-                style={{ marginLeft: "auto", marginRight: 16 }}
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-              />
-            </TouchableOpacity>
+            <ExternalLink
+              display_name="GitHub"
+              url={github}
+              icon={<Feather name="github" size={24} color="black" />}
+            />
           )}
 
           {linkedin && (
-            <TouchableOpacity
-              style={styles2.attributeContainer}
-              onPress={() => openBrowserAsync(linkedin)}
-            >
-              <View style={styles2.attributeIconContainer}>
-                <Feather name="linkedin" size={24} color="black" />
-              </View>
-              <Text style={styles2.attributeText}>LinkedIn</Text>
-              <FontAwesome
-                style={{ marginLeft: "auto", marginRight: 16 }}
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-              />
-            </TouchableOpacity>
+            <ExternalLink
+              display_name="LinkedIn"
+              url={linkedin}
+              icon={<Feather name="linkedin" size={24} color="black" />}
+            />
           )}
 
           {website && (
-            <TouchableOpacity
-              style={styles2.attributeContainer}
-              onPress={() => openBrowserAsync(website)}
-            >
-              <View style={styles2.attributeIconContainer}>
-                <Ionicons name="globe-outline" size={24} color="black" />
-              </View>
-              <Text style={styles2.attributeText}>Website</Text>
-              <FontAwesome
-                style={{ marginLeft: "auto", marginRight: 16 }}
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-              />
-            </TouchableOpacity>
+            <ExternalLink
+              display_name="Website"
+              url={website}
+              icon={<Ionicons name="globe-outline" size={24} color="black" />}
+            />
           )}
         </View>
       </ScrollView>
