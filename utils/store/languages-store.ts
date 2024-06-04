@@ -7,7 +7,7 @@ type LanguagesStore = {
   removeLanguage: (language: string) => void;
 };
 
-export const uselanguagesStore = create<LanguagesStore>((set) => ({
+export const useLanguagesStore = create<LanguagesStore>((set) => ({
   languages: [],
   setLanguages: (languages: string[]) => {
     set({ languages });

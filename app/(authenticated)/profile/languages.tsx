@@ -5,17 +5,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Badge from "@/components/profile/badge";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { LANGUAGES } from "@/constants/Languages";
-
-const SELECTED = ["🇬🇧 English"];
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const Languages = () => {
+  const [search, setSearch] = useState("");
+
+  const { languages, addLanguage, removeLanguage } = useLanguagesStore();
+
+  const MAX_LANGUAGES = 5;
+
   return (
     <View style={styles.container}>
       <View
@@ -27,7 +32,9 @@ const Languages = () => {
         }}
       >
         <Text style={{ fontSize: 32, fontWeight: "bold" }}>Languages</Text>
-        <Text style={{ color: Colors.gray }}>1 of 5</Text>
+        <Text style={{ color: Colors.gray }}>
+          {languages.length} of {MAX_LANGUAGES}
+        </Text>
       </View>
       <View style={{ height: 48 }}>
         <ScrollView
@@ -35,9 +42,9 @@ const Languages = () => {
           style={{ marginTop: 8 }}
           showsHorizontalScrollIndicator={false}
         >
-          {SELECTED.map((skill, i) => (
+          {languages.map((language, i) => (
             <TouchableOpacity
-              key={skill}
+              key={language}
               style={{
                 backgroundColor: Colors.primary,
                 padding: 8,
@@ -48,8 +55,11 @@ const Languages = () => {
                 alignItems: "center",
                 marginLeft: i == 0 ? 16 : 0,
               }}
+              onPress={() => {
+                removeLanguage(language);
+              }}
             >
-              <Text style={{ color: "white", fontSize: 12 }}>{skill}</Text>
+              <Text style={{ color: "white", fontSize: 12 }}>{language}</Text>
               <FontAwesome
                 name="times"
                 size={12}
@@ -76,7 +86,11 @@ const Languages = () => {
           ]}
         >
           <Ionicons name="search" size={16} color={Colors.gray} />
-          <TextInput placeholder="Search" style={{ height: "100%" }} />
+          <TextInput
+            placeholder="Search"
+            style={{ height: "100%", flex: 1 }}
+            onChangeText={(s) => setSearch(s.toLowerCase())}
+          />
         </View>
 
         <ScrollView
@@ -90,8 +104,25 @@ const Languages = () => {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {LANGUAGES.map((e, i) => (
-            <Badge text={e} key={i} selected={SELECTED.includes(e)} />
+          {LANGUAGES.filter((language) =>
+            language.toLowerCase().includes(search)
+          ).map((e, i) => (
+            <Badge
+              text={e}
+              key={i}
+              selected={languages.includes(e)}
+              onPress={() => {
+                if (languages.includes(e)) {
+                  removeLanguage(e);
+                } else if (languages.length >= MAX_LANGUAGES) {
+                  alert(
+                    `A maximum of ${MAX_LANGUAGES} languages can be selected`
+                  );
+                } else {
+                  addLanguage(e);
+                }
+              }}
+            />
           ))}
         </ScrollView>
       </View>
