@@ -8,6 +8,7 @@ import { useUserIdStore } from "@/utils/store/user-id-store";
 import { decode } from "base64-arraybuffer";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useSkillsStore } from "@/utils/store/skills-store";
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const Layout = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const Layout = () => {
     useProfileStore();
 
   const skills = useSkillsStore((state) => state.skills);
+  const languages = useLanguagesStore((state) => state.languages);
 
   useEffect(() => {
     const getImage = async () => {
@@ -68,6 +70,29 @@ const Layout = () => {
 
     if (skillError) {
       alert(skillError.message);
+      return;
+    }
+
+    const { error: deleteLanguageError } = await supabase
+      .from("user_languages")
+      .delete()
+      .eq("user_id", userId);
+    if (deleteLanguageError) {
+      alert(deleteLanguageError.message);
+      return;
+    }
+
+    const { error: languageError } = await supabase
+      .from("user_languages")
+      .upsert(
+        languages.map((language) => ({
+          user_id: userId,
+          language_name: language,
+        }))
+      );
+
+    if (languageError) {
+      alert(languageError.message);
       return;
     }
 

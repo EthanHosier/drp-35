@@ -12,6 +12,7 @@ import { supabase } from "@/utils/supabase";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { useSkillsStore } from "@/utils/store/skills-store";
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const EditTab = () => {
   const [progress, setProgress] = useState<number>(0);
@@ -32,6 +33,8 @@ const EditTab = () => {
   const userId = useUserIdStore((state) => state.userId);
   const skills = useSkillsStore((state) => state.skills);
   const setSkills = useSkillsStore((state) => state.setSkills);
+  const languages = useLanguagesStore((state) => state.languages);
+  const setLanguages = useLanguagesStore((state) => state.setLanguages);
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -69,6 +72,16 @@ const EditTab = () => {
       setSkills(data.map((skill) => skill.skill_name));
     };
     getSkills();
+
+    const getLanguages = async () => {
+      const { data, error } = await supabase
+        .from("user_languages")
+        .select("language_name")
+        .eq("user_id", userId);
+      if (error) return;
+      setLanguages(data.map((language) => language.language_name));
+    };
+    getLanguages();
   }, []);
 
   return (
@@ -200,7 +213,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                🇬🇧 English
+                {languages.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>

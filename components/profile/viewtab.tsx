@@ -4,9 +4,9 @@ import { Image } from "expo-image";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useProfileStore } from "@/utils/store/profile-store";
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase";
+import React from "react";
 import { useSkillsStore } from "@/utils/store/skills-store";
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const ViewTab = () => {
   const {
@@ -21,21 +21,7 @@ const ViewTab = () => {
   } = useProfileStore();
 
   const { skills } = useSkillsStore();
-  const [languages, setLanguages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const getLanguages = async () => {
-      const { data, error } = await supabase
-        .from("user_languages")
-        .select("language_name");
-      if (error) {
-        alert(error.message);
-        return;
-      }
-      setLanguages(data.map((language) => language.language_name));
-    };
-    getLanguages();
-  }, []);
+  const { languages } = useLanguagesStore();
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
