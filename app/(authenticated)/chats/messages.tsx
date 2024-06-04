@@ -22,6 +22,7 @@ import {
   TouchableOpacity,
   PanGestureHandlerGestureEvent,
   ScrollView,
+  FlatList,
 } from "react-native-gesture-handler";
 import ChatPreview from "@/components/chats/chat-preview";
 import Colors from "@/constants/Colors";
@@ -146,6 +147,7 @@ const CHATS: ChatPreview[] = [
 
 export default function MessagesList() {
   const [search, setSearch] = useState("");
+  const [filteredChats, setFilteredChats] = useState(CHATS);
 
   function onRemove() {
     Alert.alert("Removed");
@@ -155,7 +157,7 @@ export default function MessagesList() {
     <>
       <Stack.Screen options={{ title: "Messages" }} />
       <View style={[s.container]}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
+        {/* <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
           <View style={{ paddingHorizontal: 16 }}>
             <TextInput
               style={[
@@ -182,10 +184,53 @@ export default function MessagesList() {
             </Text>
           </View>
 
-          {CHATS.filter((chat) => chat.name.toLowerCase().includes(search)).map((chat, i) => (
-            <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
-          ))}
-        </ScrollView>
+          {CHATS.filter((chat) => chat.name.toLowerCase().includes(search)).map(
+            (chat, i) => (
+              <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
+            )
+          )}
+        </ScrollView> */}
+        <FlatList
+          ListHeaderComponent={
+            <View style={{ paddingHorizontal: 16 }}>
+              <TextInput
+                style={[
+                  defaultStyles.textInput,
+                  {
+                    marginTop: Platform.OS === "android" ? 8 : 164,
+                  },
+                ]}
+                placeholderTextColor={Colors.gray}
+                placeholder="Search"
+                onChangeText={(e) => {
+                  setSearch(e);
+                  setFilteredChats(
+                    CHATS.filter((chat) =>
+                      chat.name.toLowerCase().includes(e.toLowerCase())
+                    )
+                  );
+                }}
+              />
+              <Text
+                style={{
+                  marginTop: 4,
+                  marginBottom: 8,
+                  fontWeight: "600",
+                  color: Colors.gray,
+                }}
+              >
+                {search.length > 0
+                  ? `Search results for "${search}"`
+                  : "All messages"}
+              </Text>
+            </View>
+          }
+          data={filteredChats}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <ListItem id={index} item={item} onRemove={onRemove} />
+          )}
+        />
       </View>
     </>
   );
