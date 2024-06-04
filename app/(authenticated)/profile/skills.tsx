@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
@@ -113,7 +113,6 @@ const SKILLS = [
 ];
 
 const Skills = () => {
-
   const [search, setSearch] = useState("");
 
   return (
@@ -176,7 +175,11 @@ const Skills = () => {
           ]}
         >
           <Ionicons name="search" size={16} color={Colors.gray} />
-          <TextInput placeholder="Search" style={{ height: "100%" }} onChangeText={(s) => setSearch(s.toLowerCase())}/>
+          <TextInput
+            placeholder="Search"
+            style={{ height: "100%" }}
+            onChangeText={(s) => setSearch(s.toLowerCase())}
+          />
         </View>
 
         <ScrollView
@@ -190,9 +193,11 @@ const Skills = () => {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {SKILLS.filter((skill) => skill.toLowerCase().includes(search)).map((e, i) => (
-            <Badge text={e} key={i} selected={SELECTED.includes(e)} />
-          ))}
+          {SKILLS.filter((skill) => skill.toLowerCase().includes(search)).map(
+            (e, i) => (
+              <Badge text={e} key={i} selected={SELECTED.includes(e)} />
+            )
+          )}
         </ScrollView>
       </View>
     </View>
