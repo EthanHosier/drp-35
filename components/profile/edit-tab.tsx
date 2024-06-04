@@ -167,6 +167,30 @@ const EditTab = () => {
             </View>
           </TouchableOpacity>
         </Link>
+        <Link
+          asChild
+          href="/(authenticated)/profile/languages"
+          style={[
+            styles.fieldsContainer,
+            { paddingBottom: 20, paddingRight: 32 },
+          ]}
+        >
+          <TouchableOpacity>
+            <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
+              Languages
+            </Text>
+            <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.skillsText}
+              >
+                🇬🇧 English
+              </Text>
+              <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
+            </View>
+          </TouchableOpacity>
+        </Link>
       </KeyboardAwareScrollView>
     </View>
   );

@@ -100,6 +100,38 @@ const ViewTab = () => {
           )}
         </ScrollView>
 
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "600",
+            marginTop: 24,
+            marginLeft: 24,
+          }}
+        >
+          I speak
+        </Text>
+        <ScrollView
+          horizontal
+          contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {["🇬🇧 English", "🇫🇷 French"].map((skill, i) => (
+            <View
+              key={i}
+              style={{
+                backgroundColor: Colors.lightGray,
+                height: 32,
+                paddingHorizontal: 12,
+                borderRadius: 16,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontWeight: "500" }}>{skill}</Text>
+            </View>
+          ))}
+        </ScrollView>
+
         <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
           <TouchableOpacity style={styles2.attributeContainer}>
             <View style={styles2.attributeIconContainer}>
