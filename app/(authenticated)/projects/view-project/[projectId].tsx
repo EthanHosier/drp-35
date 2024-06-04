@@ -2,11 +2,15 @@ import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import React from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
+import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
+import { SafeAreaView } from "react-native-safe-area-context";
 import InfoSheet from "@/components/projects/info-sheet";
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
+import { defaultStyles } from "@/constants/DefaultStyles";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { sleep } from "@/utils/utils";
 
 const InfoTab = () => {

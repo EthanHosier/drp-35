@@ -6,7 +6,6 @@ import {
   Alert,
   Text,
   TextInput,
-  TouchableOpacity,
   Platform,
 } from "react-native";
 import Animated, {
@@ -20,6 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 import {
   PanGestureHandler,
+  TouchableOpacity,
   PanGestureHandlerGestureEvent,
   ScrollView,
 } from "react-native-gesture-handler";
@@ -182,11 +182,9 @@ export default function MessagesList() {
             </Text>
           </View>
 
-          {CHATS.filter((chat) => chat.name.toLowerCase().includes(search)).map(
-            (chat, i) => (
-              <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
-            )
-          )}
+          {CHATS.filter((chat) => chat.name.toLowerCase().includes(search)).map((chat, i) => (
+            <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
+          ))}
         </ScrollView>
       </View>
     </>

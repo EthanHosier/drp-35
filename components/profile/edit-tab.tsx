@@ -2,14 +2,8 @@ import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { TEXT_FIELDS } from "@/components/profile/profile-card";
 import { useDetails, useProfileStore } from "@/utils/store/profile-store";
 import * as ImagePicker from "expo-image-picker";

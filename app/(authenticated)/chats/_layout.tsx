@@ -1,7 +1,8 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 import { Image } from "expo-image";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Layout = () => {
   return (
