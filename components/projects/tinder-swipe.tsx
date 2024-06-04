@@ -1,11 +1,20 @@
-import React, { useCallback, useRef, useState } from "react";
-import { StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  type ImageSourcePropType,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { sleep } from "@/utils/utils";
+import Dots from "react-native-dots-pagination";
+import { BlurView } from "expo-blur";
 
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
@@ -16,6 +25,19 @@ const IMAGES: ImageSourcePropType[] = [
 const NUM_CARDS = 3;
 
 const TinderSwipe = () => {
+  const [index, setIndex] = useState(0);
+
+  const handleTap = (xIndex: number, screenWidth: number) => {
+    const quarterWidth = screenWidth / 4;
+
+    if (xIndex >= 0 && xIndex < quarterWidth) {
+      setIndex((i) => Math.max(0, i - 1));
+    } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
+      setIndex((i) => Math.min(i + 1, IMAGES.length - 1));
+    }
+  };
+  const { width } = Dimensions.get("window");
+
   const OverlayLabelRight = useCallback(() => {
     return (
       <View
@@ -36,48 +58,88 @@ const TinderSwipe = () => {
 
   const ref = useRef<SwiperCardRefType>();
 
-  const renderCard = useCallback((image: ImageSourcePropType) => {
+  useEffect(() => console.log(index), [index]);
+
+  const renderCard = (image: ImageSourcePropType) => {
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
-        <Image source={image} style={styles.renderCardImage} resizeMode="cover">
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: Colors.background,
-              alignSelf: "flex-end",
-              position: "absolute",
-              bottom: 0,
-              padding: 16,
-              paddingLeft: 24,
-              flexDirection: "row",
-              gap: 8,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
+        <TouchableOpacity
+          onPress={(e) => {
+            handleTap(e.nativeEvent.locationX, width);
+          }}
+          activeOpacity={1}
+        >
+          <Image
+            source={IMAGES[index]}
+            style={styles.renderCardImage}
+            resizeMode="cover"
           >
-            <Text style={{ fontWeight: "600", fontSize: 20 }}>
-              Ethan Hosier
-            </Text>
+            <View
+              style={{
+                height: 8,
+                gap: 8,
+                flexDirection: "row",
+                marginTop: 8,
+                paddingHorizontal: 12,
+              }}
+            >
+              {Array.from({ length: NUM_CARDS }).map((_, i) => (
+                <View
+                  style={{ flex: 1, borderRadius: 4, overflow: "hidden" }}
+                  key={i}
+                >
+                  <BlurView
+                    tint="extraLight"
+                    style={{
+                      flex: 1,
+                      backgroundColor: `rgba(255,255,255,${
+                        index === i ? 0.9 : 0.3
+                      })`,
+                    }}
+                    intensity={80}
+                  />
+                </View>
+              ))}
+            </View>
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: Colors.background,
+                alignSelf: "flex-end",
+                position: "absolute",
+                bottom: 0,
+                padding: 16,
+                paddingLeft: 24,
+                flexDirection: "row",
+                gap: 8,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ fontWeight: "600", fontSize: 20 }}>
+                Ethan Hosier
+              </Text>
 
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <View
-                style={{
-                  backgroundColor: Colors.lightGray,
-                  height: 32,
-                  paddingHorizontal: 12,
-                  borderRadius: 16,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontWeight: "500" }}>🇺🇸 🇫🇷</Text>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <View
+                  style={{
+                    backgroundColor: Colors.lightGray,
+                    height: 32,
+                    paddingHorizontal: 12,
+                    borderRadius: 16,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontWeight: "500" }}>🇺🇸 🇫🇷</Text>
+                </View>
               </View>
             </View>
-          </View>
-        </Image>
+          </Image>
+        </TouchableOpacity>
       </View>
     );
-  }, []);
+  };
 
   return (
     <View style={[styles.subContainer, { width: "100%", height: 600 }]}>
