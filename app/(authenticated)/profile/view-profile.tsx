@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { useProfileStore } from "@/utils/store/profile-store";

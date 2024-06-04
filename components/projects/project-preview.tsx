@@ -1,8 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { getMonthAbbreviation } from "@/utils/utils";

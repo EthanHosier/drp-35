@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useRef } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import Colors from "@/constants/Colors";
 import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 
 const InfoSheet = () => {
   // ref
