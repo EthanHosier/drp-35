@@ -6,6 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useProfileStore } from "@/utils/store/profile-store";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
+import { useSkillsStore } from "@/utils/store/skills-store";
 
 const ViewTab = () => {
   const {
@@ -19,22 +20,10 @@ const ViewTab = () => {
     website,
   } = useProfileStore();
 
-  const [skills, setSkills] = useState<string[]>([]);
+  const { skills } = useSkillsStore();
   const [languages, setLanguages] = useState<string[]>([]);
 
   useEffect(() => {
-    const getSkills = async () => {
-      const { data, error } = await supabase
-        .from("user_skills")
-        .select("skill_name");
-      if (error) {
-        alert(error.message);
-        return;
-      }
-      setSkills(data.map((skill) => skill.skill_name));
-    };
-    getSkills();
-
     const getLanguages = async () => {
       const { data, error } = await supabase
         .from("user_languages")

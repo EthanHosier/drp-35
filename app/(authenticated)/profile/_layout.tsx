@@ -7,6 +7,7 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { decode } from "base64-arraybuffer";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useSkillsStore } from "@/utils/store/skills-store";
 
 const Layout = () => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const Layout = () => {
   const setImageUri = useProfileStore((state) => state.setImageUri);
   const { fullName, pronouns, university, course, linkedin, github, website } =
     useProfileStore();
+
+  const skills = useSkillsStore((state) => state.skills);
 
   useEffect(() => {
     const getImage = async () => {
@@ -45,7 +48,28 @@ const Layout = () => {
       website,
     });
 
-    if (error) alert(error.message);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const { error: deleteError } = await supabase
+      .from("user_skills")
+      .delete()
+      .eq("user_id", userId);
+    if (deleteError) {
+      alert(deleteError.message);
+      return;
+    }
+
+    const { error: skillError } = await supabase
+      .from("user_skills")
+      .upsert(skills.map((skill) => ({ user_id: userId, skill_name: skill })));
+
+    if (skillError) {
+      alert(skillError.message);
+      return;
+    }
 
     if (imageBase64 === "") {
       router.back();

@@ -10,6 +10,8 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useUserIdStore } from "@/utils/store/user-id-store";
+import { useSkillsStore } from "@/utils/store/skills-store";
 
 const EditTab = () => {
   const [progress, setProgress] = useState<number>(0);
@@ -26,6 +28,10 @@ const EditTab = () => {
     setWebsite,
     setDetails,
   } = useProfileStore();
+
+  const userId = useUserIdStore((state) => state.userId);
+  const skills = useSkillsStore((state) => state.skills);
+  const setSkills = useSkillsStore((state) => state.setSkills);
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -53,6 +59,16 @@ const EditTab = () => {
       );
     };
     getDetails();
+
+    const getSkills = async () => {
+      const { data, error } = await supabase
+        .from("user_skills")
+        .select("skill_name")
+        .eq("user_id", userId);
+      if (error) return;
+      setSkills(data.map((skill) => skill.skill_name));
+    };
+    getSkills();
   }, []);
 
   return (
@@ -160,8 +176,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                Java, C, Python, JavaScript, HTML, CSS, SQL, TypeScript, React,
-                Node.js
+                {skills.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>

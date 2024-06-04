@@ -6,11 +6,10 @@ import Colors from "@/constants/Colors";
 interface BadgeProps {
   text: string;
   selected: boolean;
+  onPress: () => void;
 }
 
-const Badge: React.FC<BadgeProps> = ({ text, selected: wasSelected }) => {
-  const [selected, setSelected] = useState(wasSelected);
-
+const Badge: React.FC<BadgeProps> = ({ text, selected, onPress }) => {
   return (
     <View>
       <TouchableOpacity
@@ -24,7 +23,7 @@ const Badge: React.FC<BadgeProps> = ({ text, selected: wasSelected }) => {
             paddingHorizontal: 8,
           },
         ]}
-        onPress={() => setSelected(!selected)}
+        onPress={() => onPress()}
         activeOpacity={0.8}
       >
         <Text

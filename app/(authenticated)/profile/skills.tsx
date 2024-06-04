@@ -11,109 +11,15 @@ import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Badge from "@/components/profile/badge";
 import { defaultStyles } from "@/constants/DefaultStyles";
-
-const SELECTED = ["JavaScript", "Python", "Java", "HTML", "CSS"];
-const SKILLS = [
-  "JavaScript",
-  "Python",
-  "Java",
-  "HTML",
-  "CSS",
-  "SQL",
-  "TypeScript",
-  "React",
-  "Node.js",
-  "C#",
-  "C++",
-  "C",
-  "PHP",
-  "Ruby",
-  "Swift",
-  "Kotlin",
-  "Go",
-  "React Native",
-  "Angular",
-  "Vue",
-  "Express",
-  "MongoDB",
-  "Flutter",
-  "Dart",
-  "Svelte",
-  "Rust",
-  "Assembly",
-  "Perl",
-  "Scala",
-  "Haskell",
-  "Lua",
-  "Objective-C",
-  "R",
-  "Erlang",
-  "Clojure",
-  "Groovy",
-  "Scheme",
-  "F#",
-  "COBOL",
-  "VB.NET",
-  "Pascal",
-  "Ada",
-  "Lisp",
-  "Fortran",
-  "Prolog",
-  "Delphi",
-  "PowerShell",
-  "Matlab",
-  "LabVIEW",
-  "Verilog",
-  "VHDL",
-  "PL/SQL",
-  "Transact-SQL",
-  "ABAP",
-  "Shell Scripting",
-  "Batch Scripting",
-  "Korn Shell",
-  "Bash",
-  "AWK",
-  "Docker",
-  "Kubernetes",
-  "Ansible",
-  "Chef",
-  "Puppet",
-  "Terraform",
-  "Jenkins",
-  "Git",
-  "SVN",
-  "Mercurial",
-  "Perforce",
-  "GraphQL",
-  "RESTful APIs",
-  "SOAP",
-  "gRPC",
-  "WebSockets",
-  "OAuth",
-  "JWT",
-  "OAuth2",
-  "OpenID Connect",
-  "OAuth2.0",
-  "OpenID",
-  "LDAP",
-  "OAuth 2.0",
-  "OAuth 1.0a",
-  "Basic Auth",
-  "Digest Auth",
-  "SCRAM",
-  "Kerberos",
-  "NTLM",
-  "SAML",
-  "WS-Security",
-  "XACML",
-  "CORS",
-  "CSRF",
-  "XSS",
-  "SQL Injection",
-];
+import { SKILLS } from "@/constants/Skills";
+import { useSkillsStore } from "@/utils/store/skills-store";
 
 const Skills = () => {
   const [search, setSearch] = useState("");
+
+  const { skills, addSkill, removeSkill } = useSkillsStore();
+
+  const MAX_SKILLS = 10;
 
   return (
     <View style={styles.container}>
@@ -126,7 +32,9 @@ const Skills = () => {
         }}
       >
         <Text style={{ fontSize: 32, fontWeight: "bold" }}>Skills</Text>
-        <Text style={{ color: Colors.gray }}>5 of 10</Text>
+        <Text style={{ color: Colors.gray }}>
+          {skills.length} of {MAX_SKILLS}
+        </Text>
       </View>
       <View style={{ height: 48 }}>
         <ScrollView
@@ -134,7 +42,7 @@ const Skills = () => {
           style={{ marginTop: 8 }}
           showsHorizontalScrollIndicator={false}
         >
-          {SELECTED.map((skill, i) => (
+          {skills.map((skill, i) => (
             <TouchableOpacity
               key={skill}
               style={{
@@ -146,6 +54,9 @@ const Skills = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 marginLeft: i == 0 ? 16 : 0,
+              }}
+              onPress={() => {
+                removeSkill(skill);
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>{skill}</Text>
@@ -177,7 +88,7 @@ const Skills = () => {
           <Ionicons name="search" size={16} color={Colors.gray} />
           <TextInput
             placeholder="Search"
-            style={{ height: "100%" }}
+            style={{ height: "100%", flex: 1 }}
             onChangeText={(s) => setSearch(s.toLowerCase())}
           />
         </View>
@@ -195,7 +106,20 @@ const Skills = () => {
         >
           {SKILLS.filter((skill) => skill.toLowerCase().includes(search)).map(
             (e, i) => (
-              <Badge text={e} key={i} selected={SELECTED.includes(e)} />
+              <Badge
+                text={e}
+                key={i}
+                selected={skills.includes(e)}
+                onPress={() => {
+                  if (skills.includes(e)) {
+                    removeSkill(e);
+                  } else if (skills.length >= MAX_SKILLS) {
+                    alert(`A maximum of ${MAX_SKILLS} skills can be selected`);
+                  } else {
+                    addSkill(e);
+                  }
+                }}
+              />
             )
           )}
         </ScrollView>
