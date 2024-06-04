@@ -4,7 +4,8 @@ import { Image } from "expo-image";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useProfileStore } from "@/utils/store/profile-store";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase";
 
 const ViewTab = () => {
   const {
@@ -17,6 +18,35 @@ const ViewTab = () => {
     github,
     website,
   } = useProfileStore();
+
+  const [skills, setSkills] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getSkills = async () => {
+      const { data, error } = await supabase
+        .from("user_skills")
+        .select("skill_name");
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      setSkills(data.map((skill) => skill.skill_name));
+    };
+    getSkills();
+
+    const getLanguages = async () => {
+      const { data, error } = await supabase
+        .from("user_languages")
+        .select("language_name");
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      setLanguages(data.map((language) => language.language_name));
+    };
+    getLanguages();
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -81,23 +111,21 @@ const ViewTab = () => {
           contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
           showsHorizontalScrollIndicator={false}
         >
-          {["Java", "Python", "JavaScript", "React", "Node.js"].map(
-            (skill, i) => (
-              <View
-                key={i}
-                style={{
-                  backgroundColor: Colors.lightGray,
-                  height: 32,
-                  paddingHorizontal: 12,
-                  borderRadius: 16,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontWeight: "500" }}>{skill}</Text>
-              </View>
-            )
-          )}
+          {skills.map((skill, i) => (
+            <View
+              key={i}
+              style={{
+                backgroundColor: Colors.lightGray,
+                height: 32,
+                paddingHorizontal: 12,
+                borderRadius: 16,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontWeight: "500" }}>{skill}</Text>
+            </View>
+          ))}
         </ScrollView>
 
         <Text
@@ -115,7 +143,7 @@ const ViewTab = () => {
           contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
           showsHorizontalScrollIndicator={false}
         >
-          {["🇬🇧 English", "🇫🇷 French"].map((skill, i) => (
+          {languages.map((language, i) => (
             <View
               key={i}
               style={{
@@ -127,7 +155,7 @@ const ViewTab = () => {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ fontWeight: "500" }}>{skill}</Text>
+              <Text style={{ fontWeight: "500" }}>{language}</Text>
             </View>
           ))}
         </ScrollView>

@@ -9,6 +9,62 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      group_members: {
+        Row: {
+          group_id: string;
+          user_id: string;
+        };
+        Insert: {
+          group_id: string;
+          user_id: string;
+        };
+        Update: {
+          group_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "groups";
+            referencedColumns: ["group_id"];
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      groups: {
+        Row: {
+          description: string;
+          group_id: string;
+          project_id: string;
+        };
+        Insert: {
+          description?: string;
+          group_id?: string;
+          project_id?: string;
+        };
+        Update: {
+          description?: string;
+          group_id?: string;
+          project_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "groups_project_id_fkey";
+            columns: ["project_id"];
+            isOneToOne: false;
+            referencedRelation: "projects";
+            referencedColumns: ["project_id"];
+          }
+        ];
+      };
       profiles: {
         Row: {
           course: string;
@@ -76,6 +132,52 @@ export type Database = {
           start_date_time?: string;
         };
         Relationships: [];
+      };
+      user_languages: {
+        Row: {
+          language_name: string;
+          user_id: string;
+        };
+        Insert: {
+          language_name: string;
+          user_id: string;
+        };
+        Update: {
+          language_name?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_languages_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_skills: {
+        Row: {
+          skill_name: string;
+          user_id: string;
+        };
+        Insert: {
+          skill_name: string;
+          user_id: string;
+        };
+        Update: {
+          skill_name?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_skills_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: {
