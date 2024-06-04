@@ -119,40 +119,43 @@ const ViewProfile = () => {
           </TouchableOpacity>
         </View>
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
-          My Projects
+          My Groups
         </Text>
         {PROJECTS.map((project, i) => (
-          <TouchableOpacity
-            style={{
-              paddingTop: i == 0 ? 16 : 12,
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: Colors.lightGray,
-              paddingVertical: 8,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-            key={i}
-          >
-            <Image
-              source={project.image}
-              style={{ width: 64, height: 64, borderRadius: 32 }}
-            />
-            <View style={{ marginLeft: 16 }}>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                {project.title}
-              </Text>
-              <Text style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}>
-                {project.teamMembersGot}/{project.teamMembersNeeded} team
-                members
-              </Text>
-            </View>
-            <FontAwesome
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-              style={{ marginLeft: "auto" }}
-            />
-          </TouchableOpacity>
+          <Link asChild href="/(authenticated)/profile/1" key={i}>
+            <TouchableOpacity
+              style={{
+                paddingTop: i == 0 ? 16 : 12,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.lightGray,
+                paddingVertical: 8,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={project.image}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
+              />
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                  {project.title}
+                </Text>
+                <Text
+                  style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
+                >
+                  {project.teamMembersGot}/{project.teamMembersNeeded} team
+                  members
+                </Text>
+              </View>
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          </Link>
         ))}
       </ScrollView>
     </View>

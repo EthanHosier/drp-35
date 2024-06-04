@@ -6,6 +6,7 @@ import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { decode } from "base64-arraybuffer";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
 const Layout = () => {
   const router = useRouter();
@@ -139,6 +140,35 @@ const Layout = () => {
               >
                 Done
               </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="[projectId]"
+        options={{
+          title: "My Group",
+          presentation: "fullScreenModal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons
+                name="chevron-back-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <Ionicons
+                name="ellipsis-horizontal-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{
+                  alignSelf: "center",
+                }}
+              />
             </TouchableOpacity>
           ),
         }}
