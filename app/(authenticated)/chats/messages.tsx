@@ -166,7 +166,7 @@ export default function MessagesList() {
               ]}
               placeholderTextColor={Colors.gray}
               placeholder="Search"
-              onChangeText={(e) => setSearch(e)}
+              onChangeText={(e) => setSearch(e.toLowerCase())}
             />
             <Text
               style={{
@@ -182,7 +182,7 @@ export default function MessagesList() {
             </Text>
           </View>
 
-          {CHATS.filter((chat) => chat.name.includes(search)).map((chat, i) => (
+          {CHATS.filter((chat) => chat.name.toLowerCase().includes(search)).map((chat, i) => (
             <ListItem id={i} key={i} item={chat} onRemove={onRemove} />
           ))}
         </ScrollView>
