@@ -10,6 +10,8 @@ import InfoSheet from "@/components/projects/info-sheet";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import { Link, useRouter } from "expo-router";
+import { sleep } from "@/utils/utils";
 
 const InfoTab = () => {
   return (
@@ -53,9 +55,18 @@ const InfoTab = () => {
 };
 
 const GroupsTab = () => {
+  const router = useRouter();
   return (
     <View style={{ flex: 1 }}>
-      <TinderSwipe />
+      <TinderSwipe
+        onSwipeRight={async () => {
+          await sleep(20);
+          router.push({
+            pathname: "/(authenticated)/projects/view-project/match",
+            params: { matchId: "123" },
+          });
+        }}
+      />
       <InfoSheet />
     </View>
   );

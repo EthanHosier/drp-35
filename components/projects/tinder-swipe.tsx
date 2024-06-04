@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { sleep } from "@/utils/utils";
 import Dots from "react-native-dots-pagination";
 import { BlurView } from "expo-blur";
+import EmojiWaterfallExample from "./emoji-waterfall";
 
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/ccl422.jpeg"),
@@ -24,7 +25,7 @@ const IMAGES: ImageSourcePropType[] = [
 
 const NUM_CARDS = 3;
 
-const TinderSwipe = () => {
+const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
   const [index, setIndex] = useState(0);
 
   const handleTap = (xIndex: number, screenWidth: number) => {
@@ -151,7 +152,8 @@ const TinderSwipe = () => {
         data={IMAGES}
         renderCard={renderCard}
         onSwipeRight={(cardIndex) => {
-          console.log("cardIndex", cardIndex);
+          console.log("onSwipeRight", cardIndex);
+          onSwipeRight();
         }}
         onSwipedAll={async () => {
           await sleep(100);

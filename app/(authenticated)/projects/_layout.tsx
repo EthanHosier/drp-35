@@ -97,9 +97,9 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="[projectId]"
+        name="view-project"
         options={{
-          presentation: "fullScreenModal",
+          headerShown: false,
           title: "View Project",
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
