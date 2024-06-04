@@ -113,6 +113,9 @@ const SKILLS = [
 ];
 
 const Skills = () => {
+
+  const [search, setSearch] = useState("");
+
   return (
     <View style={styles.container}>
       <View
@@ -173,7 +176,7 @@ const Skills = () => {
           ]}
         >
           <Ionicons name="search" size={16} color={Colors.gray} />
-          <TextInput placeholder="Search" style={{ height: "100%" }} />
+          <TextInput placeholder="Search" style={{ height: "100%" }} onChangeText={(s) => setSearch(s.toLowerCase())}/>
         </View>
 
         <ScrollView
@@ -187,7 +190,7 @@ const Skills = () => {
           }}
           showsVerticalScrollIndicator={false}
         >
-          {SKILLS.map((e, i) => (
+          {SKILLS.filter((skill) => skill.toLowerCase().includes(search)).map((e, i) => (
             <Badge text={e} key={i} selected={SELECTED.includes(e)} />
           ))}
         </ScrollView>
