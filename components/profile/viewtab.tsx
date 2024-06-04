@@ -7,6 +7,7 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import React from "react";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
+import { openBrowserAsync } from "expo-web-browser";
 
 const ViewTab = () => {
   const {
@@ -136,44 +137,59 @@ const ViewTab = () => {
         </ScrollView>
 
         <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Feather name="github" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>Github</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-            />
-          </TouchableOpacity>
+          {github && (
+            <TouchableOpacity
+              style={styles2.attributeContainer}
+              onPress={() => openBrowserAsync(github)}
+            >
+              <View style={styles2.attributeIconContainer}>
+                <Feather name="github" size={24} color="black" />
+              </View>
+              <Text style={styles2.attributeText}>Github</Text>
+              <FontAwesome
+                style={{ marginLeft: "auto", marginRight: 16 }}
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+              />
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Feather name="linkedin" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>LinkedIn</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-            />
-          </TouchableOpacity>
+          {linkedin && (
+            <TouchableOpacity
+              style={styles2.attributeContainer}
+              onPress={() => openBrowserAsync(linkedin)}
+            >
+              <View style={styles2.attributeIconContainer}>
+                <Feather name="linkedin" size={24} color="black" />
+              </View>
+              <Text style={styles2.attributeText}>LinkedIn</Text>
+              <FontAwesome
+                style={{ marginLeft: "auto", marginRight: 16 }}
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+              />
+            </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Ionicons name="globe-outline" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>Website</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-            />
-          </TouchableOpacity>
+          {website && (
+            <TouchableOpacity
+              style={styles2.attributeContainer}
+              onPress={() => openBrowserAsync(website)}
+            >
+              <View style={styles2.attributeIconContainer}>
+                <Ionicons name="globe-outline" size={24} color="black" />
+              </View>
+              <Text style={styles2.attributeText}>Website</Text>
+              <FontAwesome
+                style={{ marginLeft: "auto", marginRight: 16 }}
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </View>
