@@ -12,6 +12,7 @@ import { Image } from "expo-image";
 import { ScrollView } from "react-native-gesture-handler";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const PROJECT_FIELDS = [
   "Name",
@@ -38,7 +39,7 @@ const AddProjectPage = () => {
   } = useProjectFieldsStore();
 
   return (
-    <ScrollView style={styles.container}>
+    <KeyboardAwareScrollView style={styles.container}>
       <View style={styles.imgContainer}>
         <TouchableOpacity
           onPress={() => alert("TODO")}
@@ -104,7 +105,7 @@ const AddProjectPage = () => {
           />
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 
