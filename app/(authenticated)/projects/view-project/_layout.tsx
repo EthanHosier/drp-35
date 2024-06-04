@@ -8,7 +8,7 @@ const Layout = () => {
   const router = useRouter();
   return (
     <Stack>
-      <Stack.Screen name="[projectId]" />
+      <Stack.Screen name="[projectId]" options={{ headerShown: false }} />
       <Stack.Screen
         name="match"
         options={{

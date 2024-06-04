@@ -99,7 +99,7 @@ const Layout = () => {
       <Stack.Screen
         name="view-project"
         options={{
-          headerShown: false,
+          presentation: "fullScreenModal",
           title: "View Project",
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>

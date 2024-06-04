@@ -38,16 +38,24 @@ const Match = () => {
         >
           Your group has been merged with Francois, Jonny and Henry.
         </Text>
-        <View style={{ width: "100%", marginTop: "auto", marginBottom: 32 }}>
-          <TouchableOpacity
-            style={[
-              defaultStyles.pillButton,
-              { backgroundColor: Colors.primary },
-            ]}
-          >
-            <Text style={{ color: "white", fontSize: 16 }}>View Group</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
+      <View
+        style={{
+          width: "90%",
+          alignSelf: "center",
+          marginBottom: 32,
+          position: "absolute",
+          bottom: 24,
+        }}
+      >
+        <TouchableOpacity
+          style={[
+            defaultStyles.pillButton,
+            { backgroundColor: Colors.primary },
+          ]}
+        >
+          <Text style={{ color: "white", fontSize: 16 }}>View Group</Text>
+        </TouchableOpacity>
       </View>
     </>
   );
