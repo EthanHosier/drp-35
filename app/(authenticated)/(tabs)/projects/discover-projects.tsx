@@ -49,7 +49,10 @@ const DiscoverProjects = () => {
         style={{ height: "100%" }}
         locations={[0, 1]} // Adjust the second value to make the transition earlier or later
       >
-        <ScrollView contentContainerStyle={{ height: "100%", marginTop: 64 }}>
+        <ScrollView
+            contentContainerStyle={{ marginTop: 64 }}
+            showsVerticalScrollIndicator={false}
+        >
           <View style={{ paddingHorizontal: 24 }}>
             <TouchableOpacity
               style={{
@@ -127,7 +130,7 @@ const DiscoverProjects = () => {
             </ScrollView>
           </View>
           <View  style={{paddingHorizontal: 24}}>
-            <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
+            <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
               Organisations you might like
             </Text>
           </View>
