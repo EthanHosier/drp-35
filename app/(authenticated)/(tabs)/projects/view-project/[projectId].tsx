@@ -19,10 +19,6 @@ const InfoTab = () => {
   const id = useLocalSearchParams().projectId;
 
   useEffect(() => {
-    console.log(projectData);
-  }, [projectData]);
-
-  useEffect(() => {
     getProjectDetails(id as string).then((res) => {
       if (!res.data) return;
       setProjectData(res.data);
