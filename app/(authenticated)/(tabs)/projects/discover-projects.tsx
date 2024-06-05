@@ -1,8 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
@@ -11,7 +10,9 @@ import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
-import { Project, useProjectsStore } from "@/utils/store/projects-store";
+import { useProjectsStore } from "@/utils/store/projects-store";
+import OrganisationPreview from "@/components/projects/organisation-preview";
+import {Organisations} from "@/constants/PlaceholderValues";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
@@ -49,7 +50,11 @@ const DiscoverProjects = () => {
         style={{ height: "100%" }}
         locations={[0, 1]} // Adjust the second value to make the transition earlier or later
       >
-        <ScrollView contentContainerStyle={{ height: "100%", marginTop: 64 }}>
+        <ScrollView
+            contentContainerStyle={{ marginTop: 64 }}
+            style={{ height: "100%" }}
+            showsVerticalScrollIndicator={false}
+        >
           <View style={{ paddingHorizontal: 24 }}>
             <TouchableOpacity
               style={{
@@ -112,10 +117,9 @@ const DiscoverProjects = () => {
               />
             </View>
             <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
-              You might like
+              Projects you might like
             </Text>
           </View>
-
           <View>
             <ScrollView
               style={{ marginTop: 12 }}
@@ -124,6 +128,22 @@ const DiscoverProjects = () => {
             >
               {projects.map((project, i) => (
                 <ProjectPreview project={project} key={i} />
+              ))}
+            </ScrollView>
+          </View>
+          <View  style={{paddingHorizontal: 24}}>
+            <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
+              Organisations you might like
+            </Text>
+          </View>
+          <View>
+            <ScrollView
+              style={{ marginTop: 12, paddingBottom: Platform.OS === 'android' ? 160 : 0 }}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {Organisations.map((organisation, i) => (
+                <OrganisationPreview organisation={organisation} key={i} />
               ))}
             </ScrollView>
           </View>
