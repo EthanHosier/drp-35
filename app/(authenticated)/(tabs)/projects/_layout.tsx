@@ -10,7 +10,7 @@ import { useProjectsStore } from "@/utils/store/projects-store";
 const Layout = () => {
   const router = useRouter();
   const {
-    image,
+    imageUri,
     name,
     description,
     minGroupSize,
