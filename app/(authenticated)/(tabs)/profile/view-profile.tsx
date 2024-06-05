@@ -8,6 +8,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { useProfileStore } from "@/utils/store/profile-store";
+import {Projects, Organisations} from "@/constants/PlaceholderValues";
 import { Group, useMyGroupsStore } from "@/utils/store/my-groups-store";
 
 type Organisation = {
@@ -128,7 +129,7 @@ const ViewProfile = () => {
           My Groups
         </Text>
         {myGroups.map((group, i) => (
-          <Link asChild href="/(authenticated)/profile/1" key={i}>
+          <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,
@@ -165,34 +166,36 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Organisations
         </Text>
-        {ORGANISATIONS.map((org, i) => (
-          <TouchableOpacity
-            style={{
-              paddingTop: i == 0 ? 16 : 12,
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: Colors.lightGray,
-              paddingVertical: 8,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-            key={i}
-          >
-            <Image
-              source={org.image}
-              style={{ width: 64, height: 64, borderRadius: 32 }}
-            />
-            <View style={{ marginLeft: 16 }}>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                {org.name}
-              </Text>
-            </View>
-            <FontAwesome
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-              style={{ marginLeft: "auto" }}
-            />
-          </TouchableOpacity>
+        {Organisations.map((org, i) => (
+          <Link asChild href="/(authenticated)/profile/orgs/1" key={i}>
+            <TouchableOpacity
+              style={{
+                paddingTop: i == 0 ? 16 : 12,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.lightGray,
+                paddingVertical: 8,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              key={i}
+            >
+              <Image
+                source={org.image}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
+              />
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                  {org.name}
+                </Text>
+              </View>
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          </Link>
         ))}
       </ScrollView>
     </View>
