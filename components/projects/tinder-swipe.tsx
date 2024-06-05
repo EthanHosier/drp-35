@@ -22,6 +22,9 @@ const IMAGES: ImageSourcePropType[] = [
 
 const NUM_CARDS = 3;
 
+const TAGS = ["Tryhard", "Onsite"];
+const LOOKING_FOR = ["React Native", "JS"];
+
 const TinderSwipe = ({onSwipeRight}: { onSwipeRight: () => void }) => {
   const [index, setIndex] = useState(0);
 
@@ -61,84 +64,78 @@ const TinderSwipe = ({onSwipeRight}: { onSwipeRight: () => void }) => {
   const renderCard = (image: ImageSourcePropType) => {
     return (
         <View style={[styles.renderCardContainer, {height: "100%"}]}>
-          <ImageBackground
-              source={IMAGES[index]}
-              imageStyle={styles.renderCardImage}
-              resizeMode="cover"
-          >
-            <TouchableOpacity
-                onPress={(e) => {
-                  handleTap(e.nativeEvent.locationX, width);
-                }}
-                activeOpacity={1}
-                style={{flex: 1, position: "absolute", width: "100%", height: "100%"}}
+          <View style={{padding: 16, borderRadius: 16, backgroundColor: Colors.background}}>
+            <ImageBackground
+                source={IMAGES[index]}
+                imageStyle={styles.renderCardImage}
+                resizeMode="cover"
             >
-              <View
-                  style={{
-                    height: 8,
-                    gap: 8,
-                    flexDirection: "row",
-                    marginTop: 8,
-                    paddingHorizontal: 12,
-                    position: "absolute",
-                    width:"100%",
-                    top: 0
+              <TouchableOpacity
+                  onPress={(e) => {
+                    handleTap(e.nativeEvent.locationX, width);
                   }}
+                  activeOpacity={1}
+                  style={{flex: 1, position: "absolute", width: "100%", height: "100%"}}
               >
-                {Array.from({length: NUM_CARDS}).map((_, i) => (
-                    <View
-                        style={{flex: 1, borderRadius: 4, overflow: "hidden"}}
-                        key={i}
-                    >
-                      <BlurView
-                          tint="extraLight"
-                          style={{
-                            flex: 1,
-                            backgroundColor: `rgba(255,255,255,${
-                                index === i ? 0.9 : 0.3
-                            })`,
-                          }}
-                          intensity={80}
-                      />
-                    </View>
-                ))}
-              </View>
-              <View
-                  style={{
-                    width: "100%",
-                    backgroundColor: Colors.background,
-                    alignSelf: "flex-end",
-                    position: "absolute",
-                    bottom: 0,
-                    padding: 16,
-                    paddingLeft: 24,
-                    flexDirection: "row",
-                    gap: 8,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-              >
-                <Text style={{fontWeight: "600", fontSize: 20}}>
-                  Ethan Hosier
-                </Text>
+                <View style={styles.groupContainer}>
+                  {Array.from({length: NUM_CARDS}).map((_, i) => (
+                      <View
+                          style={{flex: 1, borderRadius: 4, overflow: "hidden"}}
+                          key={i}
+                      >
+                        <BlurView
+                            tint="extraLight"
+                            style={{
+                              flex: 1,
+                              backgroundColor: `rgba(255,255,255,${
+                                  index === i ? 0.9 : 0.3
+                              })`,
+                            }}
+                            intensity={80}
+                        />
+                      </View>
+                  ))}
+                </View>
+                <View
+                    style={styles.nameInfo}
+                >
+                  <Text style={{fontWeight: "600", fontSize: 20}}>
+                    Ethan Hosier
+                  </Text>
 
-                <View style={{flexDirection: "row", gap: 8}}>
-                  <View
-                      style={{
-                        backgroundColor: Colors.lightGray,
-                        height: 32,
-                        paddingHorizontal: 12,
-                        borderRadius: 16,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                  >
-                    <Text style={{fontWeight: "500"}}>🇺🇸 🇫🇷</Text>
+                  <View style={{flexDirection: "row", gap: 8}}>
+                    <View
+                        style={styles.flagContainer}
+                    >
+                      <Text style={{fontWeight: "500"}}>🇺🇸 🇫🇷</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </ImageBackground>
+              </TouchableOpacity>
+            </ImageBackground>
+
+            <View style={styles.tagsContainer}>
+              <Text style={styles.tagTitle}>
+                We are:
+              </Text>
+              {
+                TAGS.map((tag, i) => <View style={styles.tag} key={i}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>)
+              }
+            </View>
+            <View style={styles.tagsContainer}>
+              <Text style={styles.tagTitle}>
+                Looking for:
+              </Text>
+              {
+                LOOKING_FOR.map((tag, i) => <View style={styles.tag} key={i}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>)
+              }
+            </View>
+          </View>
+
         </View>
     );
   };
@@ -232,7 +229,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   renderCardImage: {
-    height: "100%",
+    height: 300,
     width: "100%",
     borderRadius: 15,
     position: "relative",
@@ -246,4 +243,63 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 15,
   },
+  groupContainer: {
+    height: 8,
+    gap: 8,
+    flexDirection: "row",
+    marginTop: 8,
+    paddingHorizontal: 12,
+    position: "absolute",
+    width:"100%",
+    top: 0
+  },
+  nameInfo: {
+    width: "100%",
+    backgroundColor: Colors.background,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderColor: Colors.gray,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    alignSelf: "flex-end",
+    position: "absolute",
+    bottom: 0,
+    padding: 16,
+    paddingLeft: 24,
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  flagContainer: {
+    backgroundColor: Colors.lightGray,
+    height: 32,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tagsContainer: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 4,
+    alignItems: "center",
+    marginTop: 12
+  },
+  tag: {
+    height: 40,
+    paddingHorizontal: 8,
+    borderRadius: 20,
+    backgroundColor: Colors.dark,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tagTitle: {
+    fontSize: 16,
+    marginLeft: 4
+  },
+  tagText: {
+    color: "white",
+    fontSize: 16
+  }
 });
