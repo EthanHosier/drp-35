@@ -1,26 +1,24 @@
 import { decode } from "base64-arraybuffer";
 import { supabase } from "../supabase";
-import { DRPError } from "./error-types";
+import { DRPResponse } from "./error-types";
 
-export const getProjectPicUrl: (projectId: string) => string = (projectId) => {
+export const getProjectPicUrl: (projectId: string) => DRPResponse = (
+  projectId
+) => {
   const { data } = supabase.storage.from("projectpics").getPublicUrl(projectId);
-  return data.publicUrl;
+  return { data: data.publicUrl, error: null };
 };
 
 export const uploadProjectPic: (
   projectId: string,
   imageBase64: string,
   imageMimeType: string
-) => Promise<DRPError | null> = async (
-  projectId,
-  imageBase64,
-  imageMimeType
-) => {
+) => Promise<DRPResponse> = async (projectId, imageBase64, imageMimeType) => {
   const { error } = await supabase.storage
     .from("projectpics")
     .upload(projectId, decode(imageBase64), {
       contentType: imageMimeType,
     });
-  if (error) return { message: error.message };
-  return null;
+  if (error) return { data: null, error };
+  return { error: null };
 };
