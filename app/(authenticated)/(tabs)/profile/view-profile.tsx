@@ -132,7 +132,7 @@ const ViewProfile = () => {
           My Organisations
         </Text>
         {Organisations.map((org, i) => (
-          <Link asChild href="/(authenticated)/(tabs)/1" key={i}>
+          <Link asChild href="/(authenticated)/(tabs)/projects/view-org/1" key={i}>
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,

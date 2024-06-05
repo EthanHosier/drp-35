@@ -15,7 +15,7 @@ const OrganisationPreview: React.FC<OrganisationPreviewProps> = ({ organisation 
   return (
       <View style={{ marginLeft: 24 }}>
           <TouchableOpacity
-              onPress={() => router.navigate("(authenticated)/(tabs)/1")}
+              onPress={() => router.navigate("(authenticated)/(tabs)/projects/view-org/1")}
           >
             <View style={{ width: 320, aspectRatio: 5 / 3, borderRadius: 20 }}>
               <ImageBackground
