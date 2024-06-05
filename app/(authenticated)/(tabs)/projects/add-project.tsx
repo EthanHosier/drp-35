@@ -13,6 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as ImagePicker from "expo-image-picker";
 
 const PROJECT_FIELDS = [
   "Name",
@@ -24,8 +25,8 @@ const PROJECT_FIELDS = [
 
 const AddProjectPage = () => {
   const {
-    image,
-    setImage,
+    imageUri,
+    setImageFromPicker,
     name,
     setName,
     description,
@@ -38,25 +39,35 @@ const AddProjectPage = () => {
     setStartDateTime,
   } = useProjectFieldsStore();
 
+  const pickImage = async () => {
+    const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      base64: true,
+    });
+    if (canceled) return;
+    setImageFromPicker(assets[0]);
+  };
+
   return (
     <KeyboardAwareScrollView style={styles.container}>
       <View style={styles.imgContainer}>
         <TouchableOpacity
-          onPress={() => alert("TODO")}
+          onPress={pickImage}
           style={{
             height: 200,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          {image === "" ? (
+          {imageUri === "" ? (
             <MaterialCommunityIcons
               name="file-image-plus-outline"
               size={64}
               color={Colors.gray}
             />
           ) : (
-            <Image source={image} style={styles.image} />
+            <Image source={{ uri: imageUri }} style={styles.image} />
           )}
         </TouchableOpacity>
       </View>

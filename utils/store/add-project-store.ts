@@ -1,8 +1,11 @@
+import { ImagePickerAsset } from "expo-image-picker";
 import { create } from "zustand";
 
 type ProjectFieldsStore = {
-  image: string;
-  setImage: (image: string) => void;
+  imageUri: string;
+  imageBase64: string;
+  imageMimeType: string;
+  setImageFromPicker: (imagePickerAsset: ImagePickerAsset) => void;
   name: string;
   setName: (name: string) => void;
   description: string;
@@ -16,9 +19,15 @@ type ProjectFieldsStore = {
 };
 
 export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
-  image: "",
-  setImage: (image: string) => {
-    set({ image });
+  imageUri: "",
+  imageBase64: "",
+  imageMimeType: "",
+  setImageFromPicker: (imagePickerAsset) => {
+    set({
+      imageUri: imagePickerAsset.uri,
+      imageBase64: imagePickerAsset.base64!,
+      imageMimeType: imagePickerAsset.mimeType,
+    });
   },
   name: "",
   setName: (name: string) => {
