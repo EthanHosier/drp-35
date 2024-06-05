@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {
   StyleSheet,
   Text,
@@ -6,16 +6,13 @@ import {
   type ImageSourcePropType,
   TouchableOpacity,
   Dimensions,
+  ImageBackground,
 } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
-import { Image } from "expo-image";
+import {Swiper, type SwiperCardRefType} from "rn-swiper-list";
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import { sleep } from "@/utils/utils";
-import Dots from "react-native-dots-pagination";
-import { BlurView } from "expo-blur";
-import EmojiWaterfallExample from "./emoji-waterfall";
+import {Ionicons} from "@expo/vector-icons";
+import {sleep} from "@/utils/utils";
+import {BlurView} from "expo-blur";
 
 const IMAGES: ImageSourcePropType[] = [
   require("@/assets/images/jamal.jpg"),
@@ -25,7 +22,7 @@ const IMAGES: ImageSourcePropType[] = [
 
 const NUM_CARDS = 3;
 
-const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
+const TinderSwipe = ({onSwipeRight}: { onSwipeRight: () => void }) => {
   const [index, setIndex] = useState(0);
 
   const handleTap = (xIndex: number, screenWidth: number) => {
@@ -37,23 +34,23 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
       setIndex((i) => Math.min(i + 1, IMAGES.length - 1));
     }
   };
-  const { width } = Dimensions.get("window");
+  const {width} = Dimensions.get("window");
 
   const OverlayLabelRight = useCallback(() => {
     return (
-      <View
-        style={[
-          styles.overlayLabelContainer,
-          {
-            backgroundColor: Colors.primary,
-            opacity: 0.7,
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        ]}
-      >
-        <Ionicons name="happy-outline" size={80} color={Colors.background} />
-      </View>
+        <View
+            style={[
+              styles.overlayLabelContainer,
+              {
+                backgroundColor: Colors.primary,
+                opacity: 0.7,
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+        >
+          <Ionicons name="happy-outline" size={80} color={Colors.background}/>
+        </View>
     );
   }, []);
 
@@ -63,124 +60,128 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
 
   const renderCard = (image: ImageSourcePropType) => {
     return (
-      <View style={[styles.renderCardContainer, { height: "100%" }]}>
-        <TouchableOpacity
-          onPress={(e) => {
-            handleTap(e.nativeEvent.locationX, width);
-          }}
-          activeOpacity={1}
-        >
-          <Image
-            source={IMAGES[index]}
-            style={styles.renderCardImage}
-            resizeMode="cover"
+        <View style={[styles.renderCardContainer, {height: "100%"}]}>
+          <ImageBackground
+              source={IMAGES[index]}
+              imageStyle={styles.renderCardImage}
+              resizeMode="cover"
           >
-            <View
-              style={{
-                height: 8,
-                gap: 8,
-                flexDirection: "row",
-                marginTop: 8,
-                paddingHorizontal: 12,
-              }}
+            <TouchableOpacity
+                onPress={(e) => {
+                  handleTap(e.nativeEvent.locationX, width);
+                }}
+                activeOpacity={1}
+                style={{flex: 1, position: "absolute", width: "100%", height: "100%"}}
             >
-              {Array.from({ length: NUM_CARDS }).map((_, i) => (
-                <View
-                  style={{ flex: 1, borderRadius: 4, overflow: "hidden" }}
-                  key={i}
-                >
-                  <BlurView
-                    tint="extraLight"
-                    style={{
-                      flex: 1,
-                      backgroundColor: `rgba(255,255,255,${
-                        index === i ? 0.9 : 0.3
-                      })`,
-                    }}
-                    intensity={80}
-                  />
-                </View>
-              ))}
-            </View>
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: Colors.background,
-                alignSelf: "flex-end",
-                position: "absolute",
-                bottom: 0,
-                padding: 16,
-                paddingLeft: 24,
-                flexDirection: "row",
-                gap: 8,
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={{ fontWeight: "600", fontSize: 20 }}>
-                Ethan Hosier
-              </Text>
-
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <View
+              <View
                   style={{
-                    backgroundColor: Colors.lightGray,
-                    height: 32,
+                    height: 8,
+                    gap: 8,
+                    flexDirection: "row",
+                    marginTop: 8,
                     paddingHorizontal: 12,
-                    borderRadius: 16,
-                    alignItems: "center",
-                    justifyContent: "center",
+                    position: "absolute",
+                    width:"100%",
+                    top: 0
                   }}
-                >
-                  <Text style={{ fontWeight: "500" }}>🇺🇸 🇫🇷</Text>
+              >
+                {Array.from({length: NUM_CARDS}).map((_, i) => (
+                    <View
+                        style={{flex: 1, borderRadius: 4, overflow: "hidden"}}
+                        key={i}
+                    >
+                      <BlurView
+                          tint="extraLight"
+                          style={{
+                            flex: 1,
+                            backgroundColor: `rgba(255,255,255,${
+                                index === i ? 0.9 : 0.3
+                            })`,
+                          }}
+                          intensity={80}
+                      />
+                    </View>
+                ))}
+              </View>
+              <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: Colors.background,
+                    alignSelf: "flex-end",
+                    position: "absolute",
+                    bottom: 0,
+                    padding: 16,
+                    paddingLeft: 24,
+                    flexDirection: "row",
+                    gap: 8,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+              >
+                <Text style={{fontWeight: "600", fontSize: 20}}>
+                  Ethan Hosier
+                </Text>
+
+                <View style={{flexDirection: "row", gap: 8}}>
+                  <View
+                      style={{
+                        backgroundColor: Colors.lightGray,
+                        height: 32,
+                        paddingHorizontal: 12,
+                        borderRadius: 16,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                  >
+                    <Text style={{fontWeight: "500"}}>🇺🇸 🇫🇷</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </Image>
-        </TouchableOpacity>
-      </View>
+            </TouchableOpacity>
+          </ImageBackground>
+        </View>
     );
   };
 
   return (
-    <View style={[styles.subContainer, { width: "100%", height: 600 }]}>
-      <Swiper
-        translateXRange={[-100, 0, 100]}
-        ref={ref}
-        disableTopSwipe
-        cardStyle={styles.cardStyle}
-        data={IMAGES}
-        renderCard={renderCard}
-        onSwipeRight={(cardIndex) => {
-          console.log("onSwipeRight", cardIndex);
-          onSwipeRight();
-        }}
-        onSwipedAll={async () => {
-          await sleep(100);
-          for (let i = 0; i < NUM_CARDS; i++) {
-            ref.current?.swipeBack();
-            console.log("swipeBack");
-            await sleep(50);
-          }
-        }}
-        onSwipeLeft={(cardIndex) => {
-          console.log("onSwipeLeft", cardIndex);
-        }}
-        onSwipeTop={(cardIndex) => {
-          console.log("onSwipeTop", cardIndex);
-        }}
-        onSwipeActive={() => {
-          console.log("onSwipeActive");
-        }}
-        onSwipeStart={() => {
-          console.log("onSwipeStart");
-        }}
-        onSwipeEnd={() => {
-          console.log("onSwipeEnd");
-        }}
-        OverlayLabelRight={OverlayLabelRight}
-      />
-    </View>
+      <View style={[styles.subContainer, {width: "100%", height: 600}]}>
+        <Swiper
+            translateXRange={[-100, 0, 100]}
+            ref={ref}
+            disableTopSwipe
+            cardStyle={styles.cardStyle}
+            data={IMAGES}
+            renderCard={renderCard}
+            onSwipeRight={(cardIndex) => {
+              console.log("onSwipeRight", cardIndex);
+              onSwipeRight();
+            }}
+            onSwipedAll={async () => {
+              await sleep(100);
+              for (let i = 0; i < NUM_CARDS; i++) {
+                ref.current?.swipeBack();
+                console.log("swipeBack");
+                await sleep(50);
+              }
+            }}
+            onSwipeLeft={(cardIndex) => {
+              console.log("onSwipeLeft", cardIndex);
+            }}
+            onSwipeTop={(cardIndex) => {
+              console.log("onSwipeTop", cardIndex);
+            }}
+            onSwipeActive={() => {
+              console.log("onSwipeActive");
+            }}
+            onSwipeStart={() => {
+              console.log("onSwipeStart");
+            }}
+            onSwipeEnd={() => {
+              console.log("onSwipeEnd");
+            }}
+            OverlayLabelRight={OverlayLabelRight}
+        />
+      </View>
   );
 };
 

@@ -1,27 +1,16 @@
-// import React from "react";
-// import { Stack } from "expo-router";
-
-// const Layout = () => {
-//   return (
-//     <Stack>
-//       <Stack.Screen options={{ headerShown: false }} name="view-org" />
-//     </Stack>
-//   );
-// };
-
-// export default Layout;
 import Colors from "@/constants/Colors";
 import {
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import React from "react";
 import { Image } from "expo-image";
 import ViewOrg from "./view-org";
-import {Projects, Organisations} from "@/constants/PlaceholderValues"
+import {Organisations} from "@/constants/PlaceholderValues"
 import { ScrollView } from "react-native-gesture-handler";
 
 const InfoTab = () => {
@@ -33,23 +22,24 @@ const InfoTab = () => {
           { backgroundColor: Colors.background, paddingBottom: 100},
         ]}
       >
+        <Image
+          source={Organisations[0].image}
+          style={styles.img}
+        />
         <Text style={{marginBottom:5, fontSize: 24, fontWeight: "600"}}>
           {Organisations[0].name}
         </Text>
-        <Image
-          source={Organisations[0].image}
-          style={{
-            marginTop: 20,
-            width: "100%",
-            aspectRatio: 1,
-            borderRadius: 12,
-            alignSelf: "center",
-            resizeMode: "contain",
-          }}
-        />
+        <Text style={{fontSize: 16, color: Colors.gray}}>
+          {Organisations[0].subtitle}
+        </Text>
         <Text style={{ marginTop: 24 }}>
           {Organisations[0].description}
         </Text>
+        <TouchableOpacity style={styles.button}>
+          <View>
+            <Text style={{color: Colors.lightGray}}>Join Organisation</Text>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -105,8 +95,20 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   img: {
-    height: 80,
-    width: 80,
-    borderRadius: 48,
+    marginTop: 20,
+    width: "100%",
+    aspectRatio: 5/3,
+    borderRadius: 12,
+    alignSelf: "center",
+    resizeMode: "contain",
   },
+  button: {
+    marginTop: 20,
+    borderRadius: 20,
+    width: "100%",
+    height: 40,
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });
