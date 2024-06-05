@@ -19,7 +19,7 @@ const Layout = () => {
   console.log({ segments });
 
   useEffect(() => {
-    const getUserId = async () => {
+    const getUserIdAndFullName = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -28,20 +28,17 @@ const Layout = () => {
         return;
       }
       setUserId(user.id);
-    };
 
-    const getFullName = async () => {
       const { data, error } = await supabase
         .from("profiles")
         .select("full_name")
+        .eq("user_id", user.id)
         .single();
       if (error) return;
       setFullName(data.full_name);
     };
 
-    getUserId().then(() => {
-      getFullName();
-    });
+    getUserIdAndFullName();
   }, []);
 
   return (
@@ -61,7 +58,6 @@ const Layout = () => {
           },
         }}
       >
-
         <Tabs.Screen
           name="projects"
           options={{

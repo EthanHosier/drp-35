@@ -48,7 +48,11 @@ const EditTab = () => {
 
   useEffect(() => {
     const getDetails = async () => {
-      const { data, error } = await supabase.from("profiles").select().single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select()
+        .eq("user_id", userId)
+        .single();
       if (error) return;
       setFullName(data.full_name);
       setPronouns(data.pronouns);
