@@ -9,6 +9,7 @@ import { decode } from "base64-arraybuffer";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
+import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 
 
 const Layout = () => {
@@ -22,6 +23,8 @@ const Layout = () => {
 
   const skills = useSkillsStore((state) => state.skills);
   const languages = useLanguagesStore((state) => state.languages);
+
+  const setGroups = useMyGroupsStore((state) => state.setGroups);
 
   useEffect(() => {
     const getImage = async () => {
@@ -37,6 +40,44 @@ const Layout = () => {
       };
     };
     getImage();
+
+    const getMyGroups = async () => {
+      const { data, error } = await supabase
+        .from("group_members")
+        .select("group_id, groups(description, projects(name, max_group_size))")
+        .eq("user_id", userId);
+      if (error) {
+        alert(error.message);
+        return;
+      }
+
+      const groupIds = data.map((group) => group.group_id);
+
+      const currentGroupSizes = new Map<string, number>();
+      await Promise.all(
+        groupIds.map(async (groupId) => {
+          const { count, error } = await supabase
+            .from("group_members")
+            .select("*", { count: "exact", head: true })
+            .eq("group_id", groupId);
+          if (error) {
+            alert(error.message);
+          }
+          currentGroupSizes.set(groupId, count ?? 0);
+        })
+      );
+
+      setGroups(
+        data.map((group) => ({
+          projectName: group.groups?.projects?.name ?? "",
+          maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
+          currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
+          image:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+        }))
+      );
+    };
+    getMyGroups();
   }, []);
 
   const saveProfile = async () => {

@@ -9,10 +9,51 @@ import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { useProfileStore } from "@/utils/store/profile-store";
 import {Projects, Organisations} from "@/constants/PlaceholderValues";
+import { Group, useMyGroupsStore } from "@/utils/store/my-groups-store";
+
+type Organisation = {
+  name: string;
+  image: string;
+  projects: Group[];
+};
 
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
   const fullName = useProfileStore((state) => state.fullName);
+  const myGroups = useMyGroupsStore((state) => state.groups);
+
+  const ORGANISATIONS: Organisation[] = [
+    {
+      name: "Imperial Computing Year 1",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+      projects: myGroups,
+    },
+    {
+      name: "Imperial Computing Year 2",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+      projects: myGroups,
+    },
+    {
+      name: "Imperial Computing Year 3",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+      projects: myGroups,
+    },
+    {
+      name: "McDonald's",
+      image:
+        "https://image.similarpng.com/very-thumbnail/2021/11/Mcdonalds-logo-on-transparent-background-PNG.png",
+      projects: myGroups,
+    },
+    {
+      name: "ICHack24",
+      image:
+        "https://pbs.twimg.com/profile_images/1742880732207329280/NYKXBC3k_400x400.jpg",
+      projects: myGroups,
+    },
+  ];
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -87,7 +128,7 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Groups
         </Text>
-        {Projects.map((project, i) => (
+        {myGroups.map((group, i) => (
           <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
             <TouchableOpacity
               style={{
@@ -100,18 +141,17 @@ const ViewProfile = () => {
               }}
             >
               <Image
-                source={project.image}
+                source={group.image}
                 style={{ width: 64, height: 64, borderRadius: 32 }}
               />
               <View style={{ marginLeft: 16 }}>
                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                  {project.title}
+                  {group.projectName}
                 </Text>
                 <Text
                   style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
                 >
-                  {project.teamMembersGot}/{project.teamMembersNeeded} team
-                  members
+                  {group.currentGroupSize}/{group.maxGroupSize} team members
                 </Text>
               </View>
               <FontAwesome
