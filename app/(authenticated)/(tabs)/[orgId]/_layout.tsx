@@ -37,7 +37,7 @@ const InfoTab = () => {
         </Text>
         <TouchableOpacity style={styles.button}>
           <View>
-            <Text style={{color: Colors.lightGray}}>Join Project</Text>
+            <Text style={{color: Colors.lightGray}}>Join Organisation</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
