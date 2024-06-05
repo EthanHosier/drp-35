@@ -18,9 +18,9 @@ import { BlurView } from "expo-blur";
 import EmojiWaterfallExample from "./emoji-waterfall";
 
 const IMAGES: ImageSourcePropType[] = [
-  require("@/assets/images/ccl422.jpeg"),
-  require("@/assets/images/fp522.jpeg"),
-  require("@/assets/images/tsy22.jpeg"),
+  require("@/assets/images/jamal.jpg"),
+  require("@/assets/images/joe.jpg"),
+  require("@/assets/images/wang.jpg"),
 ];
 
 const NUM_CARDS = 3;

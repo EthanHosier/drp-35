@@ -17,6 +17,12 @@ type Project = {
   teamMembersNeeded: number;
 };
 
+type Organisation = {
+  name: string;
+  image: string;
+  projects: Project[];
+}
+
 const PROJECTS: Project[] = [
   {
     title: "Project 1",
@@ -44,6 +50,34 @@ const PROJECTS: Project[] = [
   },
 ];
 
+const ORGANISATIONS: Organisation[] = [
+  {
+    name: "Imperial Computing Year 1",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+    projects: PROJECTS,
+  },
+  {
+    name: "Imperial Computing Year 2",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+    projects: PROJECTS,
+  },
+  {
+    name: "Imperial Computing Year 3",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+    projects: PROJECTS,
+  },
+  {
+    name: "McDonald's",
+    image: "https://image.similarpng.com/very-thumbnail/2021/11/Mcdonalds-logo-on-transparent-background-PNG.png",
+    projects: PROJECTS,
+  },
+  {
+    name: "ICHack24",
+    image: "https://pbs.twimg.com/profile_images/1742880732207329280/NYKXBC3k_400x400.jpg",
+    projects: PROJECTS,
+  }
+]
+
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
   const fullName = useProfileStore((state) => state.fullName);
@@ -53,7 +87,7 @@ const ViewProfile = () => {
       <ScrollView
         contentContainerStyle={[
           styles.container,
-          { backgroundColor: Colors.background, flex: 1 },
+          { backgroundColor: Colors.background, paddingBottom: 100 },
         ]}
       >
         <View
@@ -156,6 +190,38 @@ const ViewProfile = () => {
               />
             </TouchableOpacity>
           </Link>
+        ))}
+        <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
+          My Organisations
+        </Text>
+        {ORGANISATIONS.map((org, i) => (
+          <TouchableOpacity
+            style={{
+              paddingTop: i == 0 ? 16 : 12,
+              borderBottomWidth: StyleSheet.hairlineWidth,
+              borderColor: Colors.lightGray,
+              paddingVertical: 8,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            key={i}
+          >
+            <Image
+              source={org.image}
+              style={{ width: 64, height: 64, borderRadius: 32 }}
+            />
+            <View style={{ marginLeft: 16 }}>
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                {org.name}
+              </Text>
+            </View>
+            <FontAwesome
+              name="chevron-right"
+              size={16}
+              color={Colors.dark}
+              style={{ marginLeft: "auto" }}
+            />
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
