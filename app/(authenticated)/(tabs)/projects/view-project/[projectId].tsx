@@ -12,7 +12,12 @@ import { defaultStyles } from "@/constants/DefaultStyles";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { formatHumanReadableDate, sleep } from "@/utils/utils";
-import { getProjectDetails, type Project } from "@/utils/api/project-details";
+import {
+  Group,
+  getProjectDetails,
+  getProjectGroups,
+  type Project,
+} from "@/utils/api/project-details";
 
 const InfoTab = () => {
   const [projectData, setProjectData] = useState<Project | null>(null);
@@ -95,7 +100,17 @@ const renderScene = SceneMap({
 });
 
 export default function ProjectTabs() {
+  const [projectGroups, setProjectGroups] = useState<Group[] | null>(null);
+
   const layout = useWindowDimensions();
+  const id = useLocalSearchParams().projectId;
+
+  useEffect(() => {
+    getProjectGroups(id as string).then((res) => {
+      if (!res.data) return;
+      setProjectGroups(res.data);
+    });
+  }, []);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
