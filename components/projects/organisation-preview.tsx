@@ -16,7 +16,7 @@ const ProjectPreview: React.FC<OrganisationPreviewProps> = ({ organisation }) =>
   return (
       <View style={{ marginLeft: 24 }}>
           <TouchableOpacity
-              onPress={() => router.navigate("(authenticated)/profile/orgs/1")}
+              onPress={() => router.navigate("(authenticated)/(tabs)/1")}
           >
             <View style={{ width: 320, aspectRatio: 5 / 3 }}>
               <Image source={organisation.image} style={styles.image} />
@@ -47,7 +47,7 @@ export default ProjectPreview;
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    resizeMode: "cover",
+    resizeMode: "contain",
     width: "100%",
     height: "100%",
     top: 0,
