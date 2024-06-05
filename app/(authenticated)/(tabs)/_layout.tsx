@@ -1,18 +1,11 @@
 import React, { useEffect } from "react";
 import { Link, Tabs, useRouter, useSegments } from "expo-router";
-import {
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { BlurView } from "expo-blur";
 import { supabase } from "@/utils/supabase";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { useProfileStore } from "@/utils/store/profile-store";
-import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SIZE = 25;
@@ -203,8 +196,8 @@ const Layout = () => {
             {segments[2] === "profile" ? (
               <FontAwesome name="user-circle" size={26} color={"black"} />
             ) : (
-              <Ionicons
-                name="chatbubble-ellipses-outline"
+              <FontAwesome
+                name="user-circle-o"
                 size={SIZE}
                 color={Colors.gray}
               />
