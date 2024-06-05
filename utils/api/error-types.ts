@@ -2,10 +2,10 @@ export type DRPError = {
   message: string;
 };
 
-export type DRPResponse =
+export type DRPResponse<T> =
   | {
       error: null;
-      data: any;
+      data: T;
     }
   | {
       error: DRPError;
