@@ -32,35 +32,27 @@ export const getProjectDetails: (
 export const getProjectGroups: (
   projectId: string
 ) => Promise<DRPResponse<Group[]>> = async (projectId) => {
-  const { data: groups, error: groupIdError } = await supabase
+  // Fetch groups and their members in a single query
+  const { data, error } = await supabase
     .from("groups")
-    .select("group_id, description")
+    .select(
+      `
+      group_id,
+      description,
+      group_members:group_members (user_id)
+      `
+    )
     .eq("project_id", projectId);
-  if (groupIdError) return { data: null, error: groupIdError };
 
-  const groupIds = groups.map((group) => group.group_id);
+  // Handle any errors from the query
+  if (error) return { data: null, error };
 
-  const memberIds = new Map<string, string[]>();
-  const errors = await Promise.all(
-    groupIds.map(async (groupId) => {
-      const { data: memberIdsInGroup, error: memberIdError } = await supabase
-        .from("group_members")
-        .select("user_id")
-        .eq("group_id", groupId);
-      if (memberIdError) return memberIdError;
-      memberIds.set(
-        groupId,
-        memberIdsInGroup.map((e) => e.user_id)
-      );
-      return null;
-    })
-  );
-  for (const error of errors) {
-    if (error) return { data: null, error };
-  }
-  const data = groups.map((group) => ({
-    ...group,
-    members: memberIds.get(group.group_id)!,
+  // Transform the data to the desired structure
+  const groups = data.map((group) => ({
+    group_id: group.group_id,
+    description: group.description,
+    members: group.group_members.map((member) => member.user_id),
   }));
-  return { data, error: null };
+
+  return { data: groups, error: null };
 };
