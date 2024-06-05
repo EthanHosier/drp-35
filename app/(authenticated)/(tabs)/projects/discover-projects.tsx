@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
@@ -138,7 +138,7 @@ const DiscoverProjects = () => {
           </View>
           <View>
             <ScrollView
-              style={{ marginTop: 12, paddingBottom: 160 }}
+              style={{ marginTop: 12, paddingBottom: Platform.OS === 'android' ? 160 : 0 }}
               horizontal
               showsHorizontalScrollIndicator={false}
             >
