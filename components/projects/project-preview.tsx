@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
-import {ImageBackground} from "expo-image";
+import { ImageBackground } from "expo-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
@@ -16,13 +16,16 @@ interface ProjectPreviewProps {
 const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
   return (
     <View style={{ marginLeft: 24 }}>
-      <Link asChild href={"/(authenticated)/projects/view-project/1"}>
-        <TouchableOpacity>
+      <Link
+        asChild
+        href={`/(authenticated)/projects/view-project/${project.projectId}`}
+      >
+        <TouchableOpacity onPress={() => console.log("yeahh")}>
           <View style={{ width: 320, aspectRatio: 5 / 3 }}>
             <ImageBackground
-                source={{uri: project.image}}
-                style={styles.image}
-                imageStyle={{borderRadius: 24}}
+              source={{ uri: project.image }}
+              style={styles.image}
+              imageStyle={{ borderRadius: 24 }}
             >
               <View
                 style={{

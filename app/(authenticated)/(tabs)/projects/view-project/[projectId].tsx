@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
@@ -10,10 +10,31 @@ import InfoSheet from "@/components/projects/info-sheet";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { Link, useRouter } from "expo-router";
-import { sleep } from "@/utils/utils";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { formatHumanReadableDate, sleep } from "@/utils/utils";
+import { getProjectDetails, type Project } from "@/utils/api/project-details";
 
 const InfoTab = () => {
+  const [projectData, setProjectData] = useState<Project | null>(null);
+  const id = useLocalSearchParams().projectId;
+
+  useEffect(() => {
+    console.log(projectData);
+  }, [projectData]);
+
+  useEffect(() => {
+    getProjectDetails(id as string).then((res) => {
+      if (!res.data) return;
+      setProjectData(res.data);
+    });
+  }, []);
+
+  if (!projectData)
+    return (
+      <View style={{ flex: 1, backgroundColor: Colors.background }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   return (
     <View
       style={[
@@ -33,22 +54,22 @@ const InfoTab = () => {
           marginTop: 16,
         }}
       >
-        Learn to code with Amelia
+        {projectData?.name}
       </Text>
       <Text style={{ marginTop: 4, color: Colors.gray }}>
-        Fri, Dec 23, 4:00 PM
+        {formatHumanReadableDate(projectData.start_date_time)}
       </Text>
       <View style={[styles.attributeContainer, { marginTop: 24 }]}>
         <View style={styles.attributeIconContainer}>
           <Ionicons name="people-outline" size={24} color="black" />
         </View>
-        <Text style={styles.attributeText}>4 Group Members</Text>
+        <Text style={styles.attributeText}>
+          {projectData.min_group_size} - {projectData.max_group_size}
+          members
+        </Text>
       </View>
       <Text style={{ marginTop: 24 }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
+        {projectData.description || "No description provided."}
       </Text>
     </View>
   );

@@ -41,3 +41,38 @@ export function getMonthAbbreviation(date: Date): string {
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function formatHumanReadableDate(dateString: string): string {
+  const date = new Date(dateString);
+
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const dayOfWeek = daysOfWeek[date.getUTCDay()];
+  const month = months[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+  let hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+
+  const ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${dayOfWeek}, ${month} ${day}, ${hours}:${minutesStr}${ampm}`;
+}
