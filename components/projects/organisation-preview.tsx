@@ -1,22 +1,23 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
+import {router} from "expo-router";
 import { Image } from "expo-image";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import { Project } from "@/utils/store/projects-store";
-import {Organisation} from "@/utils/store/organisations-store";
+import {Organisation} from "@/constants/PlaceholderValues";
 
 interface OrganisationPreviewProps {
   organisation: Organisation;
 }
 
 const ProjectPreview: React.FC<OrganisationPreviewProps> = ({ organisation }) => {
+
   return (
       <View style={{ marginLeft: 24 }}>
-        <Link asChild href={"/(authenticated)/projects/view-organisation/1"}>
-          <TouchableOpacity onPress={() => console.log("yeahh")}>
+          <TouchableOpacity
+              onPress={() => router.navigate("(authenticated)/profile/orgs/1")}
+          >
             <View style={{ width: 320, aspectRatio: 5 / 3 }}>
               <Image source={organisation.image} style={styles.image} />
             </View>
@@ -33,11 +34,10 @@ const ProjectPreview: React.FC<OrganisationPreviewProps> = ({ organisation }) =>
                     marginTop: 1,
                   }}
               >
-                {organisation.subName}
+                {organisation.subtitle}
               </Text>
             </View>
           </TouchableOpacity>
-        </Link>
       </View>
   );
 };

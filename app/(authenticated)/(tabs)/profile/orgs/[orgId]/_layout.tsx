@@ -1,15 +1,3 @@
-// import React from "react";
-// import { Stack } from "expo-router";
-
-// const Layout = () => {
-//   return (
-//     <Stack>
-//       <Stack.Screen options={{ headerShown: false }} name="view-org" />
-//     </Stack>
-//   );
-// };
-
-// export default Layout;
 import Colors from "@/constants/Colors";
 import {
   StyleSheet,

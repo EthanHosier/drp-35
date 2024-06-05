@@ -12,7 +12,7 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
-import {Organisation} from "@/utils/store/organisations-store";
+import {Organisations} from "@/constants/PlaceholderValues";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
@@ -142,7 +142,7 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {ORGANISATIONS.map((organisation, i) => (
+              {Organisations.map((organisation, i) => (
                 <OrganisationPreview organisation={organisation} key={i} />
               ))}
             </ScrollView>
@@ -152,14 +152,6 @@ const DiscoverProjects = () => {
     </View>
   );
 };
-
-const ORGANISATIONS: Organisation[] = [
-  {
-    name: "Imperial College",
-    subName: "Computing 2nd Year",
-    image: require("@/assets/images/adaptive-icon.png"),
-  }
-];
 
 export default DiscoverProjects;
 
