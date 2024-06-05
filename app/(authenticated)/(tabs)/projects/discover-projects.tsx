@@ -42,6 +42,8 @@ const DiscoverProjects = () => {
     getProjects();
   }, []);
 
+  const [search, setSearch] = React.useState("")
+
   return (
     <View>
       <LinearGradient
@@ -112,12 +114,18 @@ const DiscoverProjects = () => {
 
               <TextInput
                 style={{ flex: 1, marginLeft: 8, fontSize: 16 }}
+                onChangeText={(text) => setSearch(text)}
                 placeholder="Search for a project"
                 cursorColor={Colors.primary}
               />
             </View>
+            {
+              search !== "" && <Text style={{marginTop: 10, color: Colors.gray, fontWeight: "bold"}}>
+                  {`Search results for: "${search}"`}
+              </Text>
+            }
             <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
-              Projects you might like
+              {search === "" ? "Projects you might like" : `Projects:`}
             </Text>
           </View>
           <View>
@@ -126,14 +134,16 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {projects.map((project, i) => (
+              {projects
+                .filter((project) => project.name.toLowerCase().includes(search.toLowerCase()))
+                .map((project, i) => (
                 <ProjectPreview project={project} key={i} />
               ))}
             </ScrollView>
           </View>
           <View  style={{paddingHorizontal: 24}}>
             <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
-              Organisations you might like
+              {search === "" ? "Organisations you might like" : `Organisations:`}
             </Text>
           </View>
           <View>
@@ -142,7 +152,9 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {Organisations.map((organisation, i) => (
+              {Organisations
+                .filter((org) => org.name.toLowerCase().includes(search.toLowerCase()))
+                .map((organisation, i) => (
                 <OrganisationPreview organisation={organisation} key={i} />
               ))}
             </ScrollView>
