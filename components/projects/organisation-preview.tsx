@@ -6,21 +6,22 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Project } from "@/utils/store/projects-store";
+import {Organisation} from "@/utils/store/organisations-store";
 
-interface ProjectPreviewProps {
-  project: Project;
+interface OrganisationPreviewProps {
+  organisation: Organisation;
 }
 
-const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
+const ProjectPreview: React.FC<OrganisationPreviewProps> = ({ organisation }) => {
   return (
       <View style={{ marginLeft: 24 }}>
-        <Link asChild href={"/(authenticated)/projects/view-project/1"}>
+        <Link asChild href={"/(authenticated)/projects/view-organisation/1"}>
           <TouchableOpacity onPress={() => console.log("yeahh")}>
             <View style={{ width: 320, aspectRatio: 5 / 3 }}>
-              <Image source={project.image} style={styles.image} />
+              <Image source={organisation.image} style={styles.image} />
             </View>
             <Text style={{ marginTop: 8, fontWeight: "700", fontSize: 16 }}>
-              {project.name}
+              {organisation.name}
             </Text>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Ionicons name="people-outline" size={24} color={Colors.gray} />
@@ -32,7 +33,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                     marginTop: 1,
                   }}
               >
-                {project.minGroupSize}-{project.maxGroupSize} members
+                {organisation.subName}
               </Text>
             </View>
           </TouchableOpacity>

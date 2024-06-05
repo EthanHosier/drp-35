@@ -12,6 +12,7 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
+import {Organisation} from "@/utils/store/organisations-store";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
@@ -51,6 +52,7 @@ const DiscoverProjects = () => {
       >
         <ScrollView
             contentContainerStyle={{ marginTop: 64 }}
+            style={{ height: "100%" }}
             showsVerticalScrollIndicator={false}
         >
           <View style={{ paddingHorizontal: 24 }}>
@@ -136,12 +138,12 @@ const DiscoverProjects = () => {
           </View>
           <View>
             <ScrollView
-              style={{ marginTop: 12 }}
+              style={{ marginTop: 12, paddingBottom: 160 }}
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {projects.map((project, i) => (
-                <OrganisationPreview project={project} key={i} />
+              {ORGANISATIONS.map((organisation, i) => (
+                <OrganisationPreview organisation={organisation} key={i} />
               ))}
             </ScrollView>
           </View>
@@ -150,6 +152,14 @@ const DiscoverProjects = () => {
     </View>
   );
 };
+
+const ORGANISATIONS: Organisation[] = [
+  {
+    name: "Imperial College",
+    subName: "Computing 2nd Year",
+    image: require("@/assets/images/adaptive-icon.png"),
+  }
+];
 
 export default DiscoverProjects;
 
