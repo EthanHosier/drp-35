@@ -8,75 +8,7 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { useProfileStore } from "@/utils/store/profile-store";
-
-type Project = {
-  title: string;
-  image: string;
-  date: Date;
-  teamMembersGot: number;
-  teamMembersNeeded: number;
-};
-
-type Organisation = {
-  name: string;
-  image: string;
-  projects: Project[];
-}
-
-const PROJECTS: Project[] = [
-  {
-    title: "Project 1",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
-    date: new Date(),
-    teamMembersGot: 2,
-    teamMembersNeeded: 4,
-  },
-  {
-    title: "Project 2",
-    image:
-      "https://pbs.twimg.com/profile_images/1742880732207329280/NYKXBC3k_400x400.jpg",
-    date: new Date(),
-    teamMembersGot: 1,
-    teamMembersNeeded: 2,
-  },
-  {
-    title: "Project 3",
-    image:
-      "https://image.similarpng.com/very-thumbnail/2021/11/Mcdonalds-logo-on-transparent-background-PNG.png",
-    date: new Date(),
-    teamMembersGot: 3,
-    teamMembersNeeded: 5,
-  },
-];
-
-const ORGANISATIONS: Organisation[] = [
-  {
-    name: "Imperial Computing Year 1",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
-    projects: PROJECTS,
-  },
-  {
-    name: "Imperial Computing Year 2",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
-    projects: PROJECTS,
-  },
-  {
-    name: "Imperial Computing Year 3",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
-    projects: PROJECTS,
-  },
-  {
-    name: "McDonald's",
-    image: "https://image.similarpng.com/very-thumbnail/2021/11/Mcdonalds-logo-on-transparent-background-PNG.png",
-    projects: PROJECTS,
-  },
-  {
-    name: "ICHack24",
-    image: "https://pbs.twimg.com/profile_images/1742880732207329280/NYKXBC3k_400x400.jpg",
-    projects: PROJECTS,
-  }
-]
+import {Projects, Organisations} from "@/constants/PlaceholderValues";
 
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
@@ -155,8 +87,8 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Groups
         </Text>
-        {PROJECTS.map((project, i) => (
-          <Link asChild href="/(authenticated)/profile/1" key={i}>
+        {Projects.map((project, i) => (
+          <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,
@@ -194,34 +126,36 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Organisations
         </Text>
-        {ORGANISATIONS.map((org, i) => (
-          <TouchableOpacity
-            style={{
-              paddingTop: i == 0 ? 16 : 12,
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: Colors.lightGray,
-              paddingVertical: 8,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-            key={i}
-          >
-            <Image
-              source={org.image}
-              style={{ width: 64, height: 64, borderRadius: 32 }}
-            />
-            <View style={{ marginLeft: 16 }}>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                {org.name}
-              </Text>
-            </View>
-            <FontAwesome
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
-              style={{ marginLeft: "auto" }}
-            />
-          </TouchableOpacity>
+        {Organisations.map((org, i) => (
+          <Link asChild href="/(authenticated)/profile/orgs/1" key={i}>
+            <TouchableOpacity
+              style={{
+                paddingTop: i == 0 ? 16 : 12,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderColor: Colors.lightGray,
+                paddingVertical: 8,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+              key={i}
+            >
+              <Image
+                source={org.image}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
+              />
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                  {org.name}
+                </Text>
+              </View>
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          </Link>
         ))}
       </ScrollView>
     </View>

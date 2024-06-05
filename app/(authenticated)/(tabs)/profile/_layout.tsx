@@ -10,6 +10,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
 
+
 const Layout = () => {
   const router = useRouter();
   const userId = useUserIdStore((state) => state.userId);
@@ -194,9 +195,38 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="[projectId]"
+        name="projects/[projectId]"
         options={{
           title: "My Group",
+          presentation: "fullScreenModal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons
+                name="chevron-back-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <Ionicons
+                name="ellipsis-horizontal-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{
+                  alignSelf: "center",
+                }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="orgs/[orgId]"
+        options={{
+          title: "View organisation",
           presentation: "fullScreenModal",
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
