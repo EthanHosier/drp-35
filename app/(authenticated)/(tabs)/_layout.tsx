@@ -76,23 +76,6 @@ const Layout = () => {
             title: "Profile",
           }}
         />
-
-        <Tabs.Screen
-          name="[orgId]"
-          options={{
-            title: "View Organisation",
-            headerLeft: () => (
-              <TouchableOpacity onPress={router.back} style={{marginLeft: 10}}>
-                <Ionicons
-                  name="chevron-back-sharp"
-                  size={24}
-                  color={Colors.primary}
-                  style={{ marginLeft: "auto" }}
-                />
-              </TouchableOpacity>
-            ),
-          }}
-        />
       </Tabs>
       <BlurView
         tint="extraLight"

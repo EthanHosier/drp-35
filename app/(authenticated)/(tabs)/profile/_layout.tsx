@@ -264,35 +264,6 @@ const Layout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="orgs/[orgId]"
-        options={{
-          title: "View organisation",
-          presentation: "fullScreenModal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Ionicons
-                name="chevron-back-sharp"
-                size={24}
-                color={Colors.primary}
-                style={{ marginLeft: "auto" }}
-              />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => {}}>
-              <Ionicons
-                name="ellipsis-horizontal-sharp"
-                size={24}
-                color={Colors.primary}
-                style={{
-                  alignSelf: "center",
-                }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
-      />
     </Stack>
   );
 };
