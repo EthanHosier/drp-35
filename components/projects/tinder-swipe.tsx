@@ -28,7 +28,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   groups,
   memberIndex,
   setMemberIndex,
-
+  groupIndex,
   setGroupIndex,
 }) => {
   const handleTap = (xIndex: number, screenWidth: number) => {
@@ -62,7 +62,8 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
 
   const ref = useRef<SwiperCardRefType>();
 
-  const renderCard = (group: Group) => {
+  const renderCard = (group: Group, index: number) => {
+    const topOfPile = index === groupIndex;
     const member = group.members[memberIndex];
     if (!member) return <></>;
     return (
@@ -111,7 +112,10 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
                   style={{
                     flex: 1,
                     backgroundColor: `rgba(255,255,255,${
-                      memberIndex === i ? 0.9 : 0.3
+                      (memberIndex === i && topOfPile) ||
+                      (i === 0 && !topOfPile)
+                        ? 0.9
+                        : 0.3
                     })`,
                   }}
                   intensity={80}
@@ -174,6 +178,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         onSwipeRight={(cardIndex) => {
           console.log("onSwipeRight", cardIndex);
           onSwipeRight();
+          setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
         }}
         onSwipedAll={async () => {
           await sleep(100);
@@ -186,6 +191,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         }}
         onSwipeLeft={(cardIndex) => {
           console.log("onSwipeLeft", cardIndex);
+          setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
         }}
         onSwipeTop={(cardIndex) => {
           console.log("onSwipeTop", cardIndex);
@@ -198,7 +204,6 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         }}
         onSwipeEnd={() => {
           console.log("onSwipeEnd");
-          setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
         }}
         OverlayLabelRight={OverlayLabelRight}
       />
