@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {Link, useLocalSearchParams} from "expo-router";
+import {Link, router, useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
@@ -124,7 +124,7 @@ const ViewOrg = () => {
                     style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
                   >
                     {project.min_group_size === project.max_group_size ?
-                    `${project.min_group_size} team members` : 
+                    `${project.min_group_size} team members` :
                     `${project.min_group_size}-${project.max_group_size} team members`}
                   </Text>
                 </View>
@@ -162,6 +162,7 @@ const ViewOrg = () => {
               if (!res.error) setInOrg(true);
             });
           }
+          router.back();
         }}
       >
         <View>
@@ -170,8 +171,6 @@ const ViewOrg = () => {
           </Text>
         </View>
       </TouchableOpacity>
-          
-         
     </View>
   );
 };
