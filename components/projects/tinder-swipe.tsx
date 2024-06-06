@@ -179,6 +179,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
           console.log("onSwipeRight", cardIndex);
           onSwipeRight();
           setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
+          setMemberIndex(0);
         }}
         onSwipedAll={async () => {
           await sleep(100);
@@ -192,6 +193,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         onSwipeLeft={(cardIndex) => {
           console.log("onSwipeLeft", cardIndex);
           setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
+          setMemberIndex(0);
         }}
         onSwipeTop={(cardIndex) => {
           console.log("onSwipeTop", cardIndex);
