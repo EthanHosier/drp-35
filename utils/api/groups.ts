@@ -39,3 +39,12 @@ export const getPendingGroupMembers: (
   });
   return { data, error: null };
 };
+
+export const requestToJoinGroup: (
+  groupId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (groupId, userId) => {
+  return await supabase
+    .from("group_members_pending")
+    .insert({ group_id: groupId, user_id: userId });
+};
