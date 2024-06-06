@@ -36,15 +36,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   pressed,
   setPressed,
 }) => {
-  const handleTap = (xIndex: number, screenWidth: number) => {
-    const quarterWidth = screenWidth / 4;
-
-    if (xIndex >= 0 && xIndex < quarterWidth) {
-      setMemberIndex((i) => Math.max(0, i - 1));
-    } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
-      setMemberIndex((i) => Math.min(i + 1, groups.length - 1));
-    }
-  };
+  
   const { width } = Dimensions.get("window");
 
   const OverlayLabelRight = useCallback(() => {
@@ -69,8 +61,18 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
 
   const renderCard = (group: Group, index: number) => {
     const topOfPile = index === groupIndex;
-    const member = group.members[memberIndex];
+    const member = group.members[Math.min(memberIndex, group.members.length - 1)];
+    const handleTap = (xIndex: number, screenWidth: number) => {
+      const quarterWidth = screenWidth / 4;
+      if(!topOfPile) return;
+      if (xIndex >= 0 && xIndex < quarterWidth) {
+        setMemberIndex((i) => Math.max(0, i - 1));
+      } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
+        setMemberIndex((i) => Math.min(i + 1, groups[groupIndex].members.length - 1));
+      }
+    };
     if (!member) return <></>;
+    
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
         <>
