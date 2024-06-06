@@ -10,7 +10,7 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
-
+import { getProjectPicUrl } from "@/utils/api/project-pics";
 
 const Layout = () => {
   const router = useRouter();
@@ -44,7 +44,9 @@ const Layout = () => {
     const getMyGroups = async () => {
       const { data, error } = await supabase
         .from("group_members")
-        .select("group_id, groups(description, projects(name, max_group_size))")
+        .select(
+          "group_id, groups(description, projects(name, max_group_size, project_id))"
+        )
         .eq("user_id", userId);
       if (error) {
         alert(error.message);
@@ -72,8 +74,7 @@ const Layout = () => {
           projectName: group.groups?.projects?.name ?? "",
           maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
           currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Shield_of_Imperial_College_London.svg/1200px-Shield_of_Imperial_College_London.svg.png",
+          image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
         }))
       );
     };
