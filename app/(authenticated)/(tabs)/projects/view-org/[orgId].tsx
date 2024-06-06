@@ -8,7 +8,6 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import { Organisations } from "@/constants/PlaceholderValues";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import {useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
@@ -18,6 +17,7 @@ import {
   joinOrganisation,
   leaveOrganisation,
 } from "@/utils/api/organisations";
+
 
 const InfoTab = () => {
 
@@ -30,6 +30,7 @@ const InfoTab = () => {
     name: "",
     subtitle: "",
     description: "",
+    image: "",
   });
 
   useEffect(() => {
@@ -42,7 +43,8 @@ const InfoTab = () => {
       if (!res.error) setOrganisation({
         name: res.data.name,
         subtitle: res.data.subtitle,
-        description: res.data.description
+        description: res.data.description,
+        image: res.data.image
       });
     });
     setLoading(false);
@@ -63,7 +65,7 @@ const InfoTab = () => {
         ]}
       >
         <View style={{ position: "relative" }}>
-          <Image source={Organisations[0].image} style={styles.img} />
+          <Image source={organisation.image} style={styles.img} />
           <View
             style={[
               styles.img,

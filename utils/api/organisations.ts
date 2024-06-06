@@ -7,6 +7,7 @@ export type Organisation = {
   subtitle: string;
   description: string;
   org_id: string;
+  image: string;
 };
 
 export const getOrganisationById: (

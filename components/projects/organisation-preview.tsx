@@ -4,7 +4,7 @@ import {router} from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import {Organisation} from "@/constants/PlaceholderValues";
+import { Organisation } from "@/utils/api/organisations";
 
 interface OrganisationPreviewProps {
   organisation: Organisation;
@@ -15,7 +15,7 @@ const OrganisationPreview: React.FC<OrganisationPreviewProps> = ({ organisation 
   return (
       <View style={{ marginLeft: 24 }}>
           <TouchableOpacity
-              onPress={() => router.navigate("(authenticated)/(tabs)/projects/view-org/1")}
+              onPress={() => router.navigate(`(authenticated)/(tabs)/projects/view-org/${organisation.org_id}`)}
           >
             <View style={{ width: 320, aspectRatio: 5 / 3, borderRadius: 20 }}>
               <ImageBackground

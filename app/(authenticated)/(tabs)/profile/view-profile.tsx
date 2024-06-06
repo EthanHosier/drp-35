@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
@@ -7,19 +7,26 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
-import {Organisations} from "@/constants/PlaceholderValues";
 import { Group, useMyGroupsStore } from "@/utils/store/my-groups-store";
-
-type Organisation = {
-  name: string;
-  image: string;
-  projects: Group[];
-};
+import { Organisation, getAllJoinedOrganisations } from "@/utils/api/organisations";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
   const fullName = useProfileStore((state) => state.fullName);
   const myGroups = useMyGroupsStore((state) => state.groups);
+  const userId = useUserIdStore((state) => state.userId);
+  const [orgs, setOrgs] = useState<Organisation[] | null>([]);
+  useEffect(() => {
+    const getOrganisations = () => {
+      getAllJoinedOrganisations(userId).then((res) => {
+        if(!res.data) return;
+        setOrgs(res.data);
+      });
+    }
+    getOrganisations();
+  }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
@@ -131,8 +138,8 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Organisations
         </Text>
-        {Organisations.map((org, i) => (
-          <Link asChild href="/(authenticated)/(tabs)/projects/view-org/1" key={i}>
+        {orgs?.map((org, i) => (
+          <Link asChild href={`/(authenticated)/(tabs)/projects/view-org/${org.org_id}`} key={i}>
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,

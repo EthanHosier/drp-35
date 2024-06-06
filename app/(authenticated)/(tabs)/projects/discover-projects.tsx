@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
@@ -18,12 +18,24 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
-import { Organisations } from "@/constants/PlaceholderValues";
+import { Organisation, getAllJoinedOrganisations, getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
 
   const { projects, setProjects } = useProjectsStore();
+  const userId = useUserIdStore((state) => state.userId);
+  const [orgs, setOrgs] = useState<Organisation[] | null>([]);
+  useEffect(() => {
+    const getOrganisations = () => {
+      getAllOrganisationsExceptJoined(userId).then((res) => {
+        if(!res.data) return;
+        setOrgs(res.data);
+      });
+    }
+    getOrganisations();
+  }, []);
 
   useEffect(() => {
     const getProjects = async () => {
@@ -172,7 +184,7 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {Organisations.filter((org) =>
+              {orgs?.filter((org) =>
                 org.name.toLowerCase().includes(search.toLowerCase())
               ).map((organisation, i) => (
                 <OrganisationPreview organisation={organisation} key={i} />
