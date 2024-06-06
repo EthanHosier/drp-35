@@ -17,6 +17,14 @@ export type Group = {
   members: Profile[];
 };
 
+export const getAllProjects: () => Promise<
+  DRPResponse<Project[]>
+> = async () => {
+  const { data, error } = await supabase.from("projects").select();
+  if (error) return { data: null, error };
+  return { data, error: null };
+};
+
 export const getProjectDetails: (
   projectId: string
 ) => Promise<DRPResponse<Project>> = async (projectId) => {
