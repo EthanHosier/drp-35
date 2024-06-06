@@ -1,5 +1,11 @@
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  Touchable,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +21,9 @@ import {
   type Project,
 } from "@/utils/api/project-details";
 import { useFilterStore } from "@/utils/store/filter-store";
+import LottieView from "lottie-react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { defaultStyles } from "@/constants/DefaultStyles";
 
 const InfoTab = () => {
   const [projectData, setProjectData] = useState<Project | null>(null);
@@ -78,6 +87,7 @@ const GroupsTab = () => {
   const [projectGroups, setProjectGroups] = useState<Group[] | null>(null);
   const [memberIndex, setMemberIndex] = useState<number>(0);
   const [groupIndex, setGroupIndex] = useState<number>(0);
+  const animation = useRef(null);
 
   const id = useLocalSearchParams().projectId;
 
@@ -96,8 +106,8 @@ const GroupsTab = () => {
   console.log({ projectGroups });
 
   return (
-    <View style={{ flex: 1 }}>
-      {projectGroups && projectGroups.length > 0 && (
+    <View style={{ flex: 1, position: "relative" }}>
+      {projectGroups && projectGroups.length > 0 ? (
         <>
           <TinderSwipe
             groups={
@@ -128,6 +138,55 @@ const GroupsTab = () => {
                 : null
             }
           />
+        </>
+      ) : (
+        <>
+          <View
+            style={{
+              flex: 1,
+              padding: 24,
+              position: "relative",
+              justifyContent: "center",
+            }}
+          >
+            <LottieView
+              autoPlay
+              ref={animation}
+              style={{
+                marginTop: -200,
+                width: "100%",
+                height: 200,
+              }}
+              source={require("@/assets/images/tumbleweed.json")}
+            />
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 28,
+                fontWeight: "600",
+                color: Colors.dark,
+              }}
+            >
+              No groups found
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              defaultStyles.pillButton,
+              {
+                backgroundColor: Colors.primary,
+                width: "90%",
+                alignSelf: "center",
+                position: "absolute",
+
+                bottom: 24,
+              },
+            ]}
+          >
+            <Text style={{ fontSize: 16, color: Colors.background }}>
+              Create group
+            </Text>
+          </TouchableOpacity>
         </>
       )}
     </View>

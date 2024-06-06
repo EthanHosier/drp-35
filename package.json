@@ -68,7 +68,8 @@
     "react-native-web": "~0.19.10",
     "rn-swiper-list": "^2.0.2",
     "zeego": "^1.10.0",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "lottie-react-native": "6.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
