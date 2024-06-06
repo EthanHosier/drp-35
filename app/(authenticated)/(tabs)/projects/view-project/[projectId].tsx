@@ -70,8 +70,7 @@ const InfoTab = () => {
           <Ionicons name="people-outline" size={24} color="black" />
         </View>
         <Text style={styles.attributeText}>
-          {projectData.min_group_size} - {projectData.max_group_size}
-          members
+          {projectData.min_group_size} - {projectData.max_group_size} members
         </Text>
       </View>
       <Text style={{ marginTop: 24 }}>
