@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
@@ -63,16 +58,31 @@ const DiscoverProjects = () => {
 
   const [search, setSearch] = React.useState("");
 
-  const orgSearchResults = orgs?.filter((org) =>
-      org.name.toLowerCase().includes(search.toLowerCase())
-  ).map((organisation, i) => (
+  const orgSearchResults = orgs
+    ?.filter((org) => org.name.toLowerCase().includes(search.toLowerCase()))
+    .map((organisation, i) => (
       <OrganisationPreview organisation={organisation} key={i} />
-  ))
-  const projectSearchResults = projects.filter((project) =>
+    ));
+  const projectSearchResults = projects
+    .filter((project) =>
       project.name.toLowerCase().includes(search.toLowerCase())
-  ).map((project, i) => (
-      <ProjectPreview project={project} key={i} />
-  ))
+    )
+    .map((project, i) => <ProjectPreview project={project} key={i} />);
+
+  const CARD_WIDTH = 320;
+  const HORIZONTAL_PADDING = 24;
+  function generateSnapPoints(projectsLength: number): number[] {
+    const arr = [0].concat(
+      Array.from(
+        { length: projectsLength - 1 },
+        (_, i) =>
+          CARD_WIDTH +
+          HORIZONTAL_PADDING / 2 +
+          (i - 1) * (CARD_WIDTH + HORIZONTAL_PADDING)
+      )
+    );
+    return arr;
+  }
 
   return (
     <View>
@@ -161,8 +171,11 @@ const DiscoverProjects = () => {
               </Text>
             )}
             <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
-              {search === "" ? "Projects you might like"
-                  : ((projectSearchResults && projectSearchResults.length > 0) && "Projects:")}
+              {search === ""
+                ? "Projects you might like"
+                : projectSearchResults &&
+                  projectSearchResults.length > 0 &&
+                  "Projects:"}
             </Text>
           </View>
           <View>
@@ -170,6 +183,10 @@ const DiscoverProjects = () => {
               style={{ marginTop: 12 }}
               horizontal
               showsHorizontalScrollIndicator={false}
+              decelerationRate={0}
+              snapToOffsets={generateSnapPoints(projectSearchResults.length)}
+              snapToAlignment={"center"}
+              snapToStart={true}
             >
               {projectSearchResults}
             </ScrollView>
@@ -179,7 +196,9 @@ const DiscoverProjects = () => {
             <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
               {search === ""
                 ? "Organisations you might like"
-                : ((orgSearchResults && orgSearchResults.length > 0) && "Organisations:")}
+                : orgSearchResults &&
+                  orgSearchResults.length > 0 &&
+                  "Organisations:"}
             </Text>
           </View>
           <View>
@@ -189,8 +208,14 @@ const DiscoverProjects = () => {
               }}
               horizontal
               showsHorizontalScrollIndicator={false}
+              decelerationRate={0}
+              snapToOffsets={generateSnapPoints(
+                orgSearchResults ? orgSearchResults.length : 0
+              )}
+              snapToAlignment={"center"}
+              snapToStart={true}
             >
-              { orgSearchResults }
+              {orgSearchResults}
             </ScrollView>
           </View>
 
@@ -211,14 +236,12 @@ const DiscoverProjects = () => {
               style={{ marginTop: 12 }}
               horizontal
               showsHorizontalScrollIndicator={false}
+              decelerationRate={0}
+              snapToOffsets={generateSnapPoints(projectSearchResults.length)}
+              snapToAlignment={"center"}
+              snapToStart={true}
             >
-              {projects
-                .filter((project) =>
-                  project.name.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((project, i) => (
-                  <ProjectPreview project={project} key={i} />
-                ))}
+              {projectSearchResults}
             </ScrollView>
           </View>
         </ScrollView>
