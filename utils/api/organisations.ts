@@ -84,6 +84,36 @@ export const joinOrganisation: (
     .insert({ org_id: orgId, user_id: userId });
 };
 
+export const joinAllProjectsInOrg: (
+  orgId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (orgId, userId) => {
+  // Get all projects in organisation
+  const { data, error } = await supabase
+    .from("projects")
+    .select("project_id")
+    .eq("org_id", orgId);
+  if (error) return { data: null, error };
+
+  for (const projectId of data.map((project) => project.project_id)) {
+    // Create group
+    const { data: newGroup, error: newGroupError } = await supabase
+      .from("groups")
+      .insert({ project_id: projectId })
+      .select()
+      .single();
+    if (newGroupError) return { data: null, error: newGroupError };
+
+    // Add yourself to the new group
+    const { error: joinNewGroupError } = await supabase
+      .from("group_members")
+      .insert({ group_id: newGroup.group_id, user_id: userId });
+    if (joinNewGroupError) return { data: null, error: joinNewGroupError };
+  }
+
+  return { data: null, error: null };
+};
+
 export const leaveOrganisation: (
   orgId: string,
   userId: string
