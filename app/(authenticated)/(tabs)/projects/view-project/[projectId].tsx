@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -97,7 +97,7 @@ const GroupsTab = () => {
   const router = useRouter();
 
   // Filter settings
-  const numMembers = useFilterStore((state) => state.settings.numMembers);
+  const numMembers = useFilterStore((state) => state.numMembers);
 
   console.log({ projectGroups });
 

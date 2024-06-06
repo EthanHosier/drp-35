@@ -6,7 +6,6 @@ import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { useProjectsStore } from "@/utils/store/projects-store";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const Layout = () => {
   const router = useRouter();
@@ -150,6 +149,22 @@ const Layout = () => {
             </TouchableOpacity>
           ),
         }}
+      />
+      <Stack.Screen
+          name="languages"
+          options={{
+            presentation: "fullScreenModal",
+            title: "Languages",
+            headerRight: () => (
+                <TouchableOpacity onPress={router.back}>
+                  <Text
+                      style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+                  >
+                    Done
+                  </Text>
+                </TouchableOpacity>
+            ),
+          }}
       />
     </Stack>
   );

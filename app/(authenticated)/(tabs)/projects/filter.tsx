@@ -6,14 +6,12 @@ import {useFilterStore} from "@/utils/store/filter-store";
 import {TouchableOpacity} from "react-native-gesture-handler";
 import {FontAwesome} from "@expo/vector-icons";
 import {Link} from "expo-router";
-import {useLanguagesStore} from "@/utils/store/languages-store";
 
 const Filter = () => {
 
   const [numMembers, setNumMembers] = React.useState(
-      useFilterStore((state) => state.settings.numMembers.toString())
+      useFilterStore((state) => state.numMembers.toString())
   );
-  const languages = useLanguagesStore((state) => state.languages);
 
   return (
       <KeyboardAwareScrollView
@@ -31,14 +29,13 @@ const Filter = () => {
               placeholder={"0"}
               onChangeText={(text) => {
                 setNumMembers(text);
-                const newSettings = useFilterStore((state) => state.settings);
-                useFilterStore.setState({settings: {...newSettings, numMembers: parseInt(text)}});
+                useFilterStore.setState({ numMembers: parseInt(text) });
               }}
           />
         </View>
         <Link
             asChild
-            href="/(authenticated)/profile/languages"
+            href="/(authenticated)/projects/languages"
             style={[
               styles.fieldsContainer,
               { paddingBottom: 20, paddingRight: 32 },
@@ -54,7 +51,7 @@ const Filter = () => {
                   ellipsizeMode="tail"
                   style={styles.skillsText}
               >
-                {languages.join(", ")}
+                {useFilterStore(state => state.languages).join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
