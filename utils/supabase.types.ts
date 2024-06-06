@@ -73,6 +73,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_members_pending_user_id_fkey1";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
           }
         ];
       };
@@ -104,17 +111,17 @@ export type Database = {
       };
       organisations: {
         Row: {
-          description: string | null;
+          description: string;
           name: string;
           org_id: string;
         };
         Insert: {
-          description?: string | null;
+          description?: string;
           name: string;
           org_id?: string;
         };
         Update: {
-          description?: string | null;
+          description?: string;
           name?: string;
           org_id?: string;
         };
