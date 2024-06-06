@@ -11,6 +11,8 @@ export type Profile = {
   linkedin: string;
   github: string;
   website: string;
+  skills: string[];
+  languages: string[];
 };
 
 export const getProfileByUserId: (
@@ -18,10 +20,18 @@ export const getProfileByUserId: (
 ) => Promise<DRPResponse<Profile>> = async (userId) => {
   const { data, error } = await supabase
     .from("profiles")
-    .select()
+    .select("*, user_skills(skill_name), user_languages(language_name)")
     .eq("user_id", userId)
     .single();
   if (error) return { data: null, error };
   const imageUrl = getProfilePicUrl(userId).data!;
-  return { data: { ...data, imageUrl }, error: null };
+  return {
+    data: {
+      ...data,
+      imageUrl,
+      skills: data.user_skills.map((skill) => skill.skill_name),
+      languages: data.user_languages.map((language) => language.language_name),
+    },
+    error: null,
+  };
 };

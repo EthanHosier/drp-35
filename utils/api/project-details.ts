@@ -45,7 +45,19 @@ export const getProjectGroups: (
   // Fetch groups and their members in a single query
   const { data, error } = await supabase
     .from("groups")
-    .select("*, group_members(*, profiles(*))")
+    .select(
+      `
+      *,
+      group_members(
+        *,
+        profiles(
+          *,
+          user_skills(skill_name),
+          user_languages(language_name)
+        )
+      )
+      `
+    )
     .eq("project_id", projectId);
 
   console.log(error);
@@ -58,11 +70,15 @@ export const getProjectGroups: (
       group_id: group.group_id,
       description: group.description,
       members: group.group_members.map((member, i) => {
-        const { user_id, ...profileWithoutUserId } = member.profiles;
+        const { user_id, ...profile } = member.profiles;
         console.log(member.profiles);
         return {
-          ...profileWithoutUserId,
+          ...profile,
           imageUrl: getProfilePicUrl(user_id).data ?? "",
+          skills: profile.user_skills.map((skill) => skill.skill_name),
+          languages: profile.user_languages.map(
+            (language) => language.language_name
+          ),
         };
       }),
     };
