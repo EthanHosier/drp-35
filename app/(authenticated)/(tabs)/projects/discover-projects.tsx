@@ -18,7 +18,7 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
-import { Organisation, getAllJoinedOrganisations, getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
+import { Organisation, getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const DiscoverProjects = () => {

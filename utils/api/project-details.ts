@@ -9,6 +9,7 @@ export type Project = {
   min_group_size: number;
   name: string;
   start_date_time: string;
+  project_id: string;
 };
 
 export type Group = {

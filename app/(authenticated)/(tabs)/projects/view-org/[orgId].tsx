@@ -21,11 +21,10 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { Project } from "@/utils/api/project-details";
 
-
-const InfoTab = () => {
+const ViewOrg = () => {
 
   const orgId = useLocalSearchParams().orgId as string;
-  const userId = useUserIdStore(user => user.userId);
+  const userId = useUserIdStore(user => user.userId); 
 
   const [loading, setLoading] = React.useState(true);
   const [inOrg, setInOrg] = React.useState(false);
@@ -104,7 +103,7 @@ const InfoTab = () => {
         </Text>
         <View style={{gap: 4}}>
           {projects?.map((project, i) => (
-            <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
+            <Link asChild href={`/(authenticated)/profile/projects/${project.project_id}`} key={i}>
               <TouchableOpacity
                 style={{
                   borderColor: Colors.lightGray,
@@ -177,60 +176,7 @@ const InfoTab = () => {
   );
 };
 
-// const ViewOrg = () => {
-//   return (
-//     <View style={{ flex: 1, backgroundColor: Colors.background }}>
-//       <ScrollView
-//         contentContainerStyle={[
-//           styles.container,
-//           { backgroundColor: Colors.background, paddingBottom: 100 },
-//         ]}
-//       >
-//         <Text style={{ marginBottom: 5, fontSize: 24, fontWeight: "600" }}>
-//           Projects in [Organisation name]
-//         </Text>
-//         {Projects.map((project, i) => (
-//           <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
-//             <TouchableOpacity
-//               style={{
-//                 paddingTop: i == 0 ? 16 : 12,
-//                 borderBottomWidth: StyleSheet.hairlineWidth,
-//                 borderColor: Colors.lightGray,
-//                 paddingVertical: 8,
-//                 flexDirection: "row",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <Image
-//                 source={project.image}
-//                 style={{ width: 64, height: 64, borderRadius: 32 }}
-//               />
-//               <View style={{ marginLeft: 16 }}>
-//                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
-//                   {project.title}
-//                 </Text>
-//                 <Text
-//                   style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
-//                 >
-//                   {project.teamMembersGot}/{project.teamMembersNeeded} team
-//                   members
-//                 </Text>
-//               </View>
-//               <FontAwesome
-//                 name="chevron-right"
-//                 size={16}
-//                 color={Colors.dark}
-//                 style={{ marginLeft: "auto" }}
-//               />
-//             </TouchableOpacity>
-//           </Link>
-//         ))}
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-export default InfoTab;
+export default ViewOrg;
 
 const styles = StyleSheet.create({
   container: {
