@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {Link, useLocalSearchParams} from "expo-router";
+import {Link, router, useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
@@ -125,7 +125,7 @@ const InfoTab = () => {
                     style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
                   >
                     {project.min_group_size === project.max_group_size ?
-                    `${project.min_group_size} team members` : 
+                    `${project.min_group_size} team members` :
                     `${project.min_group_size}-${project.max_group_size} team members`}
                   </Text>
                 </View>
@@ -163,6 +163,7 @@ const InfoTab = () => {
               if (!res.error) setInOrg(true);
             });
           }
+          router.back();
         }}
       >
         <View>
@@ -171,64 +172,9 @@ const InfoTab = () => {
           </Text>
         </View>
       </TouchableOpacity>
-          
-         
     </View>
   );
 };
-
-// const ViewOrg = () => {
-//   return (
-//     <View style={{ flex: 1, backgroundColor: Colors.background }}>
-//       <ScrollView
-//         contentContainerStyle={[
-//           styles.container,
-//           { backgroundColor: Colors.background, paddingBottom: 100 },
-//         ]}
-//       >
-//         <Text style={{ marginBottom: 5, fontSize: 24, fontWeight: "600" }}>
-//           Projects in [Organisation name]
-//         </Text>
-//         {Projects.map((project, i) => (
-//           <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
-//             <TouchableOpacity
-//               style={{
-//                 paddingTop: i == 0 ? 16 : 12,
-//                 borderBottomWidth: StyleSheet.hairlineWidth,
-//                 borderColor: Colors.lightGray,
-//                 paddingVertical: 8,
-//                 flexDirection: "row",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <Image
-//                 source={project.image}
-//                 style={{ width: 64, height: 64, borderRadius: 32 }}
-//               />
-//               <View style={{ marginLeft: 16 }}>
-//                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
-//                   {project.title}
-//                 </Text>
-//                 <Text
-//                   style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
-//                 >
-//                   {project.teamMembersGot}/{project.teamMembersNeeded} team
-//                   members
-//                 </Text>
-//               </View>
-//               <FontAwesome
-//                 name="chevron-right"
-//                 size={16}
-//                 color={Colors.dark}
-//                 style={{ marginLeft: "auto" }}
-//               />
-//             </TouchableOpacity>
-//           </Link>
-//         ))}
-//       </ScrollView>
-//     </View>
-//   );
-// };
 
 export default InfoTab;
 

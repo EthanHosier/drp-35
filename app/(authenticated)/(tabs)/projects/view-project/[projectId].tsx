@@ -2,15 +2,11 @@ import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
-import { SafeAreaView } from "react-native-safe-area-context";
 import InfoSheet from "@/components/projects/info-sheet";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import { defaultStyles } from "@/constants/DefaultStyles";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { formatHumanReadableDate, sleep } from "@/utils/utils";
 import {
   Group,
@@ -18,6 +14,7 @@ import {
   getProjectGroups,
   type Project,
 } from "@/utils/api/project-details";
+import {useFilterStore} from "@/utils/store/filter-store";
 
 const InfoTab = () => {
   const [projectData, setProjectData] = useState<Project | null>(null);
@@ -88,16 +85,20 @@ const GroupsTab = () => {
     getProjectGroups(id as string).then((res) => {
       if (!res.data) return;
       setProjectGroups(res.data);
-      console.log(res.data[0].members[0]);
     });
   }, []);
 
   const router = useRouter();
 
+  // Filter settings
+  const numMembers = useFilterStore(state => state.numMembers);
+
   return (
     <View style={{ flex: 1 }}>
       <TinderSwipe
-        groups={projectGroups || []}
+        groups={projectGroups ? projectGroups.filter((group) => {
+          return numMembers <= 0 || group.members.length === numMembers;
+        }) : []}
         memberIndex={memberIndex}
         setMemberIndex={setMemberIndex}
         groupIndex={groupIndex}
