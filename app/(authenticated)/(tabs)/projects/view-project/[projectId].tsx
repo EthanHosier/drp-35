@@ -93,9 +93,11 @@ const GroupsTab = () => {
   // Filter settings
   const numMembers = useFilterStore((state) => state.numMembers);
 
+  console.log({ projectGroups });
+
   return (
     <View style={{ flex: 1 }}>
-      {projectGroups && (
+      {projectGroups && projectGroups.length > 0 && (
         <>
           <TinderSwipe
             groups={
