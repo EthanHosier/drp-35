@@ -150,7 +150,6 @@ const ViewMembers = () => {
         )}
       </ScrollView>
       <TouchableOpacity
-        onPress={() => console.log("yeahh")}
         style={[
           defaultStyles.pillButton,
           {

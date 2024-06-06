@@ -16,8 +16,6 @@ const Layout = () => {
   const setUserId = useUserIdStore((state) => state.setUserId);
   const setFullName = useProfileStore((state) => state.setFullName);
 
-  console.log({ segments });
-
   useEffect(() => {
     const getUserIdAndFullName = async () => {
       const {

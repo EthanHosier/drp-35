@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -104,33 +104,61 @@ const GroupsTab = () => {
   const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
 
-  console.log({ projectGroups });
-
   return (
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.length > 0 ? (
         <>
-          <TouchableOpacity
-            onPress={() => router.navigate("../filter")}
+          <View
             style={{
-              marginRight: 8,
-              alignSelf: "flex-end",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 48,
-              width: 48,
-              borderRadius: 24,
-              backgroundColor: Colors.background,
-              marginTop: 12,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingHorizontal: 8,
             }}
           >
-            <Ionicons
-              name="filter"
-              size={24}
-              color={Colors.gray}
-              style={{ marginTop: 2 }}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.navigate("../filter")}
+              style={{
+                alignSelf: "flex-end",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+                width: 48,
+                borderRadius: 24,
+                backgroundColor: Colors.background,
+                marginTop: 12,
+              }}
+            >
+              <Ionicons
+                name="filter"
+                size={24}
+                color={Colors.gray}
+                style={{ marginTop: 2 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.navigate("../filter")}
+              style={{
+                alignSelf: "flex-end",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+                width: 96,
+                borderRadius: 24,
+                backgroundColor: Colors.primary,
+                marginTop: 12,
+                flexDirection: "row",
+              }}
+            >
+              <AntDesign
+                name="addusergroup"
+                size={24}
+                color={Colors.background}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={{ color: Colors.background }}>New</Text>
+            </TouchableOpacity>
+          </View>
+
           <TinderSwipe
             groups={
               projectGroups
