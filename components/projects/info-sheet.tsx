@@ -41,23 +41,21 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ profile }) => {
             contentContainerStyle={{ gap: 12, marginTop: 12, paddingLeft: 24 }}
             showsHorizontalScrollIndicator={false}
           >
-            {["Java", "Python", "JavaScript", "React", "Node.js"].map(
-              (skill, i) => (
-                <View
-                  key={i}
-                  style={{
-                    backgroundColor: Colors.lightGray,
-                    height: 32,
-                    paddingHorizontal: 12,
-                    borderRadius: 16,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text style={{ fontWeight: "500" }}>{skill}</Text>
-                </View>
-              )
-            )}
+            {profile?.skills.map((skill, i) => (
+              <View
+                key={i}
+                style={{
+                  backgroundColor: Colors.lightGray,
+                  height: 32,
+                  paddingHorizontal: 12,
+                  borderRadius: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ fontWeight: "500" }}>{skill}</Text>
+              </View>
+            ))}
           </ScrollView>
         </View>
 

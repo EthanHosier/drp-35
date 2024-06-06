@@ -5,11 +5,11 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { TextInput } from "react-native-gesture-handler";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
