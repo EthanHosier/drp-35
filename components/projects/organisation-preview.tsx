@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   imageOverlay: {
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.02)",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 24,
   },
 });
