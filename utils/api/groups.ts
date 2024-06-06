@@ -42,22 +42,22 @@ export const getPendingGroupMembers: (
 
 export const requestToJoinGroup: (
   groupId: string,
+  projectId: string,
   userId: string
-) => Promise<DRPResponse<null>> = async (groupId, userId) => {
-  const { data: projectId, error: projectIdError } = await supabase
-    .from("groups")
-    .select("project_id")
-    .eq("group_id", groupId)
-    .single();
-  if (projectIdError) return { data: null, error: projectIdError };
-
-  // Create group containing single user
+) => Promise<DRPResponse<null>> = async (groupId, projectId, userId) => {
+  // Create group
   const { data: newGroup, error: newGroupError } = await supabase
     .from("groups")
-    .insert({ project_id: projectId.project_id })
+    .insert({ project_id: projectId })
     .select()
     .single();
   if (newGroupError) return { data: null, error: newGroupError };
+
+  // Add yourself to the new group
+  const { error: joinNewGroupError } = await supabase
+    .from("group_members")
+    .insert({ group_id: newGroup.group_id, user_id: userId });
+  if (joinNewGroupError) return { data: null, error: joinNewGroupError };
 
   const { error: requestError } = await supabase
     .from("group_requests")
