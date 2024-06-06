@@ -49,10 +49,7 @@ const InfoTab = () => {
         { flex: 1, backgroundColor: Colors.background },
       ]}
     >
-      <Image
-        source="https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg"
-        style={styles.img}
-      />
+      <Image source={{ uri: projectData.image_uri }} style={styles.img} />
 
       <Text
         style={{
