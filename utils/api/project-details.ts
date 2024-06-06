@@ -50,7 +50,7 @@ export const getProjectGroups: (
       group_id: group.group_id,
       description: group.description,
       members: group.group_members.map((member, i) => {
-        const { user_id, ...profileWithoutUserId } = member.profiles;
+        const { user_id, ...profileWithoutUserId } = member.profiles[0];
         console.log(member.profiles);
         return {
           ...profileWithoutUserId,
