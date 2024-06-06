@@ -1,5 +1,4 @@
 import {
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,7 +14,6 @@ import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useProfileStore } from "@/utils/store/profile-store";
-import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
 import {
@@ -64,6 +62,17 @@ const DiscoverProjects = () => {
   }, []);
 
   const [search, setSearch] = React.useState("");
+
+  const orgSearchResults = orgs?.filter((org) =>
+      org.name.toLowerCase().includes(search.toLowerCase())
+  ).map((organisation, i) => (
+      <OrganisationPreview organisation={organisation} key={i} />
+  ))
+  const projectSearchResults = projects.filter((project) =>
+      project.name.toLowerCase().includes(search.toLowerCase())
+  ).map((project, i) => (
+      <ProjectPreview project={project} key={i} />
+  ))
 
   return (
     <View>
@@ -152,7 +161,8 @@ const DiscoverProjects = () => {
               </Text>
             )}
             <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
-              {search === "" ? "Projects you might like" : `Projects:`}
+              {search === "" ? "Projects you might like"
+                  : ((projectSearchResults && projectSearchResults.length > 0) && "Projects:")}
             </Text>
           </View>
           <View>
@@ -161,13 +171,7 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {projects
-                .filter((project) =>
-                  project.name.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((project, i) => (
-                  <ProjectPreview project={project} key={i} />
-                ))}
+              {projectSearchResults}
             </ScrollView>
           </View>
 
@@ -175,25 +179,18 @@ const DiscoverProjects = () => {
             <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
               {search === ""
                 ? "Organisations you might like"
-                : `Organisations:`}
+                : ((orgSearchResults && orgSearchResults.length > 0) && "Organisations:")}
             </Text>
           </View>
           <View>
             <ScrollView
               style={{
                 marginTop: 12,
-                paddingBottom: Platform.OS === "android" ? 160 : 0,
               }}
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {orgs
-                ?.filter((org) =>
-                  org.name.toLowerCase().includes(search.toLowerCase())
-                )
-                .map((organisation, i) => (
-                  <OrganisationPreview organisation={organisation} key={i} />
-                ))}
+              { orgSearchResults }
             </ScrollView>
           </View>
 

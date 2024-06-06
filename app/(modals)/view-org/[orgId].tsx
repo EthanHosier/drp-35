@@ -113,7 +113,7 @@ const ViewOrg = () => {
                 }}
               >
                 <Image
-                  source={{ uri: "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg" }}
+                  source={{ uri: project.image_uri }}
                   style={{ width: 64, height: 64, borderRadius: 32 }}
                 />
                 <View style={{ marginLeft: 16 }}>

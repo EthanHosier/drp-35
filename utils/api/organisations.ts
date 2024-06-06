@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
 import { Project } from "./project-details";
+import { getProjectPicUrl } from "./project-pics";
 
 export type Organisation = {
   name: string;
@@ -11,17 +12,17 @@ export type Organisation = {
 };
 
 export const getOrganisationById: (
-    orgId: string
+  orgId: string
 ) => Promise<DRPResponse<Organisation>> = async (orgId) => {
-    const { data: rawData, error } = await supabase
-        .from("organisations")
-        .select("*")
-        .eq("org_id", orgId)
-        .single();
-    if (error) return { data: null, error };
+  const { data: rawData, error } = await supabase
+    .from("organisations")
+    .select("*")
+    .eq("org_id", orgId)
+    .single();
+  if (error) return { data: null, error };
 
-    const data: Organisation = rawData!;
-    return { data, error: null };
+  const data: Organisation = rawData!;
+  return { data, error: null };
 };
 
 export const getAllJoinedOrganisations: (
@@ -65,7 +66,13 @@ export const getProjectsByOrganisation: (
     .eq("org_id", orgId)
     .single();
   if (error) return { data: null, error };
-  return { data: data.projects, error: null };
+  return {
+    data: data.projects.map((project) => ({
+      ...project,
+      image_uri: getProjectPicUrl(project.project_id).data!,
+    })),
+    error: null,
+  };
 };
 
 export const joinOrganisation: (
