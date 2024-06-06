@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     width: "95%",
-    height: "75%",
+    height: "70%",
     borderRadius: 15,
     marginVertical: 20,
   },

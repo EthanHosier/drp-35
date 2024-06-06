@@ -1,8 +1,14 @@
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -99,6 +105,27 @@ const GroupsTab = () => {
     <View style={{ flex: 1 }}>
       {projectGroups && projectGroups.length > 0 && (
         <>
+          <TouchableOpacity
+            onPress={() => router.navigate("../filter")}
+            style={{
+              marginRight: 8,
+              alignSelf: "flex-end",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+              width: 48,
+              borderRadius: 24,
+              backgroundColor: Colors.background,
+              marginTop: 12,
+            }}
+          >
+            <Ionicons
+              name="filter"
+              size={24}
+              color={Colors.gray}
+              style={{ marginTop: 2 }}
+            />
+          </TouchableOpacity>
           <TinderSwipe
             groups={
               projectGroups
