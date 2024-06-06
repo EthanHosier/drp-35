@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  type ImageSourcePropType,
   TouchableOpacity,
   Dimensions,
-  ImageBackground,
 } from "react-native";
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
 import Colors from "@/constants/Colors";
@@ -160,7 +158,9 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
                   justifyContent: "center",
                 }}
               >
-                <Text style={{ fontWeight: "500" }}>🇺🇸 🇫🇷</Text>
+                <Text style={{ fontWeight: "500" }}>
+                  {member.languages.map(l => l.split(' ')[0]).join("")}
+                </Text>
               </View>
             </View>
           </View>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     width: "95%",
-    height: "75%",
+    height: "70%",
     borderRadius: 15,
     marginVertical: 20,
   },

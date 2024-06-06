@@ -102,6 +102,7 @@ const GroupsTab = () => {
 
   // Filter settings
   const numMembers = useFilterStore((state) => state.numMembers);
+  const languages = useFilterStore((state) => state.languages);
 
   console.log({ projectGroups });
 
@@ -109,12 +110,38 @@ const GroupsTab = () => {
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.length > 0 ? (
         <>
+          <TouchableOpacity
+            onPress={() => router.navigate("../filter")}
+            style={{
+              marginRight: 8,
+              alignSelf: "flex-end",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+              width: 48,
+              borderRadius: 24,
+              backgroundColor: Colors.background,
+              marginTop: 12,
+            }}
+          >
+            <Ionicons
+              name="filter"
+              size={24}
+              color={Colors.gray}
+              style={{ marginTop: 2 }}
+            />
+          </TouchableOpacity>
           <TinderSwipe
             groups={
               projectGroups
                 ? projectGroups.filter((group) => {
                     return (
-                      numMembers <= 0 || group.members.length === numMembers
+                      (numMembers <= 0 ||
+                        group.members.length === numMembers) &&
+                      (languages.length <= 0 ||
+                        group.members.every((member) =>
+                          member.languages.includes(languages[0])
+                        ))
                     );
                   })
                 : []

@@ -7,11 +7,14 @@ import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { uploadProjectPic } from "@/utils/api/project-pics";
 
 const Layout = () => {
   const router = useRouter();
   const {
     imageUri,
+    imageBase64,
+    imageMimeType,
     name,
     description,
     minGroupSize,
@@ -28,6 +31,7 @@ const Layout = () => {
     if (Number.isNaN(min) || Number.isNaN(max))
       return "Group size must be an integer";
     if (min > max) return "Max group size must not be less than min group size";
+    if (!imageBase64) return "Please upload an image";
     return "";
   };
 
@@ -56,14 +60,23 @@ const Layout = () => {
       return;
     }
 
+    const { error: picError } = await uploadProjectPic(
+      data.project_id,
+      imageBase64,
+      imageMimeType
+    );
+    if (picError) {
+      alert(picError.message);
+      return;
+    }
+
     addProject({
       name,
       description,
       minGroupSize: min,
       maxGroupSize: max,
       startDateTime,
-      image:
-        "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
+      image: imageUri,
       projectId: data.project_id,
     });
     router.back();
@@ -150,6 +163,22 @@ const Layout = () => {
             </TouchableOpacity>
           ),
         }}
+      />
+      <Stack.Screen
+          name="languages"
+          options={{
+            presentation: "fullScreenModal",
+            title: "Languages",
+            headerRight: () => (
+                <TouchableOpacity onPress={router.back}>
+                  <Text
+                      style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+                  >
+                    Done
+                  </Text>
+                </TouchableOpacity>
+            ),
+          }}
       />
     </Stack>
   );
