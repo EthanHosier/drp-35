@@ -109,6 +109,36 @@ export type Database = {
           }
         ];
       };
+      organisation_members: {
+        Row: {
+          org_id: string;
+          user_id: string;
+        };
+        Insert: {
+          org_id: string;
+          user_id: string;
+        };
+        Update: {
+          org_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "organisation_members_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organisations";
+            referencedColumns: ["org_id"];
+          },
+          {
+            foreignKeyName: "organisation_members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          }
+        ];
+      };
       organisations: {
         Row: {
           description: string;

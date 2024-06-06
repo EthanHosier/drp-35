@@ -25,3 +25,23 @@ export const getProjectsByOrganisation: (
   if (error) return { data: null, error };
   return { data: data.projects, error: null };
 };
+
+export const joinOrganisation: (
+  orgId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (orgId, userId) => {
+  return await supabase
+    .from("organisation_members")
+    .insert({ org_id: orgId, user_id: userId });
+};
+
+export const leaveOrganisation: (
+  orgId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (orgId, userId) => {
+  return await supabase
+    .from("organisation_members")
+    .delete()
+    .eq("org_id", orgId)
+    .eq("user_id", userId);
+};
