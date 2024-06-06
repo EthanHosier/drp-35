@@ -133,7 +133,7 @@ const GroupsTab = () => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.navigate("../filter")}
+              onPress={() => {}}
               style={{
                 alignSelf: "flex-end",
                 alignItems: "center",
