@@ -67,3 +67,17 @@ export const acceptRequestToJoinGroup: (
 
   return { data: null, error: null };
 };
+
+export const rejectRequestToJoinGroup: (
+  groupId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (groupId, userId) => {
+  const { error } = await supabase
+    .from("group_members_pending")
+    .delete()
+    .eq("group_id", groupId)
+    .eq("user_id", userId);
+  if (error) return { data: null, error };
+
+  return { data: null, error: null };
+};
