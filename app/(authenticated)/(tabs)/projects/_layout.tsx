@@ -164,6 +164,22 @@ const Layout = () => {
           ),
         }}
       />
+      <Stack.Screen
+          name="languages"
+          options={{
+            presentation: "fullScreenModal",
+            title: "Languages",
+            headerRight: () => (
+                <TouchableOpacity onPress={router.back}>
+                  <Text
+                      style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+                  >
+                    Done
+                  </Text>
+                </TouchableOpacity>
+            ),
+          }}
+      />
     </Stack>
   );
 };

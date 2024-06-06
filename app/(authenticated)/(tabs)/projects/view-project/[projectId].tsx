@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -98,6 +98,7 @@ const GroupsTab = () => {
 
   // Filter settings
   const numMembers = useFilterStore((state) => state.numMembers);
+  const languages = useFilterStore((state) => state.languages);
 
   console.log({ projectGroups });
 
@@ -131,7 +132,9 @@ const GroupsTab = () => {
               projectGroups
                 ? projectGroups.filter((group) => {
                     return (
-                      numMembers <= 0 || group.members.length === numMembers
+                      (numMembers <= 0 || group.members.length === numMembers) &&
+                      (languages.length <= 0
+                          || group.members.every((member) => member.languages.includes(languages[0])))
                     );
                   })
                 : []
