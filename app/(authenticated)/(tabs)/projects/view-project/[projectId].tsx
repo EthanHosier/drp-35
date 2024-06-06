@@ -149,10 +149,14 @@ const GroupsTab = () => {
             setGroupIndex={setGroupIndex}
             onSwipeRight={async () => {
               await sleep(20);
-              router.push({
-                pathname: "/(authenticated)/projects/view-project/match",
-                params: { matchId: "123" },
-              });
+
+              // Introducing a random chance for routing
+              if (Math.random() < 0.3) {
+                router.push({
+                  pathname: "/(authenticated)/projects/view-project/match",
+                  params: { matchId: "123" },
+                });
+              }
             }}
           />
           <InfoSheet

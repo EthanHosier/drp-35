@@ -8,8 +8,10 @@ import "react-native-reanimated";
 
 import { supabase } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
-import { AppState } from "react-native";
+import { AppState, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { TouchableOpacity } from "@gorhom/bottom-sheet";
+import Colors from "@/constants/Colors";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -101,6 +103,13 @@ function RootLayoutNav() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(modals)"
+            options={{
+              headerShown: false,
+              presentation: "fullScreenModal",
+            }}
+          />
         </Stack>
       </GestureHandlerRootView>
     </ThemeProvider>

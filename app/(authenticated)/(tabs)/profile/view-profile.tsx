@@ -8,7 +8,10 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { Group, useMyGroupsStore } from "@/utils/store/my-groups-store";
-import { Organisation, getAllJoinedOrganisations } from "@/utils/api/organisations";
+import {
+  Organisation,
+  getAllJoinedOrganisations,
+} from "@/utils/api/organisations";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 
 const ViewProfile = () => {
@@ -20,10 +23,10 @@ const ViewProfile = () => {
   useEffect(() => {
     const getOrganisations = () => {
       getAllJoinedOrganisations(userId).then((res) => {
-        if(!res.data) return;
+        if (!res.data) return;
         setOrgs(res.data);
       });
-    }
+    };
     getOrganisations();
   }, []);
 
@@ -139,7 +142,7 @@ const ViewProfile = () => {
           My Organisations
         </Text>
         {orgs?.map((org, i) => (
-          <Link asChild href={`/(authenticated)/(tabs)/projects/view-org/${org.org_id}`} key={i}>
+          <Link asChild href={`/(modals)/view-org/${org.org_id}`} key={i}>
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,
