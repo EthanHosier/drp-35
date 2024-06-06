@@ -38,6 +38,8 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   groups,
   memberIndex,
   setMemberIndex,
+
+  setGroupIndex,
 }) => {
   const handleTap = (xIndex: number, screenWidth: number) => {
     const quarterWidth = screenWidth / 4;
@@ -184,6 +186,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
           await sleep(100);
           for (let i = 0; i < NUM_CARDS; i++) {
             ref.current?.swipeBack();
+            setGroupIndex((i) => (i > 0 ? i - 1 : i));
             console.log("swipeBack");
             await sleep(50);
           }
@@ -202,6 +205,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         }}
         onSwipeEnd={() => {
           console.log("onSwipeEnd");
+          setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
         }}
         OverlayLabelRight={OverlayLabelRight}
       />
