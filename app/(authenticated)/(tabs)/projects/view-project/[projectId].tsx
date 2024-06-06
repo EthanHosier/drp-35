@@ -14,7 +14,7 @@ import {
   getProjectGroups,
   type Project,
 } from "@/utils/api/project-details";
-import {useFilterStore} from "@/utils/store/filter-store";
+import { useFilterStore } from "@/utils/store/filter-store";
 
 const InfoTab = () => {
   const [projectData, setProjectData] = useState<Project | null>(null);
@@ -91,31 +91,43 @@ const GroupsTab = () => {
   const router = useRouter();
 
   // Filter settings
-  const numMembers = useFilterStore(state => state.numMembers);
+  const numMembers = useFilterStore((state) => state.numMembers);
 
   return (
     <View style={{ flex: 1 }}>
-      <TinderSwipe
-        groups={projectGroups ? projectGroups.filter((group) => {
-          return numMembers <= 0 || group.members.length === numMembers;
-        }) : []}
-        memberIndex={memberIndex}
-        setMemberIndex={setMemberIndex}
-        groupIndex={groupIndex}
-        setGroupIndex={setGroupIndex}
-        onSwipeRight={async () => {
-          await sleep(20);
-          router.push({
-            pathname: "/(authenticated)/projects/view-project/match",
-            params: { matchId: "123" },
-          });
-        }}
-      />
-      <InfoSheet
-        profile={
-          projectGroups ? projectGroups[groupIndex].members[memberIndex] : null
-        }
-      />
+      {projectGroups && (
+        <>
+          <TinderSwipe
+            groups={
+              projectGroups
+                ? projectGroups.filter((group) => {
+                    return (
+                      numMembers <= 0 || group.members.length === numMembers
+                    );
+                  })
+                : []
+            }
+            memberIndex={memberIndex}
+            setMemberIndex={setMemberIndex}
+            groupIndex={groupIndex}
+            setGroupIndex={setGroupIndex}
+            onSwipeRight={async () => {
+              await sleep(20);
+              router.push({
+                pathname: "/(authenticated)/projects/view-project/match",
+                params: { matchId: "123" },
+              });
+            }}
+          />
+          <InfoSheet
+            profile={
+              projectGroups
+                ? projectGroups[groupIndex].members[memberIndex]
+                : null
+            }
+          />
+        </>
+      )}
     </View>
   );
 };
