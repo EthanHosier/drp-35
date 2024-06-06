@@ -181,6 +181,7 @@ const DiscoverProjects = () => {
           <View>
             <ScrollView
               style={{ marginTop: 12 }}
+              contentContainerStyle={{ paddingRight: 24 }}
               horizontal
               showsHorizontalScrollIndicator={false}
               decelerationRate={0}
@@ -206,6 +207,7 @@ const DiscoverProjects = () => {
               style={{
                 marginTop: 12,
               }}
+              contentContainerStyle={{ paddingRight: 24 }}
               horizontal
               showsHorizontalScrollIndicator={false}
               decelerationRate={0}
@@ -235,6 +237,7 @@ const DiscoverProjects = () => {
             <ScrollView
               style={{ marginTop: 12 }}
               horizontal
+              contentContainerStyle={{ paddingRight: 24 }}
               showsHorizontalScrollIndicator={false}
               decelerationRate={0}
               snapToOffsets={generateSnapPoints(projectSearchResults.length)}
