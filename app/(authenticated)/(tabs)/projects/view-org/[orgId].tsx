@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {useLocalSearchParams} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
@@ -109,6 +109,7 @@ const InfoTab = () => {
               if (!res.error) setInOrg(true);
             });
           }
+          router.back();
         }}
       >
         <View>

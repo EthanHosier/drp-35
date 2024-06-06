@@ -6,6 +6,7 @@ import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { useProjectsStore } from "@/utils/store/projects-store";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const Layout = () => {
   const router = useRouter();
@@ -102,6 +103,27 @@ const Layout = () => {
           presentation: "fullScreenModal",
           title: "View Project",
           headerRight: () => (
+            <>
+              <TouchableOpacity onPress={() => router.navigate("../filter")} style={{marginRight: 8 }}>
+                <FontAwesome name="filter" size={24} color="black" />
+              </TouchableOpacity>
+              {/*<TouchableOpacity onPress={router.back}>*/}
+              {/*  <Text*/}
+              {/*    style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}*/}
+              {/*  >*/}
+              {/*    Done*/}
+              {/*  </Text>*/}
+              {/*</TouchableOpacity>*/}
+            </>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="view-org"
+        options={{
+          presentation: "fullScreenModal",
+          title: "View Organistion",
+          headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
                 style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
@@ -113,10 +135,10 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="view-org"
+        name="filter"
         options={{
           presentation: "fullScreenModal",
-          title: "View Organistion",
+          title: "Filter Groups",
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
