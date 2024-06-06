@@ -14,14 +14,6 @@ import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { Group } from "@/utils/api/project-details";
 
-const IMAGES: string[] = [
-  "https://images.unsplash.com/photo-1599834562135-b6fc90e642ca?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFuJTIwZmFjZXxlbnwwfHwwfHx8MA%3D%3D",
-  "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?cs=srgb&dl=pexels-italo-melo-881954-2379004.jpg&fm=jpg",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Outdoors-man-portrait_%28cropped%29.jpg/800px-Outdoors-man-portrait_%28cropped%29.jpg",
-];
-
-const NUM_CARDS = 3;
-
 interface TinderSwipeProps {
   onSwipeRight: () => void;
   groups: Group[];
@@ -45,7 +37,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
     if (xIndex >= 0 && xIndex < quarterWidth) {
       setMemberIndex((i) => Math.max(0, i - 1));
     } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
-      setMemberIndex((i) => Math.min(i + 1, IMAGES.length - 1));
+      setMemberIndex((i) => Math.min(i + 1, groups.length - 1));
     }
   };
   const { width } = Dimensions.get("window");
@@ -72,6 +64,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
 
   const renderCard = (group: Group) => {
     const member = group.members[memberIndex];
+    if (!member) return <></>;
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
         <Image
@@ -108,7 +101,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
               top: 0,
             }}
           >
-            {Array.from({ length: NUM_CARDS }).map((_, i) => (
+            {Array.from({ length: group.members.length }).map((_, i) => (
               <View
                 style={{ flex: 1, borderRadius: 4, overflow: "hidden" }}
                 key={i}
@@ -159,7 +152,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
                 }}
               >
                 <Text style={{ fontWeight: "500" }}>
-                  {member.languages.map(l => l.split(' ')[0]).join("")}
+                  {member.languages.map((l) => l.split(" ")[0]).join("")}
                 </Text>
               </View>
             </View>
@@ -184,7 +177,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         }}
         onSwipedAll={async () => {
           await sleep(100);
-          for (let i = 0; i < NUM_CARDS; i++) {
+          for (let i = 0; i < groups.length; i++) {
             ref.current?.swipeBack();
             setGroupIndex((i) => (i > 0 ? i - 1 : i));
             console.log("swipeBack");
