@@ -15,7 +15,7 @@ export const getGroupById: (
   if (error) return { data: null, error };
 
   const members: Profile[] = data.group_members.map((member) => {
-    const profile = member.profiles[0];
+    const profile: Profile = member.profiles;
     return { ...profile, imageUrl: getProfilePicUrl(profile.user_id).data! };
   });
   return {
