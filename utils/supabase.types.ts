@@ -36,6 +36,43 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_members_user_id_fkey1";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          }
+        ];
+      };
+      group_members_pending: {
+        Row: {
+          group_id: string;
+          user_id: string;
+        };
+        Insert: {
+          group_id: string;
+          user_id: string;
+        };
+        Update: {
+          group_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_members_pending_group_id_fkey";
+            columns: ["group_id"];
+            isOneToOne: false;
+            referencedRelation: "groups";
+            referencedColumns: ["group_id"];
+          },
+          {
+            foreignKeyName: "group_members_pending_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           }
         ];
       };
@@ -64,6 +101,24 @@ export type Database = {
             referencedColumns: ["project_id"];
           }
         ];
+      };
+      organisations: {
+        Row: {
+          description: string | null;
+          name: string;
+          org_id: string;
+        };
+        Insert: {
+          description?: string | null;
+          name: string;
+          org_id?: string;
+        };
+        Update: {
+          description?: string | null;
+          name?: string;
+          org_id?: string;
+        };
+        Relationships: [];
       };
       profiles: {
         Row: {
@@ -112,6 +167,7 @@ export type Database = {
           max_group_size: number;
           min_group_size: number;
           name: string;
+          org_id: string | null;
           project_id: string;
           start_date_time: string;
         };
@@ -120,6 +176,7 @@ export type Database = {
           max_group_size?: number;
           min_group_size?: number;
           name: string;
+          org_id?: string | null;
           project_id?: string;
           start_date_time: string;
         };
@@ -128,10 +185,19 @@ export type Database = {
           max_group_size?: number;
           min_group_size?: number;
           name?: string;
+          org_id?: string | null;
           project_id?: string;
           start_date_time?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "projects_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organisations";
+            referencedColumns: ["org_id"];
+          }
+        ];
       };
       user_languages: {
         Row: {

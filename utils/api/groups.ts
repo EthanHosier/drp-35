@@ -23,3 +23,19 @@ export const getGroupById: (
     error: null,
   };
 };
+
+export const getPendingGroupMembers: (
+  groupId: string
+) => Promise<DRPResponse<Profile[]>> = async (groupId) => {
+  const { data: rawData, error } = await supabase
+    .from("group_members_pending")
+    .select("user_id, profiles(*)")
+    .eq("group_id", groupId);
+  if (error) return { data: null, error };
+
+  const data: Profile[] = rawData.map((member) => {
+    const profile: Profile = member.profiles;
+    return { ...profile, imageUrl: getProfilePicUrl(profile.user_id).data! };
+  });
+  return { data, error: null };
+};
