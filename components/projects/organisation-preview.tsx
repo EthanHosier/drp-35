@@ -52,7 +52,7 @@ export default OrganisationPreview;
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    resizeMode: "contain",
+    resizeMode: "cover",
     width: "100%",
     height: "100%",
     top: 0,

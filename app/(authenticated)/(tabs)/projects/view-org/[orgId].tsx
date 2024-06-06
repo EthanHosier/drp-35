@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { Image } from "expo-image";
@@ -9,14 +9,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {useLocalSearchParams} from "expo-router";
+import {Link, useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
   getOrganisationById,
+  getProjectsByOrganisation,
   joinOrganisation,
   leaveOrganisation,
 } from "@/utils/api/organisations";
+import { FontAwesome } from "@expo/vector-icons";
+import { Project } from "@/utils/api/project-details";
 
 
 const InfoTab = () => {
@@ -48,6 +51,17 @@ const InfoTab = () => {
       });
     });
     setLoading(false);
+  }, []);
+
+  const [projects, setProjects] = useState<Project[] | null>([]);
+  useEffect(() => {
+    const getProjects = () => {
+      getProjectsByOrganisation(orgId).then((res) => {
+        if(!res.data) return;
+        setProjects(res.data);
+      });
+    }
+    getProjects();
   }, []);
 
   return (
@@ -85,6 +99,46 @@ const InfoTab = () => {
           {organisation.subtitle}
         </Text>
         <Text style={{ marginTop: 24 }}>{organisation.description}</Text>
+        <Text style={{ marginTop: 32, marginBottom: 4,  fontSize: 24, fontWeight: "600" }}>
+          Projects
+        </Text>
+        <View style={{gap: 4}}>
+          {projects?.map((project, i) => (
+            <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
+              <TouchableOpacity
+                style={{
+                  borderColor: Colors.lightGray,
+                  paddingVertical: 8,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={{ uri: "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg" }}
+                  style={{ width: 64, height: 64, borderRadius: 32 }}
+                />
+                <View style={{ marginLeft: 16 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                    {project.name.length > 25 ? project.name.substring(0, 25) + '...' : project.name}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
+                  >
+                    {project.min_group_size === project.max_group_size ?
+                    `${project.min_group_size} team members` : 
+                    `${project.min_group_size}-${project.max_group_size} team members`}
+                  </Text>
+                </View>
+                <FontAwesome
+                  name="chevron-right"
+                  size={16}
+                  color={Colors.dark}
+                  style={{ marginLeft: "auto" }}
+                />
+              </TouchableOpacity>
+            </Link>
+          ))}
+          </View>
       </ScrollView>
       <TouchableOpacity
         style={[
@@ -117,9 +171,64 @@ const InfoTab = () => {
           </Text>
         </View>
       </TouchableOpacity>
+          
+         
     </View>
   );
 };
+
+// const ViewOrg = () => {
+//   return (
+//     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+//       <ScrollView
+//         contentContainerStyle={[
+//           styles.container,
+//           { backgroundColor: Colors.background, paddingBottom: 100 },
+//         ]}
+//       >
+//         <Text style={{ marginBottom: 5, fontSize: 24, fontWeight: "600" }}>
+//           Projects in [Organisation name]
+//         </Text>
+//         {Projects.map((project, i) => (
+//           <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
+//             <TouchableOpacity
+//               style={{
+//                 paddingTop: i == 0 ? 16 : 12,
+//                 borderBottomWidth: StyleSheet.hairlineWidth,
+//                 borderColor: Colors.lightGray,
+//                 paddingVertical: 8,
+//                 flexDirection: "row",
+//                 alignItems: "center",
+//               }}
+//             >
+//               <Image
+//                 source={project.image}
+//                 style={{ width: 64, height: 64, borderRadius: 32 }}
+//               />
+//               <View style={{ marginLeft: 16 }}>
+//                 <Text style={{ fontSize: 16, fontWeight: "500" }}>
+//                   {project.title}
+//                 </Text>
+//                 <Text
+//                   style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
+//                 >
+//                   {project.teamMembersGot}/{project.teamMembersNeeded} team
+//                   members
+//                 </Text>
+//               </View>
+//               <FontAwesome
+//                 name="chevron-right"
+//                 size={16}
+//                 color={Colors.dark}
+//                 style={{ marginLeft: "auto" }}
+//               />
+//             </TouchableOpacity>
+//           </Link>
+//         ))}
+//       </ScrollView>
+//     </View>
+//   );
+// };
 
 export default InfoTab;
 
@@ -132,7 +241,7 @@ const styles = StyleSheet.create({
     aspectRatio: 5 / 3,
     borderRadius: 12,
     alignSelf: "center",
-    resizeMode: "contain",
+    resizeMode: "cover",
   },
   button: {
     marginTop: 20,
