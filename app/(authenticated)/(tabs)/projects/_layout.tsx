@@ -103,18 +103,19 @@ const Layout = () => {
           presentation: "fullScreenModal",
           title: "View Project",
           headerRight: () => (
-            <>
-              <TouchableOpacity onPress={() => router.navigate("../filter")} style={{marginRight: 8 }}>
-                <FontAwesome name="filter" size={24} color="black" />
-              </TouchableOpacity>
-              {/*<TouchableOpacity onPress={router.back}>*/}
-              {/*  <Text*/}
-              {/*    style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}*/}
-              {/*  >*/}
-              {/*    Done*/}
-              {/*  </Text>*/}
-              {/*</TouchableOpacity>*/}
-            </>
+            // <TouchableOpacity
+            //   onPress={() => router.navigate("../filter")}
+            //   style={{ marginRight: 8 }}
+            // >
+            //   <FontAwesome name="filter" size={24} color="black" />
+            // </TouchableOpacity>
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
           ),
         }}
       />
