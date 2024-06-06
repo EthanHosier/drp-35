@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Pressable,
 } from "react-native";
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
 import Colors from "@/constants/Colors";
@@ -21,6 +22,8 @@ interface TinderSwipeProps {
   setMemberIndex: React.Dispatch<React.SetStateAction<number>>;
   groupIndex: number;
   setGroupIndex: React.Dispatch<React.SetStateAction<number>>;
+  pressed: boolean;
+  setPressed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TinderSwipe: React.FC<TinderSwipeProps> = ({
@@ -30,6 +33,8 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   setMemberIndex,
   groupIndex,
   setGroupIndex,
+  pressed,
+  setPressed,
 }) => {
   const handleTap = (xIndex: number, screenWidth: number) => {
     const quarterWidth = screenWidth / 4;
@@ -68,6 +73,31 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
     if (!member) return <></>;
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
+        <>
+          {index === 0 && !pressed && (
+            <Pressable
+              onTouchStart={() => setPressed(true)}
+              style={{
+                backgroundColor: "transparent",
+                position: "absolute",
+                height: "100%",
+                width: "100%",
+                zIndex: 200,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={require("@/assets/images/swipe-right.gif")}
+                style={{
+                  height: 300,
+                  width: 300,
+                  tintColor: "#fff",
+                }}
+              />
+            </Pressable>
+          )}
+        </>
         <Image
           style={{
             position: "absolute",

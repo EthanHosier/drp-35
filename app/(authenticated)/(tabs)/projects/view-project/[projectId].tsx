@@ -1,4 +1,5 @@
 import {
+  Pressable,
   StyleSheet,
   Text,
   Touchable,
@@ -86,6 +87,8 @@ const GroupsTab = () => {
   const [groupIndex, setGroupIndex] = useState<number>(0);
   const animation = useRef(null);
 
+  const [pressed, setPressed] = useState<boolean>(false);
+
   const id = useLocalSearchParams().projectId;
 
   useEffect(() => {
@@ -157,6 +160,8 @@ const GroupsTab = () => {
           </View>
 
           <TinderSwipe
+            pressed={pressed}
+            setPressed={setPressed}
             groups={
               projectGroups
                 ? projectGroups.filter((group) => {
@@ -165,7 +170,9 @@ const GroupsTab = () => {
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||
                         group.members.every((member) =>
-                          member.languages.some(language => languages.includes(language))
+                          member.languages.some((language) =>
+                            languages.includes(language)
+                          )
                         ))
                     );
                   })
