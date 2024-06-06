@@ -44,9 +44,27 @@ export const requestToJoinGroup: (
   groupId: string,
   userId: string
 ) => Promise<DRPResponse<null>> = async (groupId, userId) => {
-  return await supabase
-    .from("group_members_pending")
-    .insert({ group_id: groupId, user_id: userId });
+  const { data: projectId, error: projectIdError } = await supabase
+    .from("groups")
+    .select("project_id")
+    .eq("group_id", groupId)
+    .single();
+  if (projectIdError) return { data: null, error: projectIdError };
+
+  // Create group containing single user
+  const { data: newGroup, error: newGroupError } = await supabase
+    .from("groups")
+    .insert({ project_id: projectId.project_id })
+    .select()
+    .single();
+  if (newGroupError) return { data: null, error: newGroupError };
+
+  const { error: requestError } = await supabase
+    .from("group_requests")
+    .insert({ request_group_id: newGroup.group_id, target_group_id: groupId });
+  if (requestError) return { data: null, error: requestError };
+
+  return { data: null, error: null };
 };
 
 export const acceptRequestToJoinGroup: (
