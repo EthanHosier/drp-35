@@ -68,33 +68,34 @@ export const requestToJoinGroup: (
 };
 
 export const acceptRequestToJoinGroup: (
-  groupId: string,
-  userId: string
-) => Promise<DRPResponse<null>> = async (groupId, userId) => {
+  requestGroupId: string,
+  targetGroupId: string
+) => Promise<DRPResponse<null>> = async (requestGroupId, targetGroupId) => {
   const { error } = await supabase
-    .from("group_members_pending")
+    .from("group_requests")
     .delete()
-    .eq("group_id", groupId)
-    .eq("user_id", userId);
+    .eq("request_group_id", requestGroupId)
+    .eq("target_group_id", targetGroupId);
   if (error) return { data: null, error };
 
   const { error: joinError } = await supabase
     .from("group_members")
-    .insert({ group_id: groupId, user_id: userId });
+    .update({ group_id: targetGroupId })
+    .eq("group_id", requestGroupId);
   if (joinError) return { data: null, error: joinError };
 
   return { data: null, error: null };
 };
 
 export const rejectRequestToJoinGroup: (
-  groupId: string,
-  userId: string
-) => Promise<DRPResponse<null>> = async (groupId, userId) => {
+  requestGroupId: string,
+  targetGroupId: string
+) => Promise<DRPResponse<null>> = async (requestGroupId, targetGroupId) => {
   const { error } = await supabase
-    .from("group_members_pending")
+    .from("group_requests")
     .delete()
-    .eq("group_id", groupId)
-    .eq("user_id", userId);
+    .eq("request_group_id", requestGroupId)
+    .eq("target_group_id", targetGroupId);
   if (error) return { data: null, error };
 
   return { data: null, error: null };
