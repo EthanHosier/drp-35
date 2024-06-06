@@ -102,26 +102,27 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
               top: 0,
             }}
           >
-            {Array.from({ length: group.members.length }).map((_, i) => (
-              <View
-                style={{ flex: 1, borderRadius: 4, overflow: "hidden" }}
-                key={i}
-              >
-                <BlurView
-                  tint="extraLight"
-                  style={{
-                    flex: 1,
-                    backgroundColor: `rgba(255,255,255,${
-                      (memberIndex === i && topOfPile) ||
-                      (i === 0 && !topOfPile)
-                        ? 0.9
-                        : 0.3
-                    })`,
-                  }}
-                  intensity={80}
-                />
-              </View>
-            ))}
+            {group.members.length > 1 &&
+              Array.from({ length: group.members.length }).map((_, i) => (
+                <View
+                  style={{ flex: 1, borderRadius: 4, overflow: "hidden" }}
+                  key={i}
+                >
+                  <BlurView
+                    tint="extraLight"
+                    style={{
+                      flex: 1,
+                      backgroundColor: `rgba(255,255,255,${
+                        (memberIndex === i && topOfPile) ||
+                        (i === 0 && !topOfPile)
+                          ? 0.9
+                          : 0.3
+                      })`,
+                    }}
+                    intensity={80}
+                  />
+                </View>
+              ))}
           </View>
           <View
             style={{
