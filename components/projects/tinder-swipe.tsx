@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { sleep } from "@/utils/utils";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import { Group } from "@/utils/api/project-details";
 
 const IMAGES: string[] = [
   "https://images.unsplash.com/photo-1599834562135-b6fc90e642ca?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFuJTIwZmFjZXxlbnwwfHwwfHx8MA%3D%3D",
@@ -23,16 +24,28 @@ const IMAGES: string[] = [
 
 const NUM_CARDS = 3;
 
-const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
-  const [index, setIndex] = useState(0);
+interface TinderSwipeProps {
+  onSwipeRight: () => void;
+  groups: Group[];
+  memberIndex: number;
+  setMemberIndex: React.Dispatch<React.SetStateAction<number>>;
+  groupIndex: number;
+  setGroupIndex: React.Dispatch<React.SetStateAction<number>>;
+}
 
+const TinderSwipe: React.FC<TinderSwipeProps> = ({
+  onSwipeRight,
+  groups,
+  memberIndex,
+  setMemberIndex,
+}) => {
   const handleTap = (xIndex: number, screenWidth: number) => {
     const quarterWidth = screenWidth / 4;
 
     if (xIndex >= 0 && xIndex < quarterWidth) {
-      setIndex((i) => Math.max(0, i - 1));
+      setMemberIndex((i) => Math.max(0, i - 1));
     } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
-      setIndex((i) => Math.min(i + 1, IMAGES.length - 1));
+      setMemberIndex((i) => Math.min(i + 1, IMAGES.length - 1));
     }
   };
   const { width } = Dimensions.get("window");
@@ -57,9 +70,8 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
 
   const ref = useRef<SwiperCardRefType>();
 
-  useEffect(() => console.log(index), [index]);
-
-  const renderCard = () => {
+  const renderCard = (group: Group) => {
+    const member = group.members[memberIndex];
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
         <Image
@@ -69,7 +81,7 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
             width: "100%",
             borderRadius: 16,
           }}
-          source={IMAGES[index]}
+          source={member.imageUrl}
         />
         <TouchableOpacity
           onPress={(e) => {
@@ -106,7 +118,7 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
                   style={{
                     flex: 1,
                     backgroundColor: `rgba(255,255,255,${
-                      index === i ? 0.9 : 0.3
+                      memberIndex === i ? 0.9 : 0.3
                     })`,
                   }}
                   intensity={80}
@@ -132,7 +144,7 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
             }}
           >
             <Text style={{ fontWeight: "600", fontSize: 20 }}>
-              Ethan Hosier
+              {member.full_name}
             </Text>
 
             <View style={{ flexDirection: "row", gap: 8 }}>
@@ -162,7 +174,7 @@ const TinderSwipe = ({ onSwipeRight }: { onSwipeRight: () => void }) => {
         ref={ref}
         disableTopSwipe
         cardStyle={styles.cardStyle}
-        data={IMAGES}
+        data={groups}
         renderCard={renderCard}
         onSwipeRight={(cardIndex) => {
           console.log("onSwipeRight", cardIndex);

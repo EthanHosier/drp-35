@@ -47,6 +47,7 @@ const InfoTab = () => {
         source="https://infed.org/mobi/wp-content/uploads/2014/03/eldan-goldenberg-groupwork-eldan-492925839-ccbyncsa2.jpg"
         style={styles.img}
       />
+
       <Text
         style={{
           fontWeight: "bold",
@@ -77,10 +78,30 @@ const InfoTab = () => {
 };
 
 const GroupsTab = () => {
+  const [projectGroups, setProjectGroups] = useState<Group[] | null>(null);
+  const [memberIndex, setMemberIndex] = useState<number>(0);
+  const [groupIndex, setGroupIndex] = useState<number>(0);
+
+  const id = useLocalSearchParams().projectId;
+
+  useEffect(() => {
+    getProjectGroups(id as string).then((res) => {
+      if (!res.data) return;
+      setProjectGroups(res.data);
+      console.log(res.data[0].members[0]);
+    });
+  }, []);
+
   const router = useRouter();
+
   return (
     <View style={{ flex: 1 }}>
       <TinderSwipe
+        groups={projectGroups || []}
+        memberIndex={memberIndex}
+        setMemberIndex={setMemberIndex}
+        groupIndex={groupIndex}
+        setGroupIndex={setGroupIndex}
         onSwipeRight={async () => {
           await sleep(20);
           router.push({
@@ -89,7 +110,11 @@ const GroupsTab = () => {
           });
         }}
       />
-      <InfoSheet />
+      <InfoSheet
+        profile={
+          projectGroups ? projectGroups[groupIndex].members[memberIndex] : null
+        }
+      />
     </View>
   );
 };
@@ -100,17 +125,7 @@ const renderScene = SceneMap({
 });
 
 export default function ProjectTabs() {
-  const [projectGroups, setProjectGroups] = useState<Group[] | null>(null);
-
   const layout = useWindowDimensions();
-  const id = useLocalSearchParams().projectId;
-
-  useEffect(() => {
-    getProjectGroups(id as string).then((res) => {
-      if (!res.data) return;
-      setProjectGroups(res.data);
-    });
-  }, []);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([

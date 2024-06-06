@@ -5,8 +5,15 @@ import Colors from "@/constants/Colors";
 import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { Profile } from "@/utils/api/profiles";
+import { openBrowserAsync } from "expo-web-browser";
+import ExternalLink from "../profile/external-link";
 
-const InfoSheet = () => {
+interface InfoSheetProps {
+  profile: Profile | null;
+}
+
+const InfoSheet: React.FC<InfoSheetProps> = ({ profile }) => {
   // ref
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["20%", "80%"], []);
@@ -64,13 +71,15 @@ const InfoSheet = () => {
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="school-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>I go to Imperial</Text>
+            <Text style={styles2.attributeText}>
+              I go to {profile?.university}
+            </Text>
           </View>
           <View style={styles2.attributeContainer}>
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="book-outline" size={24} color="black" />
             </View>
-            <Text style={styles2.attributeText}>I study Computing</Text>
+            <Text style={styles2.attributeText}>I study {profile?.course}</Text>
           </View>
           <Text style={{ marginTop: 24 }}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
@@ -80,44 +89,29 @@ const InfoSheet = () => {
           </Text>
         </View>
         <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Feather name="github" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>Github</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
+          {profile?.github && (
+            <ExternalLink
+              display_name="Github"
+              url={profile.github}
+              icon={<Feather name="github" size={24} color="black" />}
             />
-          </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Feather name="linkedin" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>LinkedIn</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
+          {profile?.linkedin && (
+            <ExternalLink
+              display_name="LinkedIn"
+              url={profile.linkedin}
+              icon={<Feather name="linkedin" size={24} color="black" />}
             />
-          </TouchableOpacity>
+          )}
 
-          <TouchableOpacity style={styles2.attributeContainer}>
-            <View style={styles2.attributeIconContainer}>
-              <Ionicons name="globe-outline" size={24} color="black" />
-            </View>
-            <Text style={styles2.attributeText}>Website</Text>
-            <FontAwesome
-              style={{ marginLeft: "auto", marginRight: 16 }}
-              name="chevron-right"
-              size={16}
-              color={Colors.dark}
+          {profile?.website && (
+            <ExternalLink
+              display_name="Website"
+              url={profile.website}
+              icon={<Ionicons name="globe-outline" size={24} color="black" />}
             />
-          </TouchableOpacity>
+          )}
         </View>
       </BottomSheetView>
     </BottomSheet>
