@@ -1,5 +1,4 @@
 import {
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -187,7 +186,6 @@ const DiscoverProjects = () => {
             <ScrollView
               style={{
                 marginTop: 12,
-                paddingBottom: Platform.OS === "android" ? 160 : 0,
               }}
               horizontal
               showsHorizontalScrollIndicator={false}
