@@ -4,8 +4,23 @@ import { Project } from "./project-details";
 
 export type Organisation = {
   name: string;
+  subtitle: string;
   description: string;
   org_id: string;
+};
+
+export const getOrganisationById: (
+    orgId: string
+) => Promise<DRPResponse<Organisation>> = async (orgId) => {
+    const { data: rawData, error } = await supabase
+        .from("organisations")
+        .select("*")
+        .eq("org_id", orgId)
+        .single();
+    if (error) return { data: null, error };
+
+    const data: Organisation = rawData!;
+    return { data, error: null };
 };
 
 export const getAllJoinedOrganisations: (
