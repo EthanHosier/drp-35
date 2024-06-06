@@ -8,10 +8,36 @@ export type Organisation = {
   org_id: string;
 };
 
-export const getAllOrganisations: () => Promise<
-  DRPResponse<Organisation[]>
-> = async () => {
-  return await supabase.from("organisations").select();
+export const getAllJoinedOrganisations: (
+  userId: string
+) => Promise<DRPResponse<Organisation[]>> = async (userId) => {
+  const { data: rawData, error } = await supabase
+    .from("organisation_members")
+    .select("organisations(*)")
+    .eq("user_id", userId);
+  if (error) return { data: null, error };
+
+  const data: Organisation[] = rawData.map(
+    (organisation) => organisation.organisations!
+  );
+  return { data, error: null };
+};
+
+export const getAllOrganisationsExceptJoined: (
+  userId: string
+) => Promise<DRPResponse<Organisation[]>> = async (userId) => {
+  const { data: rawData, error } = await supabase
+    .from("organisations")
+    .select("*, organisation_members(user_id)");
+  if (error) return { data: null, error };
+
+  const data: Organisation[] = rawData.filter(
+    (organisation) =>
+      !organisation.organisation_members.some(
+        (member) => member.user_id === userId
+      )
+  );
+  return { data, error: null };
 };
 
 export const getProjectsByOrganisation: (
