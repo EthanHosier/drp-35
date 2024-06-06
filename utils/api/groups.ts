@@ -48,3 +48,22 @@ export const requestToJoinGroup: (
     .from("group_members_pending")
     .insert({ group_id: groupId, user_id: userId });
 };
+
+export const acceptRequestToJoinGroup: (
+  groupId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (groupId, userId) => {
+  const { error } = await supabase
+    .from("group_members_pending")
+    .delete()
+    .eq("group_id", groupId)
+    .eq("user_id", userId);
+  if (error) return { data: null, error };
+
+  const { error: joinError } = await supabase
+    .from("group_members")
+    .insert({ group_id: groupId, user_id: userId });
+  if (joinError) return { data: null, error: joinError };
+
+  return { data: null, error: null };
+};
