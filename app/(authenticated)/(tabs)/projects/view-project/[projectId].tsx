@@ -112,7 +112,7 @@ const GroupsTab = () => {
               paddingHorizontal: 8,
             }}
           >
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => router.navigate("../filter")}
               style={{
                 alignSelf: "flex-end",
@@ -131,7 +131,7 @@ const GroupsTab = () => {
                 color={Colors.gray}
                 style={{ marginTop: 2 }}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {}}
               style={{

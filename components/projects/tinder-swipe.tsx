@@ -28,7 +28,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   groups,
   memberIndex,
   setMemberIndex,
-
+  groupIndex,
   setGroupIndex,
 }) => {
   const handleTap = (xIndex: number, screenWidth: number) => {
@@ -37,7 +37,8 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
     if (xIndex >= 0 && xIndex < quarterWidth) {
       setMemberIndex((i) => Math.max(0, i - 1));
     } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
-      setMemberIndex((i) => Math.min(i + 1, groups.length - 1));
+      setMemberIndex((i) => {console.log(groupIndex); 
+        return Math.min(i + 1, groups[groupIndex].members.length - 1)});
     }
   };
   const { width } = Dimensions.get("window");
