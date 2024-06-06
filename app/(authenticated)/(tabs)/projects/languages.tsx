@@ -18,7 +18,7 @@ const Languages = () => {
 
   const { languages, addLanguage, removeLanguage } = useFilterStore();
 
-  const MAX_LANGUAGES = 1;
+  const MAX_LANGUAGES = 5;
 
   return (
     <View style={styles.container}>

@@ -165,7 +165,7 @@ const GroupsTab = () => {
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||
                         group.members.every((member) =>
-                          member.languages.includes(languages[0])
+                          member.languages.some(language => languages.includes(language))
                         ))
                     );
                   })
