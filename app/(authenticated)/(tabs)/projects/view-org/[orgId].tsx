@@ -28,6 +28,7 @@ const InfoTab = () => {
   const [inOrg, setInOrg] = React.useState(false);
   const [organisation, setOrganisation] = React.useState({
     name: "",
+    subtitle: "",
     description: "",
   });
 
@@ -38,7 +39,11 @@ const InfoTab = () => {
         )
     );
     getOrganisationById(orgId).then((res) => {
-      if (!res.error) setOrganisation({ name: res.data.name, description: res.data.description });
+      if (!res.error) setOrganisation({
+        name: res.data.name,
+        subtitle: res.data.subtitle,
+        description: res.data.description
+      });
     });
     setLoading(false);
   }, []);
@@ -75,7 +80,7 @@ const InfoTab = () => {
           {organisation.name}
         </Text>
         <Text style={{ fontSize: 16, color: Colors.gray }}>
-          {Organisations[0].subtitle}
+          {organisation.subtitle}
         </Text>
         <Text style={{ marginTop: 24 }}>{organisation.description}</Text>
       </ScrollView>
