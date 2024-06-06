@@ -1,13 +1,19 @@
 import { create } from "zustand";
 
-type FilterStore = {
+export type FilterSettings = {
   numMembers: number;
-  setNumMembers: (newNum: number) => void;
+  languages: string[];
+}
+
+type FilterStore = {
+  settings: FilterSettings;
+  setSettings: (newSettings: FilterSettings) => void;
 };
 
 export const useFilterStore = create<FilterStore>((set) => ({
-  numMembers: 0,
-  setNumMembers: (newNum) => {
-    set({ numMembers: newNum });
-  }
+  settings: {
+    numMembers: 0,
+    languages: []
+  },
+  setSettings: (newSettings) => set({ settings: newSettings })
 }));

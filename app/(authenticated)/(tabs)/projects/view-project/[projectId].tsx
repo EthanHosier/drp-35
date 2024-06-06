@@ -91,7 +91,7 @@ const GroupsTab = () => {
   const router = useRouter();
 
   // Filter settings
-  const numMembers = useFilterStore((state) => state.numMembers);
+  const numMembers = useFilterStore((state) => state.settings.numMembers);
 
   console.log({ projectGroups });
 
