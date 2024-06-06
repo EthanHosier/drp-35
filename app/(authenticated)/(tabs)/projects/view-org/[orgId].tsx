@@ -14,8 +14,9 @@ import {useLocalSearchParams} from "expo-router";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
+  getOrganisationById,
   joinOrganisation,
-  leaveOrganisation
+  leaveOrganisation,
 } from "@/utils/api/organisations";
 
 const InfoTab = () => {
@@ -25,7 +26,10 @@ const InfoTab = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [inOrg, setInOrg] = React.useState(false);
-
+  const [organisation, setOrganisation] = React.useState({
+    name: "",
+    description: "",
+  });
 
   useEffect(() => {
     getAllJoinedOrganisations(userId).then((res) =>
@@ -33,6 +37,9 @@ const InfoTab = () => {
             !res.error && res.data?.some((org) => org.org_id === orgId)
         )
     );
+    getOrganisationById(orgId).then((res) => {
+      if (!res.error) setOrganisation({ name: res.data.name, description: res.data.description });
+    });
     setLoading(false);
   }, []);
 
@@ -65,12 +72,12 @@ const InfoTab = () => {
         </View>
 
         <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
-          {Organisations[0].name}
+          {organisation.name}
         </Text>
         <Text style={{ fontSize: 16, color: Colors.gray }}>
           {Organisations[0].subtitle}
         </Text>
-        <Text style={{ marginTop: 24 }}>{Organisations[0].description}</Text>
+        <Text style={{ marginTop: 24 }}>{organisation.description}</Text>
       </ScrollView>
       <TouchableOpacity
         style={[
