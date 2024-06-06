@@ -18,8 +18,12 @@ import { useProfileStore } from "@/utils/store/profile-store";
 import { supabase } from "@/utils/supabase";
 import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
-import { Organisation, getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
+import {
+  Organisation,
+  getAllOrganisationsExceptJoined,
+} from "@/utils/api/organisations";
 import { useUserIdStore } from "@/utils/store/user-id-store";
+import { getAllProjects } from "@/utils/api/project-details";
 
 const DiscoverProjects = () => {
   const fullName = useProfileStore((state) => state.fullName);
@@ -30,16 +34,16 @@ const DiscoverProjects = () => {
   useEffect(() => {
     const getOrganisations = () => {
       getAllOrganisationsExceptJoined(userId).then((res) => {
-        if(!res.data) return;
+        if (!res.data) return;
         setOrgs(res.data);
       });
-    }
+    };
     getOrganisations();
   }, []);
 
   useEffect(() => {
     const getProjects = async () => {
-      const { data, error } = await supabase.from("projects").select();
+      const { data, error } = await getAllProjects();
       if (error) {
         alert(error.message);
         return;
@@ -51,8 +55,7 @@ const DiscoverProjects = () => {
         minGroupSize: project.min_group_size,
         projectId: project.project_id,
         startDateTime: new Date(project.start_date_time),
-        image:
-          "https://cdn.pixabay.com/photo/2017/07/31/11/21/people-2557396_1280.jpg",
+        image: project.image_uri,
       }));
 
       setProjects(processedData);
@@ -184,11 +187,13 @@ const DiscoverProjects = () => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              {orgs?.filter((org) =>
-                org.name.toLowerCase().includes(search.toLowerCase())
-              ).map((organisation, i) => (
-                <OrganisationPreview organisation={organisation} key={i} />
-              ))}
+              {orgs
+                ?.filter((org) =>
+                  org.name.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((organisation, i) => (
+                  <OrganisationPreview organisation={organisation} key={i} />
+                ))}
             </ScrollView>
           </View>
 

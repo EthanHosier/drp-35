@@ -2,6 +2,7 @@ import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
 import { getProfilePicUrl } from "./profile-pics";
 import { Profile } from "./profiles";
+import { getProjectPicUrl } from "./project-pics";
 
 export type Project = {
   description: string;
@@ -10,6 +11,7 @@ export type Project = {
   name: string;
   start_date_time: string;
   project_id: string;
+  image_uri: string;
 };
 
 export type Group = {
@@ -21,15 +23,19 @@ export type Group = {
 export const getAllProjects: () => Promise<
   DRPResponse<Project[]>
 > = async () => {
-  const { data, error } = await supabase.from("projects").select();
+  const { data: rawData, error } = await supabase.from("projects").select();
   if (error) return { data: null, error };
+  const data = rawData.map((project) => ({
+    ...project,
+    image_uri: getProjectPicUrl(project.project_id).data!,
+  }));
   return { data, error: null };
 };
 
 export const getProjectDetails: (
   projectId: string
 ) => Promise<DRPResponse<Project>> = async (projectId) => {
-  const { data, error } = await supabase
+  const { data: rawData, error } = await supabase
     .from("projects")
     .select()
     .eq("project_id", projectId)
@@ -37,6 +43,9 @@ export const getProjectDetails: (
   if (error) {
     return { data: null, error };
   }
+  const image_uri = getProjectPicUrl(projectId).data!;
+  if (error) return { data: null, error };
+  const data = { ...rawData, image_uri };
   return { data, error: null };
 };
 
