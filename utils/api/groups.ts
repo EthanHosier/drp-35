@@ -77,7 +77,39 @@ export const getGroupRequests: (
   return { data: groups, error: null };
 };
 
-export const requestToJoinGroup: (
+export const checkIfUserHasGroup: (
+  projectId: string,
+  userId: string
+) => Promise<DRPResponse<boolean>> = async (projectId, userId) => {
+  const { count, error } = await supabase
+    .from("group_members")
+    .select(
+      `
+      groups(
+        project_id
+      )
+      `,
+      { count: "exact", head: true }
+    )
+    .eq("user_id", userId)
+    .eq("groups.project_id", projectId);
+  if (error) return { data: null, error };
+  return { data: count! > 0, error: null };
+};
+
+export const requestToMergeGroups: (
+  requestGroupId: string,
+  targetGroupId: string
+) => Promise<DRPResponse<null>> = async (requestGroupId, targetGroupId) => {
+  const { error } = await supabase.from("group_requests").insert({
+    request_group_id: requestGroupId,
+    target_group_id: targetGroupId,
+  });
+  if (error) return { data: null, error };
+  return { data: null, error: null };
+};
+
+export const createGroupAndRequestToJoin: (
   groupId: string,
   projectId: string,
   userId: string
