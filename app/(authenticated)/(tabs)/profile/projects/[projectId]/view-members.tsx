@@ -20,7 +20,46 @@ import { Profile } from "@/utils/api/profiles";
 import {Group} from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 
+type Members = {
+  id: number;
+  name: string;
+  image: string;
+};
 
+const MEMBERS: Members[] = [
+  {
+    id: 1,
+    name: "You",
+    image:
+      "https://avatars.githubusercontent.com/u/80335311?s=400&u=e3ffb939cb151c470f31de4b85cff93dfaa6f4b0&v=4",
+  },
+  {
+    id: 2,
+    name: "John Doe",
+    image:
+      "https://imagenes.elpais.com/resizer/v2/PYUQSPU2HRDB7PFG7BEEZ232VE.jpg?auth=a6f5e6b73ba56ad5f15cba89e5b76608af4e809eb145a3b7bda42709d820cd58&width=414",
+  },
+  {
+    id: 3,
+    name: "Jane Smith",
+    image:
+      "https://www.usatoday.com/gcdn/-mm-/2dc66323a8a0797d363207d2b3a39f44cf6947ba/c=150-0-1200-1400/local/-/media/2017/01/19/USATODAY/USATODAY/636204062074628434-AFP-552692014.jpg?width=660&height=880&fit=crop&format=pjpg&auto=webp",
+  },
+];
+
+type InterestedInGroup = {
+  image: string;
+};
+const INTERESTED_IN_GROUP: InterestedInGroup[] = [
+  {
+    image:
+      "https://api.time.com/wp-content/uploads/2017/03/donald-trump-lede.jpg",
+  },
+  {
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsNWPhXbh68-pBV7iNSR76TAgOVQRSqkuogA&s",
+  },
+];
 
 const ViewMembers = () => {
   const projectId = useLocalSearchParams().projectId;
@@ -67,7 +106,15 @@ const ViewMembers = () => {
           }}
         />
 
-        <View style={{ gap: 12, marginTop: 28 }}>
+        <View
+          style={{
+            gap: 8,
+            marginTop: 32,
+            paddingBottom: 16,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderColor: Colors.gray,
+          }}
+        >
           {[1, 2, 3].map((i) => (
             <View
               key={i}
@@ -82,8 +129,33 @@ const ViewMembers = () => {
                   marginLeft: 16,
                 }}
               />
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.gray}
+                style={{ marginLeft: "auto" }}
+              />
             </View>
           ))}
+        </View>
+        <View
+          style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
+        >
+          <Skeleton style={{ height: 80, width: 80, borderRadius: 40 }} />
+          <Skeleton
+            style={{
+              height: 32,
+              width: 164,
+              borderRadius: 8,
+              marginLeft: 16,
+            }}
+          />
+          <FontAwesome
+            name="chevron-right"
+            size={16}
+            color={Colors.gray}
+            style={{ marginLeft: "auto" }}
+          />
         </View>
       </View>
     );
