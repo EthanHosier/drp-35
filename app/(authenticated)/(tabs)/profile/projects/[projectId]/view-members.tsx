@@ -77,7 +77,7 @@ const ViewMembers = () => {
           }}
         >
           {MEMBERS.map((member, i) => (
-            <Link href={"#"} asChild key={i}>
+            <Link href={"./8618a383-e2b9-4e03-87b3-c7be1ac0a2b4"} asChild key={i}>
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
