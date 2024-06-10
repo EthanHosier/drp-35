@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import {RefreshControl, ScrollView, TextInput} from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
@@ -23,37 +23,38 @@ const DiscoverProjects = () => {
 
   const { projects, setProjects } = useProjectsStore();
   const userId = useUserIdStore((state) => state.userId);
+  const [loading, setLoading] = useState(false);
   const [orgs, setOrgs] = useState<Organisation[] | null>([]);
-  useEffect(() => {
-    const getOrganisations = () => {
-      getAllOrganisationsExceptJoined(userId).then((res) => {
-        if (!res.data) return;
-        setOrgs(res.data);
-      });
-    };
-    getOrganisations();
-  }, []);
+
+  const getProjects = async () => {
+    const { data, error } = await getAllProjects();
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const processedData = data.map((project) => ({
+      ...project,
+      maxGroupSize: project.max_group_size,
+      minGroupSize: project.min_group_size,
+      projectId: project.project_id,
+      startDateTime: new Date(project.start_date_time),
+      image: project.image_uri,
+    }));
+
+    setProjects(processedData);
+  };
+
+  const getOrganisations = async () => {
+    getAllOrganisationsExceptJoined(userId).then((res) => {
+      if (!res.data) return;
+      setOrgs(res.data);
+    });
+  };
 
   useEffect(() => {
-    const getProjects = async () => {
-      const { data, error } = await getAllProjects();
-      if (error) {
-        alert(error.message);
-        return;
-      }
-
-      const processedData = data.map((project) => ({
-        ...project,
-        maxGroupSize: project.max_group_size,
-        minGroupSize: project.min_group_size,
-        projectId: project.project_id,
-        startDateTime: new Date(project.start_date_time),
-        image: project.image_uri,
-      }));
-
-      setProjects(processedData);
-    };
     getProjects();
+    getOrganisations();
   }, []);
 
   const [search, setSearch] = React.useState("");
@@ -84,6 +85,12 @@ const DiscoverProjects = () => {
     return arr;
   }
 
+  const refresh = () => async () => {
+    setLoading(true);
+    await Promise.all([getProjects(), getOrganisations()]);
+    setLoading(false);
+  };
+
   return (
     <View>
       <LinearGradient
@@ -93,6 +100,9 @@ const DiscoverProjects = () => {
         locations={[0, 1]} // Adjust the second value to make the transition earlier or later
       >
         <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={refresh} />
+          }
           contentContainerStyle={{ marginTop: 64, paddingBottom: 200 }}
           style={{ height: "100%" }}
           showsVerticalScrollIndicator={false}
