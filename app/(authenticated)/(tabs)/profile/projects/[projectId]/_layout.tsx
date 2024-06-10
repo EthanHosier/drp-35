@@ -5,6 +5,7 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen options={{ headerShown: false }} name="view-members" />
+      <Stack.Screen options={{ headerShown: false }} name="[userId]" />
     </Stack>
   );
 };
