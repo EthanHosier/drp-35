@@ -4,7 +4,11 @@ import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
@@ -13,26 +17,79 @@ import {
   getAllJoinedOrganisations,
 } from "@/utils/api/organisations";
 import { useUserIdStore } from "@/utils/store/user-id-store";
+import { getProjectPicUrl } from "@/utils/api/project-pics";
 
 const ViewProfile = () => {
   const image = useProfileStore((state) => state.imageUri);
   const fullName = useProfileStore((state) => state.fullName);
   const myGroups = useMyGroupsStore((state) => state.groups);
+  const setGroups = useMyGroupsStore((state) => state.setGroups);
   const userId = useUserIdStore((state) => state.userId);
   const [orgs, setOrgs] = useState<Organisation[] | null>([]);
+  const [loading, setLoading] = useState(false);
+
+  const getMyGroups = async () => {
+    const { data, error } = await supabase
+      .from("group_members")
+      .select(
+        "group_id, groups(description, projects(name, max_group_size, project_id))"
+      )
+      .eq("user_id", userId);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const groupIds = data.map((group) => group.group_id);
+
+    const currentGroupSizes = new Map<string, number>();
+    await Promise.all(
+      groupIds.map(async (groupId) => {
+        const { count, error } = await supabase
+          .from("group_members")
+          .select("*", { count: "exact", head: true })
+          .eq("group_id", groupId);
+        if (error) {
+          alert(error.message);
+        }
+        currentGroupSizes.set(groupId, count ?? 0);
+      })
+    );
+
+    setGroups(
+      data.map((group) => ({
+        id: group.group_id,
+        projectName: group.groups?.projects?.name ?? "",
+        maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
+        currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
+        image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
+      }))
+    );
+  };
+
+  const getOrganisations = () => {
+    getAllJoinedOrganisations(userId).then((res) => {
+      if (!res.data) return;
+      setOrgs(res.data);
+    });
+  };
+
+  const refresh = async () => {
+    setLoading(true);
+    await Promise.all([getMyGroups(), getOrganisations()]);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const getOrganisations = () => {
-      getAllJoinedOrganisations(userId).then((res) => {
-        if (!res.data) return;
-        setOrgs(res.data);
-      });
-    };
     getOrganisations();
   }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={refresh} />
+        }
         contentContainerStyle={[
           styles.container,
           { backgroundColor: Colors.background, paddingBottom: 100 },
