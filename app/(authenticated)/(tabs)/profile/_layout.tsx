@@ -237,35 +237,6 @@ const Layout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="projects/[projectId]"
-        options={{
-          title: "My Group",
-          presentation: "fullScreenModal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Ionicons
-                name="chevron-back-sharp"
-                size={24}
-                color={Colors.primary}
-                style={{ marginLeft: "auto" }}
-              />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => {}}>
-              <Ionicons
-                name="ellipsis-horizontal-sharp"
-                size={24}
-                color={Colors.primary}
-                style={{
-                  alignSelf: "center",
-                }}
-              />
-            </TouchableOpacity>
-          ),
-        }}
-      />
     </Stack>
   );
 };

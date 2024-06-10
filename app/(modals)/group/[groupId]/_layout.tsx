@@ -11,6 +11,12 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="view-interested"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

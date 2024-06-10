@@ -3,6 +3,7 @@ import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Text } from "react-native";
 import Colors from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const Layout = () => {
   const router = useRouter();
@@ -12,17 +13,26 @@ const Layout = () => {
         name="[groupId]"
         options={{
           title: "My Group",
-          headerRight: () => (
+          headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
-              <Text
+              <Ionicons
+                name="chevron-back-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <Ionicons
+                name="ellipsis-horizontal-sharp"
+                size={24}
+                color={Colors.primary}
                 style={{
-                  color: Colors.primary,
-                  fontWeight: 500,
-                  fontSize: 16,
+                  alignSelf: "center",
                 }}
-              >
-                Done
-              </Text>
+              />
             </TouchableOpacity>
           ),
         }}
