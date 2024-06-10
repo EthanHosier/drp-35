@@ -46,43 +46,6 @@ export type Database = {
           }
         ];
       };
-      group_members_pending: {
-        Row: {
-          group_id: string;
-          user_id: string;
-        };
-        Insert: {
-          group_id: string;
-          user_id: string;
-        };
-        Update: {
-          group_id?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "group_members_pending_group_id_fkey";
-            columns: ["group_id"];
-            isOneToOne: false;
-            referencedRelation: "groups";
-            referencedColumns: ["group_id"];
-          },
-          {
-            foreignKeyName: "group_members_pending_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "group_members_pending_user_id_fkey1";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "profiles";
-            referencedColumns: ["user_id"];
-          }
-        ];
-      };
       group_requests: {
         Row: {
           request_group_id: string;
@@ -337,7 +300,18 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      getprojectgroups_old: {
+        Args: {
+          project_id: string;
+        };
+        Returns: string;
+      };
+      testtt: {
+        Args: {
+          arg_project_id: string;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       [_ in never]: never;

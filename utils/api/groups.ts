@@ -24,20 +24,50 @@ export const getGroupById: (
   };
 };
 
-export const getPendingGroupMembers: (
+export const getGroupRequests: (
   groupId: string
-) => Promise<DRPResponse<Profile[]>> = async (groupId) => {
-  const { data: rawData, error } = await supabase
-    .from("group_members_pending")
-    .select("user_id, profiles(*)")
-    .eq("group_id", groupId);
+) => Promise<DRPResponse<Group[]>> = async (groupId) => {
+  const { data, error } = await supabase
+    .from("group_requests")
+    .select(
+      `
+      request_group_id,
+      groups!group_requests_request_group_id_fkey(
+        *,
+        group_members(
+          *,
+          profiles(
+            *,
+            user_skills(skill_name),
+            user_languages(language_name)
+          )
+        )
+      )
+      `
+    )
+    .eq("target_group_id", groupId);
   if (error) return { data: null, error };
 
-  const data: Profile[] = rawData.map((member) => {
-    const profile: Profile = member.profiles;
-    return { ...profile, imageUrl: getProfilePicUrl(profile.user_id).data! };
+  const groups = data.map((group) => {
+    return {
+      group_id: group.request_group_id,
+      description: group.groups!.description,
+      members: group.groups!.group_members.map((member, i) => {
+        const { user_id, ...profile } = member.profiles!;
+        console.log(member.profiles);
+        return {
+          ...profile,
+          imageUrl: getProfilePicUrl(user_id).data ?? "",
+          skills: profile.user_skills.map((skill) => skill.skill_name),
+          languages: profile.user_languages.map(
+            (language) => language.language_name
+          ),
+        };
+      }),
+    };
   });
-  return { data, error: null };
+
+  return { data: groups, error: null };
 };
 
 export const requestToJoinGroup: (
@@ -99,4 +129,18 @@ export const rejectRequestToJoinGroup: (
   if (error) return { data: null, error };
 
   return { data: null, error: null };
+};
+
+export const isMatch: (
+  requestGroupId: string,
+  targetGroupId: string
+) => Promise<DRPResponse<boolean>> = async (requestGroupId, targetGroupId) => {
+  // requestGroupId is the group making the latest swipe request
+  const { count, error } = await supabase
+    .from("group_requests")
+    .select("", { count: "exact", head: true })
+    .eq("request_group_id", targetGroupId)
+    .eq("target_group_id", requestGroupId);
+  if (error) return { data: null, error };
+  return { data: count! > 0, error: null };
 };
