@@ -13,11 +13,12 @@ import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import {
   getGroupById,
-  getGroupIdFromProjectIdAndUserId, getGroupRequests,
+  getGroupIdFromProjectIdAndUserId,
+  getGroupRequests,
 } from "@/utils/api/groups";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { Profile } from "@/utils/api/profiles";
-import {Group} from "@/utils/api/project-details";
+import { Group } from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 
 type Members = {
@@ -90,7 +91,6 @@ const ViewMembers = () => {
       }
     );
   }, [projectId, userId]);
-
 
   if (loading)
     return (
@@ -183,7 +183,7 @@ const ViewMembers = () => {
           }}
         >
           {members?.map((member, i) => (
-            <Link href={"#"} asChild key={i}>
+            <Link href={`/(modals)/view-profile/1`} asChild key={i}>
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
@@ -218,8 +218,7 @@ const ViewMembers = () => {
                   style={[
                     { width: 80, height: 80, borderRadius: 40 },
                     index == 0 && {
-                      marginRight:
-                        interested.length > 1 ? -64 : 0,
+                      marginRight: interested.length > 1 ? -64 : 0,
                       zIndex: 100,
                       borderColor: Colors.background,
                       borderWidth: 2,
