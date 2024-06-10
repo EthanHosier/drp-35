@@ -21,7 +21,7 @@ import {Group} from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 
 const ViewMembers = () => {
-  const groupId = useLocalSearchParams().projectId as string;
+  const {projectId: groupId, maxGroupSize} = useLocalSearchParams()
   const userId = useUserIdStore((state) => state.userId);
   const [members, setMembers] = useState<Profile[] | null>(null);
   const [loadingGroup, setLoadingGroup] = useState(true);
@@ -35,7 +35,7 @@ const ViewMembers = () => {
 
   useEffect(() => {
     if (!groupId || !userId) return;
-    getGroupRequests(groupId).then((res) => {
+    getGroupRequests(groupId as string).then((res) => {
       setLoadingInterested(false)
       if (res.error) {
         console.error(res.error)
@@ -43,7 +43,7 @@ const ViewMembers = () => {
       }
       setInterested(res.data);
     });
-    getGroupById(groupId).then((res) => {
+    getGroupById(groupId as string).then((res) => {
       if (res.error) return handleError(res.error);
       setMembers(res.data?.members);
       setLoadingGroup(false);
@@ -129,7 +129,7 @@ const ViewMembers = () => {
       <ScrollView contentContainerStyle={{ padding: 24 }}>
         <Text style={{ alignSelf: "center", fontSize: 16 }}>
           You currently have{" "}
-          <Text style={{ fontWeight: "700" }}>{members?.length}/4</Text> members
+          <Text style={{ fontWeight: "700" }}>{members?.length}/{maxGroupSize}</Text> members
         </Text>
         <View
           style={{
