@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ExternalLink from "./external-link";
 
 interface ProfileProps {
-  imageUri: string;
+  imageUrl: string;
   fullName: string;
   pronouns: string;
   university: string;
@@ -19,7 +19,7 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({
-  imageUri,
+  imageUrl,
   fullName,
   pronouns,
   university,
@@ -42,8 +42,8 @@ const Profile: React.FC<ProfileProps> = ({
         <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
           <Image
             source={
-              imageUri
-                ? { uri: imageUri }
+              imageUrl
+                ? { uri: imageUrl }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles2.img}

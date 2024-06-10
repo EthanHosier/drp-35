@@ -106,7 +106,7 @@ const ViewProfile = () => {
         {myGroups.map((group, i) => (
           <Link
             asChild
-            href={`/(authenticated)/profile/projects/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}`}
+            href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}`}
             key={i}
           >
             <TouchableOpacity

@@ -13,6 +13,7 @@ export type Profile = {
   website: string;
   skills: string[];
   languages: string[];
+  id: string;
 };
 
 export const getProfileByUserId: (
@@ -27,7 +28,9 @@ export const getProfileByUserId: (
   const imageUrl = getProfilePicUrl(userId).data!;
   return {
     data: {
+      fullName: data.full_name,
       ...data,
+      id: userId,
       imageUrl,
       skills: data.user_skills.map((skill) => skill.skill_name),
       languages: data.user_languages.map((language) => language.language_name),

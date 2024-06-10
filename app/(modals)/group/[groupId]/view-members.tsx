@@ -22,7 +22,7 @@ import { Group } from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 
 const ViewMembers = () => {
-  const { projectId: groupId, maxGroupSize } = useLocalSearchParams();
+  const { groupId, maxGroupSize } = useLocalSearchParams();
   const userId = useUserIdStore((state) => state.userId);
   const [members, setMembers] = useState<Profile[] | null>(null);
   const [loadingGroup, setLoadingGroup] = useState(true);
@@ -145,7 +145,7 @@ const ViewMembers = () => {
           }}
         >
           {members?.map((member, i) => (
-            <Link href={`/(modals)/view-profile/`} asChild key={i}>
+            <Link href={`/(modals)/view-profile/${member.id}`} asChild key={i}>
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >

@@ -15,8 +15,14 @@ export const getGroupById: (
   if (error) return { data: null, error };
 
   const members: Profile[] = data.group_members.map((member) => {
-    const profile: Profile = member.profiles;
-    return { ...profile, imageUrl: getProfilePicUrl(profile.user_id).data! };
+    const profile: Profile = {
+      imageUrl: "",
+      skills: ["DOESN'T FETCH SKILLS HERE"],
+      languages: ["DOESN'T FETCH LANGS HERE"],
+      ...member.profiles,
+      id: member.profiles?.user_id ?? "",
+    } as Profile;
+    return { ...profile, imageUrl: getProfilePicUrl(profile.id).data! };
   });
   return {
     data: { description: data.description, group_id: groupId, members },
@@ -57,6 +63,7 @@ export const getGroupRequests: (
         console.log(member.profiles);
         return {
           ...profile,
+          id: user_id,
           imageUrl: getProfilePicUrl(user_id).data ?? "",
           skills: profile.user_skills.map((skill) => skill.skill_name),
           languages: profile.user_languages.map(

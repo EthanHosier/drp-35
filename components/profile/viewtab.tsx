@@ -16,7 +16,14 @@ const ViewTab = () => {
   const { skills } = useSkillsStore();
   const { languages } = useLanguagesStore();
 
-  return <Profile {...profile} skills={skills} languages={languages} />;
+  return (
+    <Profile
+      {...profile}
+      skills={skills}
+      languages={languages}
+      imageUrl={profile.imageUri}
+    />
+  );
 };
 
 export default ViewTab;
