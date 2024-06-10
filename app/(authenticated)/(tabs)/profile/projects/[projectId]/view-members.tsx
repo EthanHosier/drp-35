@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -17,6 +17,7 @@ import {
 } from "@/utils/api/groups";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { Profile } from "@/utils/api/profiles";
+import Skeleton from "@/components/LoadingSkeleton";
 
 type Members = {
   id: number;
@@ -63,19 +64,61 @@ const ViewMembers = () => {
   const projectId = useLocalSearchParams().projectId;
   const userId = useUserIdStore((state) => state.userId);
   const [members, setMembers] = useState<Profile[] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const handleError = useCallback((error: any) => {
+    console.error(error);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (!projectId || !userId) return;
     getGroupIdFromProjectIdAndUserId(projectId as string, userId).then(
       (res) => {
-        if (res.error) return console.error(res.error);
+        if (res.error) return handleError(res.error);
         getGroupById(res.data as string).then((res) => {
-          if (res.error) return console.error(res.error);
+          if (res.error) return handleError(res.error);
           setMembers(res.data?.members);
+          setLoading(false);
         });
       }
     );
   }, [projectId, userId]);
+
+  if (loading)
+    return (
+      <View
+        style={{ flex: 1, padding: 24, backgroundColor: Colors.background }}
+      >
+        <Skeleton
+          style={{
+            height: 32,
+            width: 200,
+            alignSelf: "center",
+            borderRadius: 8,
+          }}
+        />
+
+        <View style={{ gap: 12, marginTop: 28 }}>
+          {[1, 2, 3].map((i) => (
+            <View
+              key={i}
+              style={{ flexDirection: "row", alignItems: "center" }}
+            >
+              <Skeleton style={{ height: 80, width: 80, borderRadius: 40 }} />
+              <Skeleton
+                style={{
+                  height: 32,
+                  width: 120 + Math.random() * 60,
+                  borderRadius: 8,
+                  marginLeft: 16,
+                }}
+              />
+            </View>
+          ))}
+        </View>
+      </View>
+    );
   return (
     <View
       style={{
@@ -127,14 +170,15 @@ const ViewMembers = () => {
             <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
-              {INTERESTED_IN_GROUP.slice(0, 2).map((e, index) => (
+              {INTERESTED_IN_GROUP.slice(0, 1).map((e, index) => (
                 <Image
                   key={index}
                   source={e.image}
                   style={[
                     { width: 80, height: 80, borderRadius: 40 },
                     index == 0 && {
-                      marginRight: -64,
+                      marginRight:
+                        INTERESTED_IN_GROUP.slice(0, 1).length > 1 ? -64 : 0,
                       zIndex: 100,
                       borderColor: Colors.background,
                       borderWidth: 2,
@@ -152,6 +196,7 @@ const ViewMembers = () => {
                   borderRadius: 12,
                   marginTop: -48,
                   marginLeft: -18,
+                  zIndex: 100,
                 }}
               >
                 <Text style={{ color: Colors.background }}>
