@@ -2,7 +2,7 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { router } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "@/constants/Colors";
 import { Organisation } from "@/utils/api/organisations";
 
@@ -33,7 +33,7 @@ const OrganisationPreview: React.FC<OrganisationPreviewProps> = ({
           {organisation.name}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons name="people-outline" size={24} color={Colors.gray} />
+          <MaterialIcons name="description" size={20} color="grey" />
           <Text
             style={{
               color: Colors.gray,

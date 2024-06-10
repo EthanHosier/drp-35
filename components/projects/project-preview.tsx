@@ -8,7 +8,6 @@ import Colors from "@/constants/Colors";
 import { getMonthAbbreviation } from "@/utils/utils";
 import { BlurView } from "expo-blur";
 import { Project } from "@/utils/store/projects-store";
-
 interface ProjectPreviewProps {
   project: Project;
 }
@@ -79,7 +78,9 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                 marginTop: 1,
               }}
             >
-              {project.minGroupSize}-{project.maxGroupSize} members
+              {project.minGroupSize === project.maxGroupSize ?
+                `${project.minGroupSize} team members` :
+                `${project.minGroupSize}-${project.maxGroupSize} team members`}
             </Text>
           </View>
         </TouchableOpacity>
