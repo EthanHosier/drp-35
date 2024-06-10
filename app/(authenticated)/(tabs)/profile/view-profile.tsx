@@ -7,7 +7,7 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
-import { Group, useMyGroupsStore } from "@/utils/store/my-groups-store";
+import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 import {
   Organisation,
   getAllJoinedOrganisations,
@@ -106,7 +106,7 @@ const ViewProfile = () => {
         {myGroups.map((group, i) => (
           <Link
             asChild
-            href={`/(authenticated)/profile/projects/${group.id}/view-members`}
+            href={`/(authenticated)/profile/projects/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}`}
             key={i}
           >
             <TouchableOpacity
