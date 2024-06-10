@@ -6,6 +6,7 @@ const Layout = () => {
     <Stack>
       <Stack.Screen options={{ headerShown: false }} name="view-members" />
       <Stack.Screen options={{ headerShown: false }} name="[userId]" />
+      <Stack.Screen options={{ headerShown: false }} name="view-interested" />
     </Stack>
   );
 };
