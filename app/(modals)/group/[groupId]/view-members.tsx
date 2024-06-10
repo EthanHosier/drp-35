@@ -169,7 +169,7 @@ const ViewMembers = () => {
           ))}
         </View>
         {interested.length > 0 && (
-          <Link href={"./view-interested"} asChild style={{ marginTop: 16 }}>
+          <Link href={`./view-interested?interested=${JSON.stringify(interested)}`} asChild style={{ marginTop: 16 }}>
             <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
