@@ -99,7 +99,15 @@ const ViewMembers = () => {
           }}
         />
 
-        <View style={{ gap: 12, marginTop: 28 }}>
+        <View
+          style={{
+            gap: 8,
+            marginTop: 32,
+            paddingBottom: 16,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderColor: Colors.gray,
+          }}
+        >
           {[1, 2, 3].map((i) => (
             <View
               key={i}
@@ -114,8 +122,33 @@ const ViewMembers = () => {
                   marginLeft: 16,
                 }}
               />
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.gray}
+                style={{ marginLeft: "auto" }}
+              />
             </View>
           ))}
+        </View>
+        <View
+          style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
+        >
+          <Skeleton style={{ height: 80, width: 80, borderRadius: 40 }} />
+          <Skeleton
+            style={{
+              height: 32,
+              width: 164,
+              borderRadius: 8,
+              marginLeft: 16,
+            }}
+          />
+          <FontAwesome
+            name="chevron-right"
+            size={16}
+            color={Colors.gray}
+            style={{ marginLeft: "auto" }}
+          />
         </View>
       </View>
     );
@@ -170,7 +203,7 @@ const ViewMembers = () => {
             <TouchableOpacity
               style={{ flexDirection: "row", alignItems: "center" }}
             >
-              {INTERESTED_IN_GROUP.slice(0, 1).map((e, index) => (
+              {INTERESTED_IN_GROUP.slice(0, 2).map((e, index) => (
                 <Image
                   key={index}
                   source={e.image}
@@ -178,7 +211,7 @@ const ViewMembers = () => {
                     { width: 80, height: 80, borderRadius: 40 },
                     index == 0 && {
                       marginRight:
-                        INTERESTED_IN_GROUP.slice(0, 1).length > 1 ? -64 : 0,
+                        INTERESTED_IN_GROUP.slice(0, 2).length > 1 ? -64 : 0,
                       zIndex: 100,
                       borderColor: Colors.background,
                       borderWidth: 2,
