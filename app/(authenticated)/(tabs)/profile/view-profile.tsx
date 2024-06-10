@@ -104,7 +104,11 @@ const ViewProfile = () => {
           My Groups
         </Text>
         {myGroups.map((group, i) => (
-          <Link asChild href="/(authenticated)/profile/projects/1" key={i}>
+          <Link
+            asChild
+            href={`/(authenticated)/profile/projects/${group.id}/view-members`}
+            key={i}
+          >
             <TouchableOpacity
               style={{
                 paddingTop: i == 0 ? 16 : 12,

@@ -144,3 +144,24 @@ export const isMatch: (
   if (error) return { data: null, error };
   return { data: count! > 0, error: null };
 };
+
+// TODO: refactor to use joins
+export const getGroupIdFromProjectIdAndUserId = async (
+  projectId: string,
+  userId: string
+) => {
+  const { data, error } = await supabase
+    .from("group_members")
+    .select(
+      `
+    user_id,
+    groups(group_id)
+
+  `
+    )
+    .eq("user_id", userId);
+  // .filter("group_members.user_id", "eq", userId);
+  if (error) return { data: null, error };
+
+  return { data: data[0].groups?.group_id, error };
+};

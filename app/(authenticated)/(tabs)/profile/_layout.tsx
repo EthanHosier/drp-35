@@ -71,6 +71,7 @@ const Layout = () => {
 
       setGroups(
         data.map((group) => ({
+          id: group.group_id,
           projectName: group.groups?.projects?.name ?? "",
           maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
           currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,

@@ -5,6 +5,7 @@ export type Group = {
   maxGroupSize: number;
   currentGroupSize: number;
   image: string;
+  id: string;
 };
 
 type MyGroupsStore = {

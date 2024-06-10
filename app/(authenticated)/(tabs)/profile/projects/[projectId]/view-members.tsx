@@ -5,12 +5,18 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import {
+  getGroupById,
+  getGroupIdFromProjectIdAndUserId,
+} from "@/utils/api/groups";
+import { useUserIdStore } from "@/utils/store/user-id-store";
+import { Profile } from "@/utils/api/profiles";
 
 type Members = {
   id: number;
@@ -54,6 +60,22 @@ const INTERESTED_IN_GROUP: InterestedInGroup[] = [
 ];
 
 const ViewMembers = () => {
+  const projectId = useLocalSearchParams().projectId;
+  const userId = useUserIdStore((state) => state.userId);
+  const [members, setMembers] = useState<Profile[] | null>(null);
+
+  useEffect(() => {
+    if (!projectId || !userId) return;
+    getGroupIdFromProjectIdAndUserId(projectId as string, userId).then(
+      (res) => {
+        if (res.error) return console.error(res.error);
+        getGroupById(res.data as string).then((res) => {
+          if (res.error) return console.error(res.error);
+          setMembers(res.data?.members);
+        });
+      }
+    );
+  }, [projectId, userId]);
   return (
     <View
       style={{
@@ -76,19 +98,19 @@ const ViewMembers = () => {
             paddingBottom: 16,
           }}
         >
-          {MEMBERS.map((member, i) => (
+          {members?.map((member, i) => (
             <Link href={"#"} asChild key={i}>
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <Image
-                  source={member.image}
+                  source={member.imageUrl}
                   style={{ width: 80, height: 80, borderRadius: 40 }}
                 />
                 <Text
                   style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}
                 >
-                  {member.name}
+                  {member.full_name}
                 </Text>
                 <FontAwesome
                   name="chevron-right"
