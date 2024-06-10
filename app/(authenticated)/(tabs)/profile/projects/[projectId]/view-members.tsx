@@ -162,8 +162,8 @@ const ViewMembers = () => {
     >
       <ScrollView contentContainerStyle={{ padding: 24 }}>
         <Text style={{ alignSelf: "center", fontSize: 16 }}>
-          You currently have <Text style={{ fontWeight: "700" }}>3/4</Text>{" "}
-          members
+          You currently have{" "}
+          <Text style={{ fontWeight: "700" }}>{members?.length}/4</Text> members
         </Text>
         <View
           style={{
