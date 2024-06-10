@@ -17,10 +17,10 @@ const AnimatedLG = Animated.createAnimatedComponent(LinearGradient);
 
 interface SkeletonProps {
   children?: React.ReactNode;
-  styles?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({ children, styles }) => {
+const Skeleton: React.FC<SkeletonProps> = ({ children, style }) => {
   const animatedValue = new Animated.Value(0);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const Skeleton: React.FC<SkeletonProps> = ({ children, styles }) => {
           position: "relative",
           overflow: "hidden",
         },
-        styles,
+        style,
       ]}
     >
       <AnimatedLG
@@ -66,11 +66,3 @@ const Skeleton: React.FC<SkeletonProps> = ({ children, styles }) => {
   );
 };
 export default Skeleton;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
