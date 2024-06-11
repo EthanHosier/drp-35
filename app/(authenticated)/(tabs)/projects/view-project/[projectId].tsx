@@ -93,7 +93,7 @@ const GroupsTab = () => {
   const userId = useUserIdStore((state) => state.userId);
   const [groupId, setGroupId] = useState<string | null>(null);
 
-  const getGroupId = async() => {
+  const getGroupId = async () => {
     const { data, error } = await supabase
     .from("group_members")
     .select(
@@ -203,8 +203,10 @@ const GroupsTab = () => {
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
             onSwipeRight={async (targetGroupId) => {
-              if (!groupId) return;
-              requestToJoinGroup(targetGroupId, groupId, projectId, userId)
+              await requestToJoinGroup(targetGroupId, groupId, projectId, userId)
+              if (!groupId) {
+                await getGroupId();
+              }
             }}
           />
           <InfoSheet

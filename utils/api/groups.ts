@@ -79,13 +79,13 @@ export const getGroupRequests: (
 
 export const requestToJoinGroup: (
   targetGroupId: string,
-  requestGroupId: string,
+  requestGroupId: string | null,
   projectId: string,
   userId: string
 ) => Promise<DRPResponse<null>> = async (groupId, requestGroupId, projectId, userId) => {
   const { data, error } = await checkIfUserHasGroup(projectId, userId);
   if (error) return { data: null, error };
-  if (data) {
+  if (data && requestGroupId) {
     return await requestToMergeGroups(requestGroupId, groupId);
   } else {
     return await createGroupAndRequestToJoin(groupId, projectId, userId);
