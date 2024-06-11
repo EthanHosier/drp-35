@@ -58,7 +58,7 @@ export const getGroupRequests: (
     return {
       group_id: group.request_group_id,
       description: group.groups!.description,
-      members: group.groups!.group_members.map((member, i) => {
+      members: group.groups!.group_members.map((member) => {
         const { user_id, ...profile } = member.profiles!;
         console.log(member.profiles);
         return {
@@ -180,6 +180,12 @@ export const acceptRequestToJoinGroup: (
     .update({ group_id: targetGroupId })
     .eq("group_id", requestGroupId);
   if (joinError) return { data: null, error: joinError };
+
+  const {error: deleteError} = await supabase
+    .from("groups")
+    .delete()
+    .eq("group_id", requestGroupId);
+  if (deleteError) return { data: null, error: deleteError };
 
   return { data: null, error: null };
 };
