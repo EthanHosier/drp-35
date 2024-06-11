@@ -268,7 +268,7 @@ function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
       name={item.name}
       date={date}
       message={content}
-      imgUrl="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
+      imgUrl={item.imgUri}
     />
   );
 }

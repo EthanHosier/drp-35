@@ -1,5 +1,6 @@
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
+import { getProjectPicUrl } from "./project-pics";
 
 export type Message = {
   id: string;
@@ -14,6 +15,7 @@ export type GroupChat = {
   name: string;
   created_at: string;
   messages: Message[];
+  imgUri: string;
 };
 
 export const sendMessage: (
@@ -40,7 +42,11 @@ export const getGroupchat: (
   if (error) return { data: null, error };
 
   return {
-    data: { ...groupChat, name: groupChat.projects!.name },
+    data: {
+      ...groupChat,
+      name: groupChat.projects!.name,
+      imgUri: getProjectPicUrl(groupChat.project_id).data!,
+    },
     error: null,
   };
 };
