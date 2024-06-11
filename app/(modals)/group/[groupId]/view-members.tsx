@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -13,13 +13,13 @@ import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import {
   getGroupById,
-  getGroupIdFromProjectIdAndUserId,
   getGroupRequests,
 } from "@/utils/api/groups";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { Profile } from "@/utils/api/profiles";
 import { Group } from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
+import {RefreshControl} from "react-native-gesture-handler";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize } = useLocalSearchParams();
@@ -27,28 +27,25 @@ const ViewMembers = () => {
   const [members, setMembers] = useState<Profile[] | null>(null);
   const [loadingGroup, setLoadingGroup] = useState(true);
   const [loadingInterested, setLoadingInterested] = useState(true);
-
-  const handleError = useCallback((error: any) => {
-    console.error(error);
-    setLoadingGroup(false);
-  }, []);
   const [interested, setInterested] = useState<Group[]>([]);
+
+  const loadGroup = async () => {
+    setLoadingGroup(true);
+    getGroupById(groupId as string).then((res) => {
+      if (res.error) return console.error(res.error);
+      setMembers(res.data?.members);
+    });
+    setLoadingGroup(false);
+  }
 
   useEffect(() => {
     if (!groupId || !userId) return;
     getGroupRequests(groupId as string).then((res) => {
       setLoadingInterested(false);
-      if (res.error) {
-        console.error(res.error);
-        return;
-      }
+      if (res.error) return console.error(res.error);
       setInterested(res.data);
     });
-    getGroupById(groupId as string).then((res) => {
-      if (res.error) return handleError(res.error);
-      setMembers(res.data?.members);
-      setLoadingGroup(false);
-    });
+    loadGroup();
   }, [groupId, userId]);
 
   if (loadingGroup || loadingInterested)
@@ -120,107 +117,115 @@ const ViewMembers = () => {
     );
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: Colors.background,
-        position: "relative",
-      }}
-    >
-      <ScrollView contentContainerStyle={{ padding: 24 }}>
-        <Text style={{ alignSelf: "center", fontSize: 16 }}>
-          You currently have{" "}
-          <Text style={{ fontWeight: "700" }}>
-            {members?.length}/{maxGroupSize}
-          </Text>{" "}
-          members
-        </Text>
-        <View
-          style={{
-            marginTop: 32,
-            gap: 12,
-            borderBottomColor: Colors.gray,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            paddingBottom: 16,
-          }}
-        >
-          {members?.map((member, i) => (
-            <Link href={`/(modals)/view-profile/${member.id}`} asChild key={i}>
-              <TouchableOpacity
-                style={{ flexDirection: "row", alignItems: "center" }}
-              >
-                <Image
-                  source={member.imageUrl}
-                  style={{ width: 80, height: 80, borderRadius: 40 }}
-                />
-                <Text
-                  style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}
+    <View style={{
+      flex: 1,
+      backgroundColor: Colors.background,
+      position: "relative",
+    }}>
+      <ScrollView
+          refreshControl={
+            <RefreshControl
+                refreshing={loadingGroup || loadingInterested}
+                onRefresh={loadGroup}
+            />
+          }
+      >
+        <ScrollView contentContainerStyle={{ padding: 24 }}>
+          <Text style={{ alignSelf: "center", fontSize: 16 }}>
+            You currently have{" "}
+            <Text style={{ fontWeight: "700" }}>
+              {members?.length}/{maxGroupSize as string}
+            </Text>{" "}
+            members
+          </Text>
+          <View
+              style={{
+                marginTop: 32,
+                gap: 12,
+                borderBottomColor: Colors.gray,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                paddingBottom: 16,
+              }}
+          >
+            {members?.map((member, i) => (
+                <Link href={`/(modals)/view-profile/${member.id}`} asChild key={i}>
+                  <TouchableOpacity
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                  >
+                    <Image
+                        source={member.imageUrl}
+                        style={{ width: 80, height: 80, borderRadius: 40 }}
+                    />
+                    <Text
+                        style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}
+                    >
+                      {member.full_name}
+                    </Text>
+                    <FontAwesome
+                        name="chevron-right"
+                        size={16}
+                        color={Colors.dark}
+                        style={{ marginLeft: "auto" }}
+                    />
+                  </TouchableOpacity>
+                </Link>
+            ))}
+          </View>
+          {interested.length > 0 && (
+              <Link href={`./view-interested?interested=${JSON.stringify(interested)}`} asChild style={{ marginTop: 16 }}>
+                <TouchableOpacity
+                    style={{ flexDirection: "row", alignItems: "center" }}
                 >
-                  {member.full_name}
-                </Text>
-                <FontAwesome
-                  name="chevron-right"
-                  size={16}
-                  color={Colors.dark}
-                  style={{ marginLeft: "auto" }}
-                />
-              </TouchableOpacity>
-            </Link>
-          ))}
-        </View>
-        {interested.length > 0 && (
-          <Link href={`./view-interested?interested=${JSON.stringify(interested)}`} asChild style={{ marginTop: 16 }}>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
-            >
-              {interested.slice(0, 2).map((e, index) => (
-                <Image
-                  key={index}
-                  source={e.members[0].imageUrl}
-                  style={[
-                    {
-                      width: index === 0 ? 82 : 80,
-                      height: index === 0 ? 82 : 80,
-                      borderRadius: 40,
-                    },
-                    index === 0 && {
-                      marginRight: interested.length > 1 ? -64 : 0,
-                      zIndex: 100,
-                      borderColor: Colors.background,
-                      borderWidth: 2,
-                    },
-                  ]}
-                />
-              ))}
-              <View
-                style={{
-                  width: 24,
-                  height: 24,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: Colors.primary,
-                  borderRadius: 12,
-                  marginTop: -48,
-                  marginLeft: -18,
-                  zIndex: 100,
-                }}
-              >
-                <Text style={{ color: Colors.background }}>
-                  {interested.length}
-                </Text>
-              </View>
-              <Text style={{ marginLeft: 8, fontWeight: "600", fontSize: 14 }}>
-                Interested in your group
-              </Text>
-              <FontAwesome
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-                style={{ marginLeft: "auto" }}
-              />
-            </TouchableOpacity>
-          </Link>
-        )}
+                  {interested.slice(0, 2).map((e, index) => (
+                      <Image
+                          key={index}
+                          source={e.members[0].imageUrl}
+                          style={[
+                            {
+                              width: index === 0 ? 82 : 80,
+                              height: index === 0 ? 82 : 80,
+                              borderRadius: 40,
+                            },
+                            index === 0 && {
+                              marginRight: interested.length > 1 ? -64 : 0,
+                              zIndex: 100,
+                              borderColor: Colors.background,
+                              borderWidth: 2,
+                            },
+                          ]}
+                      />
+                  ))}
+                  <View
+                      style={{
+                        width: 24,
+                        height: 24,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: Colors.primary,
+                        borderRadius: 12,
+                        marginTop: -48,
+                        marginLeft: -18,
+                        zIndex: 100,
+                      }}
+                  >
+                    <Text style={{ color: Colors.background }}>
+                      {interested.length}
+                    </Text>
+                  </View>
+                  <Text style={{ marginLeft: 8, fontWeight: "600", fontSize: 14 }}>
+                    Interested in your group
+                  </Text>
+                  <FontAwesome
+                      name="chevron-right"
+                      size={16}
+                      color={Colors.dark}
+                      style={{ marginLeft: "auto" }}
+                  />
+                </TouchableOpacity>
+              </Link>
+          )}
+        </ScrollView>
+
       </ScrollView>
       <TouchableOpacity
         style={[
@@ -234,20 +239,18 @@ const ViewMembers = () => {
             zIndex: 100,
           },
         ]}
-      >
-        <Text
+    >
+      <Text
           style={{
             fontSize: 16,
             color: Colors.background,
           }}
-        >
-          Search for Group Members
-        </Text>
-      </TouchableOpacity>
+      >
+        Search for Group Members
+      </Text>
+    </TouchableOpacity>
     </View>
   );
 };
 
 export default ViewMembers;
-
-const styles = StyleSheet.create({});
