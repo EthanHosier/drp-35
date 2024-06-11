@@ -14,6 +14,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
+import { useLocalSearchParams } from "expo-router";
 
 type Message = {
   id: string;
@@ -112,6 +113,10 @@ function convertToHumanReadable(datetime: string) {
 const BORDER_RADIUS = 20;
 
 const ChatId = () => {
+  const chatId = useLocalSearchParams().chatId;
+
+  console.log("Chat ID: ", chatId);
+
   const [message, setMessage] = useState("");
   return (
     <KeyboardAvoidingView

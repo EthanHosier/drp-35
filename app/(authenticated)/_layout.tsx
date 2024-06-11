@@ -7,9 +7,12 @@ import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 import { supabase } from "@/utils/supabase";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { getProjectPicUrl } from "@/utils/api/project-pics";
+import { Message, getGroupchat, sendMessage } from "@/utils/api/groupchats";
+import { useGroupchatStore } from "@/utils/store/groupchat-store";
 
 const Layout = () => {
   const { groups, setGroups } = useMyGroupsStore();
+  const { addGroupChat, addMessage } = useGroupchatStore();
   const { userId } = useUserIdStore();
 
   const getMyGroups = async () => {
@@ -61,6 +64,13 @@ const Layout = () => {
     if (!!(groups?.length < 0)) return;
 
     groups.forEach((group) => {
+      getGroupchat(group.id).then((res) => {
+        if (res.error) {
+          alert(res.error.message);
+          return;
+        }
+        addGroupChat(res.data);
+      });
       supabase
         .channel("custom-all-channel")
         .on(
@@ -72,7 +82,15 @@ const Layout = () => {
             filter: `group_id=eq.${group.id}`,
           },
           (payload) => {
-            console.log(payload);
+            const { id, group_id, content, created_at, sender_id } =
+              payload.new;
+            addMessage(group_id, {
+              id,
+              group_id,
+              content,
+              created_at,
+              sender_id,
+            });
           }
         )
         .subscribe();

@@ -7,7 +7,7 @@ import { formatDate } from "@/utils/utils";
 import { Link } from "expo-router";
 
 interface ChatPreviewProps {
-  id: number,
+  id: string;
   name: string;
   message: string;
   imgUrl: string;

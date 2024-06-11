@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -29,125 +29,18 @@ import Colors from "@/constants/Colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { Stack } from "expo-router";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import { useGroupchatStore } from "@/utils/store/groupchat-store";
+import { GroupChat } from "@/utils/api/groupchats";
 
 const windowDimensions = Dimensions.get("window");
 const BUTTON_WIDTH = 80;
 const MAX_TRANSLATE = -BUTTON_WIDTH;
 
-type ChatPreview = {
-  name: string;
-  message: string;
-  unreadMessages: number;
-  date: Date;
-};
-const CHATS: ChatPreview[] = [
-  {
-    name: "John Doe",
-    message: "Hey, what's up?",
-    unreadMessages: 3,
-    date: new Date(),
-  },
-  {
-    name: "Bob Smith",
-    message: "Hello, how are you?",
-    unreadMessages: 4,
-    date: new Date(),
-  },
-  {
-    name: "Jane Doe",
-    message: "Hi, how's it going?",
-    unreadMessages: 2,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Alice Smith",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "John Doe",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Bob Smith",
-    message: "Hello, how are you?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Jane Doe",
-    message: "Hi, how's it going?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Alice Smith",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "John Doe",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Bob Smith",
-    message: "Hello, how are you?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Alice Smith",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "John Doe",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Bob Smith",
-    message: "Hello, how are you?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Jane Doe",
-    message: "Hi, how's it going?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Alice Smith",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "John Doe",
-    message: "Hey, what's up?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-  {
-    name: "Bob Smith",
-    message: "Hello, how are you?",
-    unreadMessages: 0,
-    date: new Date(2020, 10, 12), // November 12, 2020
-  },
-];
-
 export default function MessagesList() {
+  const { groupChats } = useGroupchatStore();
+
   const [search, setSearch] = useState("");
-  const [filteredChats, setFilteredChats] = useState(CHATS);
+  const [filteredChats, setFilteredChats] = useState<GroupChat[]>(groupChats);
 
   function onRemove() {
     Alert.alert("Removed");
@@ -205,7 +98,7 @@ export default function MessagesList() {
                 onChangeText={(e) => {
                   setSearch(e);
                   setFilteredChats(
-                    CHATS.filter((chat) =>
+                    groupChats.filter((chat) =>
                       chat.name.toLowerCase().includes(e.toLowerCase())
                     )
                   );
@@ -257,7 +150,7 @@ const timingConfig = {
 
 type ListItemProps = {
   id: number;
-  item: ChatPreview;
+  item: GroupChat;
   onRemove: () => void;
 };
 function ListItem({ id, item, onRemove }: ListItemProps) {
@@ -357,11 +250,14 @@ function Button({ item }: { item: ButtonData }) {
   );
 }
 
-function ListItemContent({ id, item }: { id: number; item: ChatPreview }) {
+function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
   return (
     <ChatPreview
-      id={id}
-      {...item}
+      unreadMessages={69}
+      id={item.id}
+      name={"TODO: Get name from group"}
+      date={new Date(item.messages[0].created_at)}
+      message={item.messages[0].content ?? "Click here to start the chat"}
       imgUrl="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
     />
   );
