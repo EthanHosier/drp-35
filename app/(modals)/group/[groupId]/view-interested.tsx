@@ -14,7 +14,6 @@ import {
 
 const ViewInterested = () => {
 
-
   const userId = useUserIdStore((state) => state.userId);
   const [loading, setLoading] = useState(false);
   const { groupId, interested } = useLocalSearchParams();
@@ -63,9 +62,9 @@ const ViewInterested = () => {
               <View style={{ flexDirection: "row", gap: 8 }}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => {
-                      acceptRequestToJoinGroup(group.group_id, groupId as string)
-                      refresh()
+                    onPress={async () => {
+                      await acceptRequestToJoinGroup(group.group_id, groupId as string)
+                      await refresh()
                     }}
                 >
                   <Text
@@ -76,9 +75,9 @@ const ViewInterested = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.button, styles.rejectButton]}
-                    onPress={() => {
-                      rejectRequestToJoinGroup(group.group_id, groupId as string)
-                      refresh()
+                    onPress={async () => {
+                      await rejectRequestToJoinGroup(group.group_id, groupId as string)
+                      await refresh()
                     }}
                 >
                   <Text style={[styles.buttonText, {}]}>Decline</Text>

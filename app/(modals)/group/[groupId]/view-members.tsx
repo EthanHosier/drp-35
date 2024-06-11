@@ -25,30 +25,35 @@ const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
   const userId = useUserIdStore((state) => state.userId);
   const [members, setMembers] = useState<Profile[] | null>(null);
-  const [loadingGroup, setLoadingGroup] = useState(true);
-  const [loadingInterested, setLoadingInterested] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [interested, setInterested] = useState<Group[]>([]);
 
   const loadGroup = async () => {
-    setLoadingGroup(true);
     getGroupById(groupId as string).then((res) => {
       if (res.error) return console.error(res.error);
       setMembers(res.data?.members);
     });
-    setLoadingGroup(false);
   }
 
-  useEffect(() => {
-    if (!groupId || !userId) return;
+  const loadInterested = async () => {
     getGroupRequests(groupId as string).then((res) => {
-      setLoadingInterested(false);
       if (res.error) return console.error(res.error);
       setInterested(res.data);
     });
-    loadGroup();
+  }
+
+  const refresh = async () => {
+    if (!groupId || !userId) return;
+    setLoading(true);
+    await Promise.all([loadGroup(), loadInterested()]);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    refresh();
   }, [groupId, userId]);
 
-  if (loadingGroup || loadingInterested)
+  if (loading)
     return (
       <View
         style={{ flex: 1, padding: 24, backgroundColor: Colors.background }}
@@ -125,8 +130,8 @@ const ViewMembers = () => {
       <ScrollView
           refreshControl={
             <RefreshControl
-                refreshing={loadingGroup || loadingInterested}
-                onRefresh={loadGroup}
+                refreshing={loading}
+                onRefresh={refresh}
             />
           }
       >
