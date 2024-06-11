@@ -23,7 +23,7 @@ import { useFilterStore } from "@/utils/store/filter-store";
 import LottieView from "lottie-react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {requestToJoinGroup} from "@/utils/api/groups";
+import {acceptRequestToJoinGroup, isMatch, requestToJoinGroup} from "@/utils/api/groups";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {supabase} from "@/utils/supabase";
 
@@ -124,6 +124,29 @@ const GroupsTab = () => {
   const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
 
+  const handleSwipeRight = async (targetGroupId: string) => {
+    if (groupId) {
+      const { data, error } =
+          await isMatch(groupId as string, targetGroupId);
+      if (error) return console.log(error);
+      console.log(data);
+      if (data) {
+        const { error } = await acceptRequestToJoinGroup(targetGroupId, groupId)
+        if (error) return console.log(error);
+        router.push({
+          pathname: "/(authenticated)/projects/view-project/match",
+          params: { matchId: "123" }, // TODO: what is matchId?
+        });
+        return;
+      }
+    }
+
+    await requestToJoinGroup(targetGroupId, groupId, projectId, userId)
+    if (!groupId) {
+      await getGroupId();
+    }
+  }
+
   return (
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.length > 0 ? (
@@ -202,12 +225,7 @@ const GroupsTab = () => {
             setMemberIndex={setMemberIndex}
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
-            onSwipeRight={async (targetGroupId) => {
-              await requestToJoinGroup(targetGroupId, groupId, projectId, userId)
-              if (!groupId) {
-                await getGroupId();
-              }
-            }}
+            onSwipeRight={handleSwipeRight}
           />
           <InfoSheet
             profile={
