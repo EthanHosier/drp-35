@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -6,7 +6,6 @@ import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { useProjectsStore } from "@/utils/store/projects-store";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { uploadProjectPic } from "@/utils/api/project-pics";
 
 const Layout = () => {
@@ -110,28 +109,6 @@ const Layout = () => {
           ),
         }}
       />
-      <Stack.Screen
-        name="view-project"
-        options={{
-          presentation: "fullScreenModal",
-          title: "View Project",
-          headerRight: () => (
-            // <TouchableOpacity
-            //   onPress={() => router.navigate("../filter")}
-            //   style={{ marginRight: 8 }}
-            // >
-            //   <FontAwesome name="filter" size={24} color="black" />
-            // </TouchableOpacity>
-            <TouchableOpacity onPress={router.back}>
-              <Text
-                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-              >
-                Done
-              </Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
 
       <Stack.Screen
         name="filter"
@@ -170,5 +147,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
-const styles = StyleSheet.create({});

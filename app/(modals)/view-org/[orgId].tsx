@@ -103,7 +103,7 @@ const ViewOrg = () => {
         </Text>
         <View style={{gap: 4}}>
           {projects?.map((project, i) => (
-            <Link asChild href={`/(authenticated)/profile/projects/${project.project_id}`} key={i}>
+            <Link asChild href={`/(modals)/view-project/${project.project_id}`} key={i}>
               <TouchableOpacity
                 style={{
                   borderColor: Colors.lightGray,
