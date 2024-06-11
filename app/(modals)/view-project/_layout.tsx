@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {TouchableOpacity} from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
-import { EvilIcons, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const Layout = () => {
   const router = useRouter();

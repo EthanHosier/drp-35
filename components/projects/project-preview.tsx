@@ -17,7 +17,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
     <View style={{ marginLeft: 24 }}>
       <Link
         asChild
-        href={`/(authenticated)/projects/view-project/${project.projectId}`}
+        href={`/(modals)/view-project/${project.projectId}`}
       >
         <TouchableOpacity onPress={() => console.log("yeahh")}>
           <View style={{ width: 320, aspectRatio: 5 / 3 }}>

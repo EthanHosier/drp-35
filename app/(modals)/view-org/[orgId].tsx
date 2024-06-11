@@ -105,7 +105,7 @@ const ViewOrg = () => {
           {projects?.map((project, i) => (
             <Link
               asChild
-              href={`/(authenticated)/profile/projects/${project.project_id}`}
+              href={`/(modals)/view-project/${project.project_id}`}
               key={i}
             >
               <TouchableOpacity

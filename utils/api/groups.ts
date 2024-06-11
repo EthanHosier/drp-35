@@ -58,7 +58,7 @@ export const getGroupRequests: (
     return {
       group_id: group.request_group_id,
       description: group.groups!.description,
-      members: group.groups!.group_members.map((member, i) => {
+      members: group.groups!.group_members.map((member) => {
         const { user_id, ...profile } = member.profiles!;
         console.log(member.profiles);
         return {
@@ -78,6 +78,53 @@ export const getGroupRequests: (
 };
 
 export const requestToJoinGroup: (
+  targetGroupId: string,
+  requestGroupId: string | null,
+  projectId: string,
+  userId: string
+) => Promise<DRPResponse<null>> = async (groupId, requestGroupId, projectId, userId) => {
+  const { data, error } = await checkIfUserHasGroup(projectId, userId);
+  if (error) return { data: null, error };
+  if (data && requestGroupId) {
+    return await requestToMergeGroups(requestGroupId, groupId);
+  } else {
+    return await createGroupAndRequestToJoin(groupId, projectId, userId);
+  }
+};
+
+export const checkIfUserHasGroup: (
+  projectId: string,
+  userId: string
+) => Promise<DRPResponse<boolean>> = async (projectId, userId) => {
+  const { count, error } = await supabase
+    .from("group_members")
+    .select(
+      `
+      groups(
+        project_id
+      )
+      `,
+      { count: "exact", head: true }
+    )
+    .eq("user_id", userId)
+    .eq("groups.project_id", projectId);
+  if (error) return { data: null, error };
+  return { data: count! > 0, error: null };
+};
+
+export const requestToMergeGroups: (
+  requestGroupId: string,
+  targetGroupId: string
+) => Promise<DRPResponse<null>> = async (requestGroupId, targetGroupId) => {
+  const { error } = await supabase.from("group_requests").insert({
+    request_group_id: requestGroupId,
+    target_group_id: targetGroupId,
+  });
+  if (error) return { data: null, error };
+  return { data: null, error: null };
+};
+
+export const createGroupAndRequestToJoin: (
   groupId: string,
   projectId: string,
   userId: string
@@ -120,6 +167,18 @@ export const acceptRequestToJoinGroup: (
     .update({ group_id: targetGroupId })
     .eq("group_id", requestGroupId);
   if (joinError) return { data: null, error: joinError };
+
+  const { error: mergeRequestsError} = await supabase
+    .from("group_requests")
+    .update({ target_group_id: targetGroupId })
+    .eq("target_group_id", requestGroupId);
+  if (mergeRequestsError) return { data: null, error: mergeRequestsError };
+
+  const {error: deleteError} = await supabase
+    .from("groups")
+    .delete()
+    .eq("group_id", requestGroupId);
+  if (deleteError) return { data: null, error: deleteError };
 
   return { data: null, error: null };
 };

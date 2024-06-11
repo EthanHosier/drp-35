@@ -1,12 +1,16 @@
 import { create } from "zustand";
 
-type FilterStore = {
+export type FilterStore = {
   numMembers: number;
   setNumMembers: (newNumMmebers: number) => void;
 
   languages: string[];
   addLanguage: (language: string) => void;
   removeLanguage: (language: string) => void;
+
+  skills: string[];
+  addSkill: (language: string) => void;
+  removeSkill: (language: string) => void;
 };
 
 export const useFilterStore = create<FilterStore>((set) => ({
@@ -20,6 +24,16 @@ export const useFilterStore = create<FilterStore>((set) => ({
   removeLanguage: (language: string) => {
     set((state) => ({...state,
       languages: state.languages.filter((s) => s !== language),
+    }));
+  },
+
+  skills: [],
+  addSkill: (skill: string) => {
+    set((state) => ( {...state, skills: [...state.skills, skill] }));
+  },
+  removeSkill: (skill: string) => {
+    set((state) => ({...state,
+      skills: state.skills.filter((s) => s !== skill),
     }));
   },
 }));

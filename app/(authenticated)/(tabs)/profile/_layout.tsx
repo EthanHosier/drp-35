@@ -6,7 +6,6 @@ import { supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { decode } from "base64-arraybuffer";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
@@ -73,6 +72,7 @@ const Layout = () => {
         data.map((group) => ({
           id: group.group_id,
           projectName: group.groups?.projects?.name ?? "",
+          projectId: group.groups?.projects?.project_id!,
           maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
           currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
           image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
@@ -242,5 +242,3 @@ const Layout = () => {
 };
 
 export default Layout;
-
-const styles = StyleSheet.create({});

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -63,6 +63,24 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+
+      <Stack.Screen
+          name="view-project"
+          options={{
+            presentation: "fullScreenModal",
+            title: "View Project",
+            headerRight: () => (
+                <TouchableOpacity onPress={router.back}>
+                  <Text
+                      style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+                  >
+                    Done
+                  </Text>
+                </TouchableOpacity>
+            ),
+          }}
+      />
+      <Stack.Screen name="filter" options={{headerShown: false}}/>
     </Stack>
   );
 };

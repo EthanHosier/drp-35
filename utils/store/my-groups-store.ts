@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export type Group = {
+  projectId: string;
   projectName: string;
   maxGroupSize: number;
   currentGroupSize: number;
