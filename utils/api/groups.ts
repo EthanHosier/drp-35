@@ -168,6 +168,12 @@ export const acceptRequestToJoinGroup: (
     .eq("group_id", requestGroupId);
   if (joinError) return { data: null, error: joinError };
 
+  const { error: mergeRequestsError} = await supabase
+    .from("group_requests")
+    .update({ target_group_id: targetGroupId })
+    .eq("target_group_id", requestGroupId);
+  if (mergeRequestsError) return { data: null, error: mergeRequestsError };
+
   const {error: deleteError} = await supabase
     .from("groups")
     .delete()
