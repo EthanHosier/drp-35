@@ -13,48 +13,60 @@ const FilterMain = () => {
   );
 
   return (
-    <KeyboardAwareScrollView
-      style={{ padding: 16 }}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
-        <Text style={styles.fieldsTitle}>Number of Members</Text>
-        <TextInput
-          style={styles.textInput}
-          value={numMembers}
-          placeholderTextColor={Colors.gray}
-          placeholder={"0"}
-          onChangeText={(text) => {
-            setNumMembers(text);
-            useFilterStore.setState({ numMembers: parseInt(text) });
-          }}
-        />
-      </View>
-      <Link
-        asChild
-        href="./languages"
-        style={[
-          styles.fieldsContainer,
-          { paddingBottom: 20, paddingRight: 32 },
-        ]}
+    <View style={{height: "100%"}}>
+      <KeyboardAwareScrollView
+          style={{ padding: 16 }}
+          showsVerticalScrollIndicator={false}
       >
-        <TouchableOpacity>
-          <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
-            Languages
-          </Text>
-          <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.skillsText}
-            >
-              {useFilterStore((state) => state.languages).join(", ")}
+        <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
+          <Text style={styles.fieldsTitle}>Number of Members</Text>
+          <TextInput
+              style={styles.textInput}
+              value={numMembers}
+              placeholderTextColor={Colors.gray}
+              placeholder={"0"}
+              onChangeText={(text) => {
+                setNumMembers(text);
+                useFilterStore.setState({ numMembers: parseInt(text) });
+              }}
+          />
+        </View>
+        <Link
+            asChild
+            href="./languages"
+            style={[
+              styles.fieldsContainer,
+              { paddingBottom: 20, paddingRight: 32 },
+            ]}
+        >
+          <TouchableOpacity>
+            <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
+              Languages
             </Text>
-            <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
-          </View>
+            <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
+              <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.skillsText}
+              >
+                {useFilterStore((state) => state.languages).join(", ")}
+              </Text>
+              <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
+            </View>
+          </TouchableOpacity>
+        </Link>
+      </KeyboardAwareScrollView>
+      <View style={styles.button}>
+        <TouchableOpacity
+            onPress={() => {
+              useFilterStore.setState({ numMembers: 0, languages: [] });
+              setNumMembers("0");
+            }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "600", color: Colors.gray }}>Clear All</Text>
         </TouchableOpacity>
-      </Link>
-    </KeyboardAwareScrollView>
+      </View>
+    </View>
   );
 };
 
@@ -68,7 +80,6 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 12,
   },
-
   skillsText: {
     width: "100%", // You can set a specific width or maxWidth instead
     overflow: "hidden",
@@ -89,6 +100,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   fieldsTitle: { fontSize: 16, fontWeight: "500", marginTop: 16 },
+  button: {
+    margin: 20,
+    padding: 8,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 12,
+    height: 40,
+  }
 });
 
 export default FilterMain;
