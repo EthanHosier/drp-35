@@ -37,6 +37,7 @@ export const getGroupchat: (
     .from("groups")
     .select("*, messages(*), projects(name)")
     .eq("group_id", group_id)
+    .order("created_at", { referencedTable: "messages" })
     .single();
 
   if (error) return { data: null, error };

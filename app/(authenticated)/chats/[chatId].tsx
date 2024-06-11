@@ -15,7 +15,7 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { useLocalSearchParams } from "expo-router";
-import { GroupChat, getGroupchat } from "@/utils/api/groupchats";
+import { GroupChat, getGroupchat, sendMessage } from "@/utils/api/groupchats";
 import Skeleton from "@/components/LoadingSkeleton";
 import { getProfilePicUrl } from "@/utils/api/profile-pics";
 import { useUserIdStore } from "@/utils/store/user-id-store";
@@ -227,7 +227,7 @@ const ChatId = () => {
                     borderRadius: 24,
                   }}
                   onPress={() => {
-                    console.log("Send message: ", message);
+                    sendMessage(chatId as string, message);
                   }}
                 >
                   <Feather name="send" size={16} color={Colors.background} />
