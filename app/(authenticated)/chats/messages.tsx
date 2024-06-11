@@ -254,8 +254,8 @@ function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
   let date;
   let content;
   if (item.messages.length > 0) {
-    date = new Date(item.messages[0].created_at);
-    content = item.messages[0].content;
+    date = new Date(item.messages[item.messages.length - 1].created_at);
+    content = item.messages[item.messages.length - 1].content;
   } else {
     date = new Date(item.created_at);
     content = "Click here to start the chat";
@@ -263,7 +263,7 @@ function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
 
   return (
     <ChatPreview
-      unreadMessages={69}
+      unreadMessages={item.messages.length}
       id={item.group_id}
       name={item.name}
       date={date}
