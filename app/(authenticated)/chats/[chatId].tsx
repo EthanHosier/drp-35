@@ -7,7 +7,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import { TextInput } from "react-native-gesture-handler";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -15,79 +15,10 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { useLocalSearchParams } from "expo-router";
-
-type Message = {
-  id: string;
-  content: string;
-  createdAt: string;
-  senderId: string;
-};
-
-const MY_ID = "user123";
-
-const MESSAGES: Message[] = [
-  {
-    id: "1",
-    content: "Hello! How are you?",
-    createdAt: "2024-06-01T10:00:00Z",
-    senderId: "user123",
-  },
-  {
-    id: "2",
-    content: "I am doing well, thank you! How about you?",
-    createdAt: "2024-06-01T10:05:00Z",
-    senderId: "user456",
-  },
-  {
-    id: "3",
-    content: "I am great, thanks for asking.",
-    createdAt: "2024-06-01T10:10:00Z",
-    senderId: "user123",
-  },
-  {
-    id: "4",
-    content: "Oh yeah oh yeah",
-    createdAt: "2024-06-01T10:11:00Z",
-    senderId: "user123",
-  },
-  {
-    id: "5",
-    content: "Oh yeahhhhhhhhhh ughhh.",
-    createdAt: "2024-06-01T10:12:00Z",
-    senderId: "user123",
-  },
-
-  {
-    id: "6",
-    content: "What are your plans for today?",
-    createdAt: "2024-06-01T10:15:00Z",
-    senderId: "user456",
-  },
-  {
-    id: "7",
-    content: "Oh nah nah",
-    createdAt: "2024-06-01T10:16:00Z",
-    senderId: "user456",
-  },
-  {
-    id: "8",
-    content: "Oh nahhhhh anasdasds",
-    createdAt: "2024-06-01T10:17:00Z",
-    senderId: "user456",
-  },
-  {
-    id: "9",
-    content: "I have a meeting in the afternoon. What about you?",
-    createdAt: "2024-06-01T10:20:00Z",
-    senderId: "user123",
-  },
-  {
-    id: "10",
-    content: "I am going to finish some work and then go for a walk.",
-    createdAt: "2024-06-01T10:25:00Z",
-    senderId: "user456",
-  },
-];
+import { GroupChat, getGroupchat } from "@/utils/api/groupchats";
+import Skeleton from "@/components/LoadingSkeleton";
+import { getProfilePicUrl } from "@/utils/api/profile-pics";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 
 // DELETE THIS FUNCTION IF NOT NEEDED WHEN HOOK UP REAL BACKEND:
 function convertToHumanReadable(datetime: string) {
@@ -114,10 +45,25 @@ const BORDER_RADIUS = 20;
 
 const ChatId = () => {
   const chatId = useLocalSearchParams().chatId;
-
-  console.log("Chat ID: ", chatId);
+  const userId = useUserIdStore((state) => state.userId);
 
   const [message, setMessage] = useState("");
+  const [groupChat, setGroupChat] = useState<GroupChat>();
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const { data, error } = await getGroupchat(chatId as string);
+      if (error) {
+        console.log(error.message);
+        return;
+      }
+      setGroupChat(data);
+    };
+    getMessages();
+  }, []);
+
+  if (!groupChat) return <Skeleton />;
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -141,41 +87,47 @@ const ChatId = () => {
                 marginVertical: 24,
               }}
             >
-              Chat created at {convertToHumanReadable(MESSAGES[0].createdAt)}
+              Chat created at {convertToHumanReadable(groupChat.created_at)}
             </Text>
           }
-          data={MESSAGES}
+          data={groupChat.messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
             <View
               style={[
                 styles.bubble,
                 index > 0 &&
-                  MESSAGES[index - 1].senderId === item.senderId && {
+                  groupChat.messages[index - 1].sender_id ===
+                    item.sender_id && {
                     marginTop: 4,
                   },
-                item.senderId === MY_ID ? styles.myBubble : styles.theirBubble,
-                item.senderId === MY_ID
+                item.sender_id === userId
+                  ? styles.myBubble
+                  : styles.theirBubble,
+                item.sender_id === userId
                   ? {
                       borderBottomRightRadius:
-                        index < MESSAGES.length - 1 &&
-                        MESSAGES[index + 1].senderId === MY_ID
+                        index < groupChat.messages.length - 1 &&
+                        groupChat.messages[index + 1].sender_id === userId
                           ? 0
                           : BORDER_RADIUS,
                       borderTopRightRadius:
-                        index > 0 && MESSAGES[index - 1].senderId === MY_ID
+                        index > 0 &&
+                        groupChat.messages[index - 1].sender_id === userId
                           ? 0
                           : BORDER_RADIUS,
                     }
                   : {
                       borderBottomLeftRadius:
-                        index < MESSAGES.length - 1 &&
-                        MESSAGES[index + 1].senderId === item.senderId
+                        index < groupChat.messages.length - 1 &&
+                        groupChat.messages[index + 1].sender_id ===
+                          item.sender_id
                           ? 0
                           : BORDER_RADIUS,
                       borderTopLeftRadius:
                         index > 0 &&
-                        MESSAGES[index - 1].senderId === item.senderId
+                        groupChat.messages[index - 1].sender_id ===
+                          item.sender_id
                           ? 0
                           : BORDER_RADIUS,
                     },
@@ -184,16 +136,17 @@ const ChatId = () => {
               <Text
                 style={{
                   color:
-                    item.senderId === MY_ID ? Colors.background : Colors.dark,
+                    item.sender_id === userId ? Colors.background : Colors.dark,
                 }}
               >
                 {item.content}
               </Text>
-              {item.senderId !== MY_ID &&
-                (index === MESSAGES.length - 1 ||
-                  MESSAGES[index + 1].senderId !== item.senderId) && (
+              {item.sender_id !== userId &&
+                (index === groupChat.messages.length - 1 ||
+                  groupChat.messages[index + 1].sender_id !==
+                    item.sender_id) && (
                   <Image
-                    source="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
+                    source={getProfilePicUrl(item.sender_id).data!}
                     style={{
                       width: 36,
                       height: 36,
