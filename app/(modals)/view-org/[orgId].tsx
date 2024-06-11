@@ -1,16 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { Image } from "expo-image";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {Link, router, useLocalSearchParams} from "expo-router";
-import {useUserIdStore} from "@/utils/store/user-id-store";
+import { Link, router, useLocalSearchParams } from "expo-router";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
   getOrganisationById,
@@ -22,9 +17,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Project } from "@/utils/api/project-details";
 
 const ViewOrg = () => {
-
   const orgId = useLocalSearchParams().orgId as string;
-  const userId = useUserIdStore(user => user.userId); 
+  const userId = useUserIdStore((user) => user.userId);
 
   const [loading, setLoading] = React.useState(true);
   const [inOrg, setInOrg] = React.useState(false);
@@ -37,17 +31,16 @@ const ViewOrg = () => {
 
   useEffect(() => {
     getAllJoinedOrganisations(userId).then((res) =>
-        setInOrg(
-            !res.error && res.data?.some((org) => org.org_id === orgId)
-        )
+      setInOrg(!res.error && res.data?.some((org) => org.org_id === orgId))
     );
     getOrganisationById(orgId).then((res) => {
-      if (!res.error) setOrganisation({
-        name: res.data.name,
-        subtitle: res.data.subtitle,
-        description: res.data.description,
-        image: res.data.image
-      });
+      if (!res.error)
+        setOrganisation({
+          name: res.data.name,
+          subtitle: res.data.subtitle,
+          description: res.data.description,
+          image: res.data.image,
+        });
     });
     setLoading(false);
   }, []);
@@ -56,10 +49,10 @@ const ViewOrg = () => {
   useEffect(() => {
     const getProjects = () => {
       getProjectsByOrganisation(orgId).then((res) => {
-        if(!res.data) return;
+        if (!res.data) return;
         setProjects(res.data);
       });
-    }
+    };
     getProjects();
   }, []);
 
@@ -98,12 +91,23 @@ const ViewOrg = () => {
           {organisation.subtitle}
         </Text>
         <Text style={{ marginTop: 24 }}>{organisation.description}</Text>
-        <Text style={{ marginTop: 32, marginBottom: 4,  fontSize: 24, fontWeight: "600" }}>
+        <Text
+          style={{
+            marginTop: 32,
+            marginBottom: 4,
+            fontSize: 24,
+            fontWeight: "600",
+          }}
+        >
           Projects
         </Text>
-        <View style={{gap: 4}}>
+        <View style={{ gap: 4 }}>
           {projects?.map((project, i) => (
-            <Link asChild href={`/(authenticated)/profile/projects/${project.project_id}`} key={i}>
+            <Link
+              asChild
+              href={`/(authenticated)/profile/projects/${project.project_id}`}
+              key={i}
+            >
               <TouchableOpacity
                 style={{
                   borderColor: Colors.lightGray,
@@ -118,14 +122,16 @@ const ViewOrg = () => {
                 />
                 <View style={{ marginLeft: 16 }}>
                   <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                    {project.name.length > 25 ? project.name.substring(0, 25) + '...' : project.name}
+                    {project.name.length > 25
+                      ? project.name.substring(0, 25) + "..."
+                      : project.name}
                   </Text>
                   <Text
                     style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
                   >
-                    {project.min_group_size === project.max_group_size ?
-                    `${project.min_group_size} team members` :
-                    `${project.min_group_size}-${project.max_group_size} team members`}
+                    {project.min_group_size === project.max_group_size
+                      ? `${project.min_group_size} team members`
+                      : `${project.min_group_size}-${project.max_group_size} team members`}
                   </Text>
                 </View>
                 <FontAwesome
@@ -137,40 +143,46 @@ const ViewOrg = () => {
               </TouchableOpacity>
             </Link>
           ))}
-          </View>
-      </ScrollView>
-      <TouchableOpacity
-        style={[
-          defaultStyles.pillButton,
-          {
-            backgroundColor: Colors.primary,
-            marginTop: "auto",
-            position: "absolute",
-            width: "90%",
-            alignSelf: "center",
-            bottom: 32,
-          },
-        ]}
-        onPress={() => {
-          if (loading || !orgId) return;
-          if (inOrg) {
-            leaveOrganisation(orgId, userId).then((res) => {
-              if (!res.error) setInOrg(false);
-            });
-          } else {
-            joinOrganisation(orgId, userId).then((res) => {
-              if (!res.error) setInOrg(true);
-            });
-          }
-          router.back();
-        }}
-      >
-        <View>
-          <Text style={{ color: Colors.lightGray, fontSize: 16 }}>
-            {loading ? "Loading..." : inOrg ? "Leave Organisation" : "Join Organisation"}
-          </Text>
         </View>
-      </TouchableOpacity>
+      </ScrollView>
+      {!inOrg && (
+        <TouchableOpacity
+          style={[
+            defaultStyles.pillButton,
+            {
+              backgroundColor: Colors.primary,
+              marginTop: "auto",
+              position: "absolute",
+              width: "90%",
+              alignSelf: "center",
+              bottom: 32,
+            },
+          ]}
+          onPress={() => {
+            if (loading || !orgId) return;
+            if (inOrg) {
+              // leaveOrganisation(orgId, userId).then((res) => {
+              //   if (!res.error) setInOrg(false);
+              // });
+            } else {
+              joinOrganisation(orgId, userId).then((res) => {
+                if (!res.error) setInOrg(true);
+              });
+            }
+            router.back();
+          }}
+        >
+          <View>
+            <Text style={{ color: Colors.lightGray, fontSize: 16 }}>
+              {loading
+                ? "Loading..."
+                : inOrg
+                ? "Leave Organisation"
+                : "Join Organisation"}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
