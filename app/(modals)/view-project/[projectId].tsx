@@ -123,6 +123,7 @@ const GroupsTab = () => {
   // FilterMain settings
   const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
+  const skills = useFilterStore((state) => state.skills);
 
   const handleSwipeRight = async (targetGroupId: string) => {
     if (groupId) {
@@ -216,7 +217,14 @@ const GroupsTab = () => {
                           member.languages.some((language) =>
                             languages.includes(language)
                           )
-                        ))
+                        )) &&
+                      (skills.length <= 0 ||
+                          group.members.every((member) =>
+                              member.skills.some((skill) =>
+                                  skills.includes(skill)
+                              )
+                          ))
+
                     );
                   })
                 : []

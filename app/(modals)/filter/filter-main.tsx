@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Colors from "@/constants/Colors";
-import { useFilterStore } from "@/utils/store/filter-store";
+import {FilterStore, useFilterStore} from "@/utils/store/filter-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -31,35 +31,21 @@ const FilterMain = () => {
               }}
           />
         </View>
-        <Link
-            asChild
+        <Selector
+            title="Languages"
             href="./languages"
-            style={[
-              styles.fieldsContainer,
-              { paddingBottom: 20, paddingRight: 32 },
-            ]}
-        >
-          <TouchableOpacity>
-            <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
-              Languages
-            </Text>
-            <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
-              <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.skillsText}
-              >
-                {useFilterStore((state) => state.languages).join(", ")}
-              </Text>
-              <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
-            </View>
-          </TouchableOpacity>
-        </Link>
+            storeToString={(state) => state.languages}
+        />
+        <Selector
+            title="Skills"
+            href="./skills"
+            storeToString={(state) => state.skills}
+        />
       </KeyboardAwareScrollView>
       <View style={styles.button}>
         <TouchableOpacity
             onPress={() => {
-              useFilterStore.setState({ numMembers: 0, languages: [] });
+              useFilterStore.setState({ numMembers: 0, languages: [], skills: [] });
               setNumMembers("0");
             }}
         >
@@ -69,6 +55,36 @@ const FilterMain = () => {
     </View>
   );
 };
+
+const Selector = ({ title, href, storeToString }: {
+  title: string;
+  href: string;
+  storeToString: (store: FilterStore) => string[];
+}) =>
+  <Link
+      asChild
+      href={href}
+      style={[
+        styles.fieldsContainer,
+        { paddingBottom: 20, paddingRight: 32 },
+      ]}
+  >
+    <TouchableOpacity>
+      <Text style={{ fontSize: 16, fontWeight: "600", marginTop: 16 }}>
+        {title}
+      </Text>
+      <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
+        <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styles.skillsText}
+        >
+          {useFilterStore(storeToString).join(", ")}
+        </Text>
+        <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
+      </View>
+    </TouchableOpacity>
+  </Link>
 
 const styles = StyleSheet.create({
   textInput: {
