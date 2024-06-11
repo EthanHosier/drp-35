@@ -107,7 +107,7 @@ const GroupsTab = () => {
     .eq("user_id", userId)
     .eq("groups.project_id", projectId)
     .single();
-    if (!error) setGroupId(data.groups!.group_id);
+    if (!error && data.groups) setGroupId(data.groups!.group_id);
   }
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const GroupsTab = () => {
 
   const router = useRouter();
 
-  // Filter settings
+  // FilterMain settings
   const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
 
@@ -159,7 +159,7 @@ const GroupsTab = () => {
             }}
           >
             <TouchableOpacity
-              onPress={() => router.navigate("../filter")}
+              onPress={() => router.navigate("../filter/filter-main")}
               style={{
                 alignSelf: "flex-end",
                 alignItems: "center",

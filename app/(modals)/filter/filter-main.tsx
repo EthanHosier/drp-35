@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { Link } from "expo-router";
 
-const Filter = () => {
+const FilterMain = () => {
   const [numMembers, setNumMembers] = React.useState(
     useFilterStore((state) => state.numMembers.toString())
   );
@@ -32,7 +32,7 @@ const Filter = () => {
       </View>
       <Link
         asChild
-        href="/(authenticated)/projects/languages"
+        href="./languages"
         style={[
           styles.fieldsContainer,
           { paddingBottom: 20, paddingRight: 32 },
@@ -91,4 +91,4 @@ const styles = StyleSheet.create({
   fieldsTitle: { fontSize: 16, fontWeight: "500", marginTop: 16 },
 });
 
-export default Filter;
+export default FilterMain;

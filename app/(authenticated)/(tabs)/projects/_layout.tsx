@@ -109,39 +109,6 @@ const Layout = () => {
           ),
         }}
       />
-
-      <Stack.Screen
-        name="filter"
-        options={{
-          presentation: "fullScreenModal",
-          title: "Filter Groups",
-          headerRight: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Text
-                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-              >
-                Done
-              </Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="languages"
-        options={{
-          presentation: "fullScreenModal",
-          title: "Languages",
-          headerRight: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Text
-                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-              >
-                Done
-              </Text>
-            </TouchableOpacity>
-          ),
-        }}
-      />
     </Stack>
   );
 };

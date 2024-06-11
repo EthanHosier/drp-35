@@ -70,6 +70,7 @@ const Layout = () => {
             ),
           }}
       />
+      <Stack.Screen name="filter" options={{headerShown: false}}/>
     </Stack>
   );
 };
