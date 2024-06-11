@@ -12,7 +12,7 @@ const Layout = () => {
       <Stack.Screen
         name="view-org"
         options={{
-          title: "View Organization",
+          title: "View Organisation",
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons
