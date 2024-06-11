@@ -1,10 +1,84 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
+import { useMyGroupsStore } from "@/utils/store/my-groups-store";
+import { supabase } from "@/utils/supabase";
+import { useUserIdStore } from "@/utils/store/user-id-store";
+import { getProjectPicUrl } from "@/utils/api/project-pics";
 
 const Layout = () => {
+  const { groups, setGroups } = useMyGroupsStore();
+  const { userId } = useUserIdStore();
+
+  const getMyGroups = async () => {
+    const { data, error } = await supabase
+      .from("group_members")
+      .select(
+        "group_id, groups(description, projects(name, max_group_size, project_id))"
+      )
+      .eq("user_id", userId);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const groupIds = data.map((group) => group.group_id);
+
+    const currentGroupSizes = new Map<string, number>();
+    await Promise.all(
+      groupIds.map(async (groupId) => {
+        const { count, error } = await supabase
+          .from("group_members")
+          .select("*", { count: "exact", head: true })
+          .eq("group_id", groupId);
+        if (error) {
+          alert(error.message);
+        }
+        currentGroupSizes.set(groupId, count ?? 0);
+      })
+    );
+
+    setGroups(
+      data.map((group) => ({
+        id: group.group_id,
+        projectName: group.groups?.projects?.name ?? "",
+        projectId: group.groups?.projects?.project_id!,
+        maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
+        currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
+        image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
+      }))
+    );
+  };
+
+  useEffect(() => {
+    if (!userId) return;
+    getMyGroups();
+  }, [userId]);
+
+  useEffect(() => {
+    if (!!(groups?.length < 0)) return;
+
+    groups.forEach((group) => {
+      supabase
+        .channel("custom-all-channel")
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "messages",
+            filter: `group_id=eq.${group.id}`,
+          },
+          (payload) => {
+            console.log(payload);
+          }
+        )
+        .subscribe();
+    });
+  }, [groups]);
+
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
