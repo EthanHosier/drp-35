@@ -6,7 +6,11 @@ import { Image } from "expo-image";
 import {RefreshControl, ScrollView} from "react-native-gesture-handler";
 import { Group } from "@/utils/api/project-details";
 import {useUserIdStore} from "@/utils/store/user-id-store";
-import {getGroupRequests} from "@/utils/api/groups";
+import {
+  acceptRequestToJoinGroup,
+  getGroupRequests,
+  rejectRequestToJoinGroup
+} from "@/utils/api/groups";
 
 const ViewInterested = () => {
 
@@ -57,14 +61,26 @@ const ViewInterested = () => {
                 {group.members.length} Member{group.members.length != 1 && "s"}
               </Text>
               <View style={{ flexDirection: "row", gap: 8 }}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      acceptRequestToJoinGroup(group.group_id, groupId as string)
+                      refresh()
+                    }}
+                >
                   <Text
                     style={[styles.buttonText, { color: Colors.background }]}
                   >
                     Accept
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.rejectButton]}>
+                <TouchableOpacity
+                    style={[styles.button, styles.rejectButton]}
+                    onPress={() => {
+                      rejectRequestToJoinGroup(group.group_id, groupId as string)
+                      refresh()
+                    }}
+                >
                   <Text style={[styles.buttonText, {}]}>Decline</Text>
                 </TouchableOpacity>
               </View>
