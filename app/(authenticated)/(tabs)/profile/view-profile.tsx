@@ -59,6 +59,7 @@ const ViewProfile = () => {
     setGroups(
       data.map((group) => ({
         id: group.group_id,
+        projectId: group.groups?.projects?.project_id!,
         projectName: group.groups?.projects?.name ?? "",
         maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
         currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
@@ -163,7 +164,7 @@ const ViewProfile = () => {
         {myGroups.map((group, i) => (
           <Link
             asChild
-            href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}`}
+            href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}&projectId=${group.projectId}`}
             key={i}
           >
             <TouchableOpacity

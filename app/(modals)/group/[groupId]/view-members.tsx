@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
-import { Link, useLocalSearchParams } from "expo-router";
+import {Link, router, useLocalSearchParams} from "expo-router";
 import { Image } from "expo-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
@@ -22,7 +22,7 @@ import Skeleton from "@/components/LoadingSkeleton";
 import {RefreshControl} from "react-native-gesture-handler";
 
 const ViewMembers = () => {
-  const { groupId, maxGroupSize } = useLocalSearchParams();
+  const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
   const userId = useUserIdStore((state) => state.userId);
   const [members, setMembers] = useState<Profile[] | null>(null);
   const [loadingGroup, setLoadingGroup] = useState(true);
@@ -239,7 +239,10 @@ const ViewMembers = () => {
             zIndex: 100,
           },
         ]}
-    >
+        onPress={() => {
+          router.navigate(`/(modals)/view-project/${projectId}`)
+        }}
+      >
       <Text
           style={{
             fontSize: 16,
