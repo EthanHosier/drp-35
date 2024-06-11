@@ -1,8 +1,6 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
-  Touchable,
   View,
   useWindowDimensions,
 } from "react-native";
@@ -14,7 +12,7 @@ import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { formatHumanReadableDate, sleep } from "@/utils/utils";
+import { formatHumanReadableDate } from "@/utils/utils";
 import {
   Group,
   getProjectDetails,
@@ -25,6 +23,9 @@ import { useFilterStore } from "@/utils/store/filter-store";
 import LottieView from "lottie-react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
+import {requestToJoinGroup} from "@/utils/api/groups";
+import {useUserIdStore} from "@/utils/store/user-id-store";
+import {supabase} from "@/utils/supabase";
 
 const InfoTab = () => {
   const [projectData, setProjectData] = useState<Project | null>(null);
@@ -88,10 +89,30 @@ const GroupsTab = () => {
 
   const [pressed, setPressed] = useState<boolean>(false);
 
-  const id = useLocalSearchParams().projectId;
+  const projectId = useLocalSearchParams().projectId as string;
+  const userId = useUserIdStore((state) => state.userId);
+  const [groupId, setGroupId] = useState<string | null>(null);
+
+  const getGroupId = async() => {
+    const { data, error } = await supabase
+    .from("group_members")
+    .select(
+        `
+        groups(
+          group_id,
+          project_id
+        )
+        `
+    )
+    .eq("user_id", userId)
+    .eq("groups.project_id", projectId)
+    .single();
+    if (!error) setGroupId(data.groups!.group_id);
+  }
 
   useEffect(() => {
-    getProjectGroups(id as string).then((res) => {
+    getGroupId();
+    getProjectGroups(projectId).then((res) => {
       if (!res.data) return;
       setProjectGroups(res.data);
     });
@@ -181,16 +202,9 @@ const GroupsTab = () => {
             setMemberIndex={setMemberIndex}
             groupIndex={groupIndex}
             setGroupIndex={setGroupIndex}
-            onSwipeRight={async () => {
-              await sleep(20);
-
-              // Introducing a random chance for routing
-              if (Math.random() < 0.3) {
-                router.push({
-                  pathname: "/(authenticated)/projects/view-project/match",
-                  params: { matchId: "123" },
-                });
-              }
+            onSwipeRight={async (targetGroupId) => {
+              if (!groupId) return;
+              requestToJoinGroup(targetGroupId, groupId, projectId, userId)
             }}
           />
           <InfoSheet

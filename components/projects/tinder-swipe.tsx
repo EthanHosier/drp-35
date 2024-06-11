@@ -16,7 +16,7 @@ import { Image } from "expo-image";
 import { Group } from "@/utils/api/project-details";
 
 interface TinderSwipeProps {
-  onSwipeRight: () => void;
+  onSwipeRight: (groupId: string) => void;
   groups: Group[];
   memberIndex: number;
   setMemberIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -209,8 +209,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         data={groups}
         renderCard={renderCard}
         onSwipeRight={(cardIndex) => {
-          console.log("onSwipeRight", cardIndex);
-          onSwipeRight();
+          onSwipeRight(groups[cardIndex].group_id);
           setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
           setMemberIndex(0);
         }}
