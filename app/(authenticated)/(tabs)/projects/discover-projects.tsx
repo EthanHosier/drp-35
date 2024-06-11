@@ -114,7 +114,7 @@ const DiscoverProjects = () => {
                 marginTop: 12,
               }}
               onPress={() =>
-                router.navigate("/(authenticated)/projects/add-project")
+                router.navigate("/(authenticated)/projects/create")
               }
             >
               <View style={{ borderRadius: 8, overflow: "hidden" }}>

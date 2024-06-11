@@ -9,17 +9,14 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
+import {useOrganisationFieldsStore} from "@/utils/store/add-organisation-store";
 
 const PROJECT_FIELDS = [
   "Name",
+  "Subtitle",
   "Description",
-  "Min Group Size",
-  "Max Group Size",
-  "Start Date",
 ];
 
 const AddProjectPage = () => {
@@ -28,15 +25,11 @@ const AddProjectPage = () => {
     setImageFromPicker,
     name,
     setName,
+    subtitle,
+    setSubtitle,
     description,
     setDescription,
-    minGroupSize,
-    setMinGroupSize,
-    maxGroupSize,
-    setMaxGroupSize,
-    startDateTime,
-    setStartDateTime,
-  } = useProjectFieldsStore();
+  } = useOrganisationFieldsStore();
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -79,41 +72,16 @@ const AddProjectPage = () => {
         />
         <ProjectField
           label={PROJECT_FIELDS[1]}
-          value={description}
+          value={subtitle}
           style={{ height: 100 }}
-          onChange={(text: string) => setDescription(text)}
+          onChange={(text: string) => setSubtitle(text)}
         />
-        <View style={{ flexDirection: "row", gap: 8, width: "100%" }}>
-          <View style={{ flex: 1 }}>
-            <ProjectField
-              label={PROJECT_FIELDS[2]}
-              placeholder={"0"}
-              value={minGroupSize}
-              onChange={(text: string) => setMinGroupSize(text)}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <ProjectField
-              placeholder={"0"}
-              label={PROJECT_FIELDS[3]}
-              value={maxGroupSize}
-              onChange={(text: string) => setMaxGroupSize(text)}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={[styles.fieldsContainer]}>
-        <Text style={styles.fieldLabel}>Start Date & Time</Text>
-        <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
-          {/*<RNDateTimePicker*/}
-          {/*  onChange={(_, date) => {*/}
-          {/*    setStartDateTime(date!);*/}
-          {/*  }}*/}
-          {/*  value={startDateTime}*/}
-          {/*  mode="datetime"*/}
-          {/*  style={{ marginLeft: -10 }}*/}
-          {/*/>*/}
-        </View>
+        <ProjectField
+            label={PROJECT_FIELDS[2]}
+            value={description}
+            style={{ height: 100 }}
+            onChange={(text: string) => setDescription(text)}
+        />
       </View>
     </KeyboardAwareScrollView>
   );
@@ -124,8 +92,7 @@ const ProjectField = ({
   placeholder = label,
   value,
   onChange,
-  style,
-}: {
+                      }: {
   label: string;
   placeholder?: string;
   value: string;
