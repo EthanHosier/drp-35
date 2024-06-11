@@ -210,6 +210,7 @@ const GroupsTab = () => {
               projectGroups
                 ? projectGroups.filter((group) => {
                     return (
+                      (group.group_id !== groupId) &&
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||
