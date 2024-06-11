@@ -9,29 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      group_chats: {
-        Row: {
-          created_at: string;
-          group_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          group_id: string;
-        };
-        Update: {
-          created_at?: string;
-          group_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "group_chats_group_id_fkey";
-            columns: ["group_id"];
-            isOneToOne: true;
-            referencedRelation: "groups";
-            referencedColumns: ["group_id"];
-          }
-        ];
-      };
       group_members: {
         Row: {
           group_id: string;
@@ -101,16 +78,19 @@ export type Database = {
       };
       groups: {
         Row: {
+          created_at: string;
           description: string;
           group_id: string;
           project_id: string;
         };
         Insert: {
+          created_at?: string;
           description?: string;
           group_id?: string;
           project_id?: string;
         };
         Update: {
+          created_at?: string;
           description?: string;
           group_id?: string;
           project_id?: string;
@@ -153,13 +133,6 @@ export type Database = {
             columns: ["group_id"];
             isOneToOne: false;
             referencedRelation: "groups";
-            referencedColumns: ["group_id"];
-          },
-          {
-            foreignKeyName: "messages_group_id_fkey1";
-            columns: ["group_id"];
-            isOneToOne: false;
-            referencedRelation: "group_chats";
             referencedColumns: ["group_id"];
           },
           {

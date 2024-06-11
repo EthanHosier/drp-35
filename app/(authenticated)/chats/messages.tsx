@@ -251,13 +251,23 @@ function Button({ item }: { item: ButtonData }) {
 }
 
 function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
+  let date;
+  let content;
+  if (item.messages.length > 0) {
+    date = new Date(item.messages[0].created_at);
+    content = item.messages[0].content;
+  } else {
+    date = new Date(item.created_at);
+    content = "Click here to start the chat";
+  }
+
   return (
     <ChatPreview
       unreadMessages={69}
-      id={item.id}
-      name={"TODO: Get name from group"}
-      date={new Date(item.messages[0].created_at)}
-      message={item.messages[0].content ?? "Click here to start the chat"}
+      id={item.group_id}
+      name={item.name}
+      date={date}
+      message={content}
       imgUrl="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
     />
   );

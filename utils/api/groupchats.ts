@@ -32,12 +32,15 @@ export const getGroupchat: (
   group_id: string
 ) => Promise<DRPResponse<GroupChat>> = async (group_id) => {
   const { data: groupChat, error } = await supabase
-    .from("group_chats")
-    .select("*,messages(*)")
+    .from("groups")
+    .select("*, messages(*), projects(name)")
     .eq("group_id", group_id)
     .single();
 
   if (error) return { data: null, error };
 
-  return { data: groupChat, error: null };
+  return {
+    data: { ...groupChat, name: groupChat.projects!.name },
+    error: null,
+  };
 };
