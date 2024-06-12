@@ -42,16 +42,24 @@ const ViewMembers = () => {
     });
   }
 
+  const rejectOversizedGroups = async () => {
+    if (members?.length) {
+      await Promise.all(
+          interested.map(group => {
+            if (group.members.length + members.length > parseInt(maxGroupSize as string)) {
+              rejectRequestToJoinGroup(group.group_id, groupId as string)
+            }
+          })
+      );
+      setInterested([]);
+    }
+  }
+
   const refresh = async () => {
     if (!groupId || !userId) return;
     setLoading(true);
     await Promise.all([loadGroup(), loadInterested()]);
-    if (members?.length && members.length >= parseInt(maxGroupSize as string)) {
-      await Promise.all(
-          interested.map(group => rejectRequestToJoinGroup(group.group_id, groupId as string))
-      );
-      setInterested([]);
-    }
+    await rejectOversizedGroups();
     setLoading(false);
   }
 
