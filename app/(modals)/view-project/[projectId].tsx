@@ -1,13 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import {AntDesign, FontAwesome6, Ionicons} from "@expo/vector-icons";
+import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -27,23 +22,21 @@ import {
   acceptRequestToJoinGroup,
   getGroupById,
   isMatch,
-  requestToJoinGroup
+  requestToJoinGroup,
 } from "@/utils/api/groups";
-import {useUserIdStore} from "@/utils/store/user-id-store";
-import {supabase} from "@/utils/supabase";
+import { getUserId, supabase } from "@/utils/supabase";
+import { useQuery } from "@tanstack/react-query";
 
 const InfoTab = () => {
-  const [projectData, setProjectData] = useState<Project | null>(null);
   const id = useLocalSearchParams().projectId;
 
-  useEffect(() => {
-    getProjectDetails(id as string).then((res) => {
-      if (!res.data) return;
-      setProjectData(res.data);
-    });
-  }, []);
+  const { data: projectData, status } = useQuery({
+    queryKey: ["project", id],
+    queryFn: () => getProjectDetails(id as string),
+    staleTime: Infinity,
+  });
 
-  if (!projectData)
+  if (status === "pending")
     return (
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
         <Text>Loading...</Text>
@@ -56,7 +49,10 @@ const InfoTab = () => {
         { flex: 1, backgroundColor: Colors.background },
       ]}
     >
-      <Image source={{ uri: projectData.image_uri }} style={styles.img} />
+      <Image
+        source={{ uri: projectData ? projectData?.data?.image_uri : "" }}
+        style={styles.img}
+      />
       <Text
         style={{
           fontWeight: "bold",
@@ -65,14 +61,15 @@ const InfoTab = () => {
           marginTop: 16,
         }}
       >
-        {projectData?.name}
+        {projectData?.data?.name}
       </Text>
       <View style={[styles.attributeContainer, { marginTop: 24 }]}>
         <View style={styles.attributeIconContainer}>
           <Ionicons name="people-outline" size={24} color="black" />
         </View>
         <Text style={styles.attributeText}>
-          {projectData.min_group_size} - {projectData.max_group_size} members
+          {projectData?.data?.min_group_size} -{" "}
+          {projectData?.data?.max_group_size} members
         </Text>
       </View>
       <View style={[styles.attributeContainer, { marginTop: 24 }]}>
@@ -80,11 +77,11 @@ const InfoTab = () => {
           <FontAwesome6 name="clock" size={24} color="black" />
         </View>
         <Text style={styles.attributeText}>
-          {formatHumanReadableDate(projectData.start_date_time)}
+          {formatHumanReadableDate(projectData?.data?.start_date_time ?? "")}
         </Text>
       </View>
       <Text style={{ marginTop: 24 }}>
-        {projectData.description || "No description provided."}
+        {projectData?.data?.description || "No description provided."}
       </Text>
     </View>
   );
@@ -99,26 +96,26 @@ const GroupsTab = () => {
   const [pressed, setPressed] = useState<boolean>(false);
 
   const projectId = useLocalSearchParams().projectId as string;
-  const userId = useUserIdStore((state) => state.userId);
   const [groupId, setGroupId] = useState<string | null>(null);
   const [membersNeeded, setMembersNeeded] = useState<number>(100);
 
   const getGroupId = async () => {
+    const userId = await getUserId();
     const { data, error } = await supabase
-    .from("group_members")
-    .select(
+      .from("group_members")
+      .select(
         `
         groups(
           group_id,
           project_id
         )
         `
-    )
-    .eq("user_id", userId)
-    .eq("groups.project_id", projectId)
-    .single();
+      )
+      .eq("user_id", userId!)
+      .eq("groups.project_id", projectId)
+      .single();
     if (!error && data.groups) setGroupId(data.groups!.group_id);
-  }
+  };
 
   const getMembersNeeded = async () => {
     const { data: project, error: maxError } = await supabase
@@ -129,21 +126,24 @@ const GroupsTab = () => {
     if (maxError) return console.error(maxError);
 
     await getGroupById(groupId as string).then((res) => {
-      if (res.data) setMembersNeeded(project.max_group_size - res.data.members.length)
+      if (res.data)
+        setMembersNeeded(project.max_group_size - res.data.members.length);
     });
-  }
+  };
 
   const getGroupData = async () => {
     await getMembersNeeded();
     await getProjectGroups(projectId).then((res) => {
       if (!res.data) return;
       console.log(membersNeeded);
-      setProjectGroups(res.data.filter((group) =>
-          (group.group_id !== groupId) &&
-          (group.members.length <= membersNeeded)
-      ));
+      setProjectGroups(
+        res.data.filter(
+          (group) =>
+            group.group_id !== groupId && group.members.length <= membersNeeded
+        )
+      );
     });
-  }
+  };
 
   useEffect(() => {
     getGroupId();
@@ -162,11 +162,13 @@ const GroupsTab = () => {
 
   const handleSwipeRight = async (targetGroupId: string) => {
     if (groupId) {
-      const { data, error } =
-          await isMatch(groupId as string, targetGroupId);
+      const { data, error } = await isMatch(groupId as string, targetGroupId);
       if (error) return console.log(error);
       if (data) {
-        const { error } = await acceptRequestToJoinGroup(targetGroupId, groupId)
+        const { error } = await acceptRequestToJoinGroup(
+          targetGroupId,
+          groupId
+        );
         if (error) return console.log(error);
         router.push({
           pathname: "/(authenticated)/projects/view-project/match",
@@ -175,12 +177,12 @@ const GroupsTab = () => {
         return;
       }
     }
-
-    await requestToJoinGroup(targetGroupId, groupId, projectId, userId)
+    const userId = await getUserId();
+    await requestToJoinGroup(targetGroupId, groupId, projectId, userId!);
     if (!groupId) {
       await getGroupId();
     }
-  }
+  };
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
@@ -253,12 +255,9 @@ const GroupsTab = () => {
                           )
                         )) &&
                       (skills.length <= 0 ||
-                          group.members.every((member) =>
-                              member.skills.some((skill) =>
-                                  skills.includes(skill)
-                              )
-                          ))
-
+                        group.members.every((member) =>
+                          member.skills.some((skill) => skills.includes(skill))
+                        ))
                     );
                   })
                 : []
