@@ -5,11 +5,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "@/constants/Colors";
 import { supabase } from "@/utils/supabase";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
-import { useProjectsStore } from "@/utils/store/projects-store";
+
 import { uploadProjectPic } from "@/utils/api/project-pics";
-import {useCreateTabStore} from "@/utils/store/create-tab-store";
-import {useOrganisationFieldsStore} from "@/utils/store/add-organisation-store";
-import {getOrganisationPicUrl, uploadOrganisationPic} from "@/utils/api/organisation-pics";
+import { useCreateTabStore } from "@/utils/store/create-tab-store";
+import { useOrganisationFieldsStore } from "@/utils/store/add-organisation-store";
+import {
+  getOrganisationPicUrl,
+  uploadOrganisationPic,
+} from "@/utils/api/organisation-pics";
+import { queryClient } from "@/app/_layout";
 
 const Layout = () => {
   const router = useRouter();
@@ -24,8 +28,6 @@ const Layout = () => {
     maxGroupSize,
     startDateTime,
   } = useProjectFieldsStore();
-
-  const { addProject } = useProjectsStore();
 
   const checkProjectFields: () => string = () => {
     if (!projectName) return "Name must not be empty";
@@ -73,15 +75,8 @@ const Layout = () => {
       return;
     }
 
-    addProject({
-      name: projectName,
-      description: projectDescription,
-      minGroupSize: min,
-      maxGroupSize: max,
-      startDateTime,
-      image: projectImageUri,
-      projectId: data.project_id,
-    });
+    queryClient.invalidateQueries({ queryKey: ["allProjects"] });
+
     router.back();
   };
 
@@ -107,30 +102,32 @@ const Layout = () => {
     }
 
     const { data, error } = await supabase
-    .from("organisations")
-    .insert({
-      name: organisationName,
-      description: organisationDescription,
-      subtitle: subtitle,
-    })
-    .select("org_id")
-    .single();
+      .from("organisations")
+      .insert({
+        name: organisationName,
+        description: organisationDescription,
+        subtitle: subtitle,
+      })
+      .select("org_id")
+      .single();
     if (error) {
       alert(error.message);
       return;
     }
 
     const { error: picError } = await uploadOrganisationPic(
-        data.org_id,
-        organisationImageBase64,
-        organisationImageMimeType
+      data.org_id,
+      organisationImageBase64,
+      organisationImageMimeType
     );
     if (picError) {
       alert(picError.message);
       return;
     }
 
-    const { data: urlData, error: getUrlError} = getOrganisationPicUrl(data.org_id);
+    const { data: urlData, error: getUrlError } = getOrganisationPicUrl(
+      data.org_id
+    );
     if (getUrlError) {
       alert(getUrlError.message);
       return;
@@ -148,7 +145,7 @@ const Layout = () => {
     router.back();
   };
 
-  const { tab} = useCreateTabStore();
+  const { tab } = useCreateTabStore();
 
   return (
     <Stack>
