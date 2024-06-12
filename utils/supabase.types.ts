@@ -277,6 +277,39 @@ export type Database = {
           }
         ];
       };
+      reviews: {
+        Row: {
+          rating: number;
+          reviewee_id: string;
+          reviewer_id: string;
+        };
+        Insert: {
+          rating: number;
+          reviewee_id: string;
+          reviewer_id: string;
+        };
+        Update: {
+          rating?: number;
+          reviewee_id?: string;
+          reviewer_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "reviews_reviewee_id_fkey";
+            columns: ["reviewee_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          },
+          {
+            foreignKeyName: "reviews_reviewer_id_fkey";
+            columns: ["reviewer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          }
+        ];
+      };
       user_languages: {
         Row: {
           language_name: string;
