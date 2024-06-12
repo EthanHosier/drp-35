@@ -14,7 +14,7 @@ import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import OrganisationPreview from "@/components/projects/organisation-preview";
 import { getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
-import { getAllProjects } from "@/utils/api/project-details";
+import { getAllProjectsExceptJoined } from "@/utils/api/project-details";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
 import { getUserId } from "@/utils/supabase";
@@ -33,19 +33,22 @@ const DiscoverProjects = () => {
   const { data: allProjects, status: allProjectsStatus } = useQuery({
     queryKey: ["allProjects"],
     queryFn: async () => {
-      const { data, error } = await getAllProjects();
+      const userId = await getUserId();
+      const { data, error } = await getAllProjectsExceptJoined(userId!);
       if (error) {
         alert(error.message);
         return;
       }
-      const processedData = data.map((project) => ({
-        ...project,
-        maxGroupSize: project.max_group_size,
-        minGroupSize: project.min_group_size,
-        projectId: project.project_id,
-        startDateTime: new Date(project.start_date_time),
-        image: project.image_uri,
-      })).sort((a, b) => a.startDateTime.getTime() - b.startDateTime.getTime());
+      const processedData = data
+        .map((project) => ({
+          ...project,
+          maxGroupSize: project.max_group_size,
+          minGroupSize: project.min_group_size,
+          projectId: project.project_id,
+          startDateTime: new Date(project.start_date_time),
+          image: project.image_uri,
+        }))
+        .sort((a, b) => a.startDateTime.getTime() - b.startDateTime.getTime());
       return processedData;
     },
   });
