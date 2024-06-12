@@ -11,120 +11,117 @@ import {
   getGroupRequests,
   rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
+import { queryClient } from "@/app/_layout";
+import { useQuery } from "@tanstack/react-query";
 
 const ViewInterested = () => {
-  const userId = useUserIdStore((state) => state.userId);
-  const [loading, setLoading] = useState(false);
-  const { groupId, interested } = useLocalSearchParams();
-  const [groups, setGroups] = useState(
-    JSON.parse(interested as string) as Group[]
-  );
+  const { groupId } = useLocalSearchParams();
 
-  const refreshGroups = async () => {
-    if (!groupId || !userId) return;
-    getGroupRequests(groupId as string).then((res) => {
-      if (res.error) {
-        console.error(res.error);
-        return;
-      }
-      setGroups(res.data);
-    });
-  };
+  const { data: interested, status } = useQuery({
+    queryKey: ["interested", groupId],
+    queryFn: async () => {
+      return getGroupRequests(groupId as string);
+    },
+  });
 
   const refresh = async () => {
-    setLoading(true);
-    await Promise.all([refreshGroups()]);
-    setLoading(false);
+    queryClient.invalidateQueries({ queryKey: ["interested", groupId] });
+    queryClient.invalidateQueries({ queryKey: ["myGroup", groupId] });
   };
 
   return (
     <View style={[styles.container]}>
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={refresh} />
+          <RefreshControl
+            refreshing={status === "pending"}
+            onRefresh={refresh}
+          />
         }
         style={{ paddingTop: 24 }}
         contentContainerStyle={{ gap: 16 }}
       >
-        {groups.map((group, index) => (
-          <View style={{}} key={index}>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingHorizontal: 24,
-              }}
-            >
-              <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                {group.members.length} Member{group.members.length != 1 && "s"}
-              </Text>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={async () => {
-                    await acceptRequestToJoinGroup(
-                      group.group_id,
-                      groupId as string
-                    );
-                    await refresh();
-                  }}
-                >
-                  <Text
-                    style={[styles.buttonText, { color: Colors.background }]}
+        {interested?.data &&
+          interested.data.map((group, index) => (
+            <View style={{}} key={index}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 24,
+                }}
+              >
+                <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                  {group.members.length} Member
+                  {group.members.length != 1 && "s"}
+                </Text>
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                      await acceptRequestToJoinGroup(
+                        group.group_id,
+                        groupId as string
+                      );
+                      refresh();
+                    }}
                   >
-                    Accept
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, styles.rejectButton]}
-                  onPress={async () => {
-                    await rejectRequestToJoinGroup(
-                      group.group_id,
-                      groupId as string
-                    );
-                    await refresh();
-                  }}
-                >
-                  <Text style={[styles.buttonText, {}]}>Decline</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <ScrollView
-              showsHorizontalScrollIndicator={false}
-              horizontal={true}
-              style={{ marginTop: 16 }}
-              contentContainerStyle={{ paddingLeft: 16, gap: 16 }}
-            >
-              {group.members.map((member, id) => (
-                <Link
-                  href={`/(modals)/view-profile/${member.id}`}
-                  asChild
-                  key={id}
-                >
-                  <TouchableOpacity key={id} style={{ marginRight: 12 }}>
-                    <Image source={member.imageUrl} style={styles.image} />
-                    <Text style={[styles.text, { marginTop: 8 }]}>
-                      {member.full_name.split(" ")[0]}
+                    <Text
+                      style={[styles.buttonText, { color: Colors.background }]}
+                    >
+                      Accept
                     </Text>
                   </TouchableOpacity>
-                </Link>
-              ))}
-            </ScrollView>
-            {index < groups.length - 1 && (
-              <View style={{ width: "100%", paddingHorizontal: 24 }}>
-                <View
-                  style={{
-                    height: StyleSheet.hairlineWidth,
-                    backgroundColor: Colors.gray,
-                    marginTop: 16,
-                  }}
-                />
+                  <TouchableOpacity
+                    style={[styles.button, styles.rejectButton]}
+                    onPress={async () => {
+                      await rejectRequestToJoinGroup(
+                        group.group_id,
+                        groupId as string
+                      );
+                      refresh();
+                    }}
+                  >
+                    <Text style={[styles.buttonText, {}]}>Decline</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            )}
-          </View>
-        ))}
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                style={{ marginTop: 16 }}
+                contentContainerStyle={{ paddingLeft: 16, gap: 16 }}
+              >
+                {group.members.map((member, id) => (
+                  <Link
+                    href={`/(modals)/view-profile/${member.id}`}
+                    asChild
+                    key={id}
+                  >
+                    <TouchableOpacity key={id} style={{ marginRight: 12 }}>
+                      <Image source={member.imageUrl} style={styles.image} />
+                      <Text style={[styles.text, { marginTop: 8 }]}>
+                        {member.full_name.split(" ")[0]}
+                      </Text>
+                    </TouchableOpacity>
+                  </Link>
+                ))}
+              </ScrollView>
+              {index < interested.data.length - 1 && (
+                <View style={{ width: "100%", paddingHorizontal: 24 }}>
+                  <View
+                    style={{
+                      height: StyleSheet.hairlineWidth,
+                      backgroundColor: Colors.gray,
+                      marginTop: 16,
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+          ))}
       </ScrollView>
     </View>
   );

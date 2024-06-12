@@ -55,6 +55,8 @@ export const getGroupRequests: (
     .eq("target_group_id", groupId);
   if (error) return { data: null, error };
 
+  console.log({ data });
+
   const groups = data.map((group) => {
     return {
       group_id: group.request_group_id,

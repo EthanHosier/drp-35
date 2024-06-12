@@ -22,13 +22,11 @@ import Skeleton from "@/components/LoadingSkeleton";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
+import { getUserId } from "@/utils/supabase";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
-  const userId = useUserIdStore((state) => state.userId);
   const [loading, setLoading] = useState(false);
-
-  const [interested, setInterested] = useState<Group[]>([]);
 
   const { data: group, status } = useQuery({
     queryKey: ["myGroup", groupId],
@@ -36,32 +34,33 @@ const ViewMembers = () => {
     staleTime: Infinity,
   });
 
-  const loadInterested = async () => {
-    getGroupRequests(groupId as string).then((res) => {
-      if (res.error) return console.error(res.error);
-      setInterested(res.data);
-    });
-  };
+  const { data: interested } = useQuery({
+    queryKey: ["interested", groupId],
+    queryFn: async () => {
+      return getGroupRequests(groupId as string);
+    },
+  });
 
-  const rejectOversizedGroups = async () => {
-    if (group && group.data?.members?.length) {
-      await Promise.all(
-        interested.map((g) => {
-          if (
-            g.members.length + group?.data?.members.length >
-            parseInt(maxGroupSize as string)
-          ) {
-            rejectRequestToJoinGroup(g.group_id, groupId as string);
-          }
-        })
-      );
-      setInterested([]);
-    }
-  };
+  // const rejectOversizedGroups = async () => {
+  //   if (group && group.data?.members?.length) {
+  //     await Promise.all(
+  //       interested.map((g) => {
+  //         if (
+  //           g.members.length + group?.data?.members.length >
+  //           parseInt(maxGroupSize as string)
+  //         ) {
+  //           rejectRequestToJoinGroup(g.group_id, groupId as string);
+  //         }
+  //       })
+  //     );
+  //     setInterested([]);
+  //   }
+  // };
 
   const refresh = () => {
     console.log("refresh");
     queryClient.invalidateQueries({ queryKey: ["myGroup", groupId] });
+    queryClient.invalidateQueries({ queryKey: ["interested", groupId] });
   };
 
   if (loading)
@@ -193,7 +192,7 @@ const ViewMembers = () => {
               </Link>
             ))}
           </View>
-          {interested.length > 0 && (
+          {interested?.data && interested.data.length > 0 && (
             <Link
               href={`./view-interested?interested=${JSON.stringify(
                 interested
@@ -204,7 +203,7 @@ const ViewMembers = () => {
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                {interested.slice(0, 2).map((e, index) => (
+                {interested.data.slice(0, 2).map((e, index) => (
                   <Image
                     key={index}
                     source={e.members[0].imageUrl}
@@ -215,7 +214,7 @@ const ViewMembers = () => {
                         borderRadius: 40,
                       },
                       index === 0 && {
-                        marginRight: interested.length > 1 ? -64 : 0,
+                        marginRight: interested.data.length > 1 ? -64 : 0,
                         zIndex: 100,
                         borderColor: Colors.background,
                         borderWidth: 2,
@@ -237,7 +236,7 @@ const ViewMembers = () => {
                   }}
                 >
                   <Text style={{ color: Colors.background }}>
-                    {interested.length}
+                    {interested.data.length}
                   </Text>
                 </View>
                 <Text
