@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -21,7 +21,6 @@ import {
   PanGestureHandler,
   TouchableOpacity,
   PanGestureHandlerGestureEvent,
-  ScrollView,
   FlatList,
 } from "react-native-gesture-handler";
 import ChatPreview from "@/components/chats/chat-preview";

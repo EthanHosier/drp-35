@@ -8,10 +8,8 @@ import "react-native-reanimated";
 
 import { supabase } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
-import { AppState, Text } from "react-native";
+import { AppState } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import Colors from "@/constants/Colors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient({
