@@ -64,10 +64,6 @@ const ViewMembers = () => {
     queryClient.invalidateQueries({ queryKey: ["myGroup"] });
   };
 
-  useEffect(() => {
-    refresh();
-  }, [groupId, userId]);
-
   if (loading)
     return (
       <View
