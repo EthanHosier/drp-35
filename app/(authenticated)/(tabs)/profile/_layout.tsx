@@ -17,8 +17,16 @@ const Layout = () => {
   const imageBase64 = useProfileStore((state) => state.imageBase64);
   const imageMimeType = useProfileStore((state) => state.imageMimeType);
   const setImageUri = useProfileStore((state) => state.setImageUri);
-  const { fullName, pronouns, university, course, linkedin, github, website, bio } =
-    useProfileStore();
+  const {
+    fullName,
+    pronouns,
+    university,
+    course,
+    linkedin,
+    github,
+    website,
+    bio,
+  } = useProfileStore();
 
   const skills = useSkillsStore((state) => state.skills);
   const languages = useLanguagesStore((state) => state.languages);

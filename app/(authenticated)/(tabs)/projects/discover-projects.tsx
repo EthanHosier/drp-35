@@ -1,74 +1,79 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
-import {RefreshControl, ScrollView, TextInput} from "react-native-gesture-handler";
+import {
+  RefreshControl,
+  ScrollView,
+  TextInput,
+} from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import ProjectPreview from "@/components/projects/project-preview";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-import { useProfileStore } from "@/utils/store/profile-store";
-import { useProjectsStore } from "@/utils/store/projects-store";
 import OrganisationPreview from "@/components/projects/organisation-preview";
-import {
-  Organisation,
-  getAllOrganisationsExceptJoined,
-} from "@/utils/api/organisations";
-import { useUserIdStore } from "@/utils/store/user-id-store";
+import { getAllOrganisationsExceptJoined } from "@/utils/api/organisations";
 import { getAllProjects } from "@/utils/api/project-details";
+import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/app/_layout";
+import { getUserId } from "@/utils/supabase";
+import { getProfileByUserId } from "@/utils/api/profiles";
 
 const DiscoverProjects = () => {
-  const fullName = useProfileStore((state) => state.fullName);
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getProfileByUserId(userId!);
+    },
+    staleTime: Infinity,
+  });
 
-  const { projects, setProjects } = useProjectsStore();
-  const userId = useUserIdStore((state) => state.userId);
-  const [loading, setLoading] = useState(false);
-  const [orgs, setOrgs] = useState<Organisation[] | null>([]);
+  const { data: allProjects, status: allProjectsStatus } = useQuery({
+    queryKey: ["allProjects"],
+    queryFn: async () => {
+      const { data, error } = await getAllProjects();
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      const processedData = data.map((project) => ({
+        ...project,
+        maxGroupSize: project.max_group_size,
+        minGroupSize: project.min_group_size,
+        projectId: project.project_id,
+        startDateTime: new Date(project.start_date_time),
+        image: project.image_uri,
+      }));
+      return processedData;
+    },
+  });
 
-  const getProjects = async () => {
-    const { data, error } = await getAllProjects();
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    const processedData = data.map((project) => ({
-      ...project,
-      maxGroupSize: project.max_group_size,
-      minGroupSize: project.min_group_size,
-      projectId: project.project_id,
-      startDateTime: new Date(project.start_date_time),
-      image: project.image_uri,
-    }));
-
-    setProjects(processedData);
-  };
-
-  const getOrganisations = async () => {
-    getAllOrganisationsExceptJoined(userId).then((res) => {
-      if (!res.data) return;
-      setOrgs(res.data);
-    });
-  };
-
-  useEffect(() => {
-    getProjects();
-    getOrganisations();
-  }, []);
+  const { data: orgs, status: allOrgsStatus } = useQuery({
+    queryKey: ["allOrgs"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getAllOrganisationsExceptJoined(userId!);
+    },
+  });
 
   const [search, setSearch] = React.useState("");
 
-  const orgSearchResults = orgs
-    ?.filter((org) => org.name.toLowerCase().includes(search.toLowerCase()))
-    .map((organisation, i) => (
-      <OrganisationPreview organisation={organisation} key={i} />
-    ));
-  const projectSearchResults = projects
-    .filter((project) =>
-      project.name.toLowerCase().includes(search.toLowerCase())
-    )
-    .map((project, i) => <ProjectPreview project={project} key={i} />);
+  const orgSearchResults = orgs?.data
+    ? orgs.data
+        .filter((org) => org.name.toLowerCase().includes(search.toLowerCase()))
+        .map((organisation, i) => (
+          <OrganisationPreview organisation={organisation} key={i} />
+        ))
+    : [];
+  const projectSearchResults = allProjects
+    ? allProjects
+        .filter((project) =>
+          project.name.toLowerCase().includes(search.toLowerCase())
+        )
+        .map((project, i) => <ProjectPreview project={project} key={i} />)
+    : [];
 
   const CARD_WIDTH = 320;
   const HORIZONTAL_PADDING = 24;
@@ -86,9 +91,8 @@ const DiscoverProjects = () => {
   }
 
   const refresh = () => async () => {
-    setLoading(true);
-    await Promise.all([getProjects(), getOrganisations()]);
-    setLoading(false);
+    queryClient.invalidateQueries({ queryKey: ["allProjects"] });
+    queryClient.invalidateQueries({ queryKey: ["allOrgs"] });
   };
 
   return (
@@ -101,7 +105,12 @@ const DiscoverProjects = () => {
       >
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={refresh} />
+            <RefreshControl
+              refreshing={
+                allOrgsStatus === "pending" || allProjectsStatus === "pending"
+              }
+              onRefresh={refresh}
+            />
           }
           contentContainerStyle={{ marginTop: 64, paddingBottom: 200 }}
           style={{ height: "100%" }}
@@ -147,7 +156,7 @@ const DiscoverProjects = () => {
             </TouchableOpacity>
             <View style={{ marginTop: 32 }}>
               <Text style={{ fontSize: 32, fontWeight: "bold" }}>
-                Hello, {fullName}
+                Hello, {profile?.data?.full_name}
               </Text>
               <Text
                 style={{
@@ -156,7 +165,7 @@ const DiscoverProjects = () => {
                   color: Colors.primary,
                 }}
               >
-                There are {projects.length} new projects in your area.
+                There are {allProjects?.length} new projects in your area.
               </Text>
             </View>
             <View style={[defaultStyles.textInput, styles.textInputView]}>
