@@ -12,6 +12,9 @@ import { AppState, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import Colors from "@/constants/Colors";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -95,23 +98,25 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="(authenticated)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(modals)"
-            options={{
-              headerShown: false,
-              presentation: "fullScreenModal",
-            }}
-          />
-        </Stack>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={DefaultTheme}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="(authenticated)"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(modals)"
+              options={{
+                headerShown: false,
+                presentation: "fullScreenModal",
+              }}
+            />
+          </Stack>
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
