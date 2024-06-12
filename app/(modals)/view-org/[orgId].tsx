@@ -10,50 +10,36 @@ import {
   getAllJoinedOrganisations,
   getOrganisationById,
   getProjectsByOrganisation,
-  joinOrganisation
+  joinOrganisation,
 } from "@/utils/api/organisations";
 import { FontAwesome } from "@expo/vector-icons";
 import { Project } from "@/utils/api/project-details";
+import { useQuery } from "@tanstack/react-query";
+import { getUserId } from "@/utils/supabase";
+import { queryClient } from "@/app/_layout";
 
 const ViewOrg = () => {
   const orgId = useLocalSearchParams().orgId as string;
-  const userId = useUserIdStore((user) => user.userId);
 
-  const [loading, setLoading] = React.useState(true);
-  const [inOrg, setInOrg] = React.useState(false);
-  const [organisation, setOrganisation] = React.useState({
-    name: "",
-    subtitle: "",
-    description: "",
-    image: "",
+  const { data: orgs, status: myOrgsStatus } = useQuery({
+    queryKey: ["myOrgs"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getAllJoinedOrganisations(userId!);
+    },
   });
 
-  useEffect(() => {
-    getAllJoinedOrganisations(userId).then((res) =>
-      setInOrg(!res.error && res.data?.some((org) => org.org_id === orgId))
-    );
-    getOrganisationById(orgId).then((res) => {
-      if (!res.error)
-        setOrganisation({
-          name: res.data.name,
-          subtitle: res.data.subtitle,
-          description: res.data.description,
-          image: res.data.image,
-        });
-    });
-    setLoading(false);
-  }, []);
+  const inOrg = orgs?.data?.some((org) => org.org_id === orgId);
 
-  const [projects, setProjects] = useState<Project[] | null>([]);
-  useEffect(() => {
-    const getProjects = () => {
-      getProjectsByOrganisation(orgId).then((res) => {
-        if (!res.data) return;
-        setProjects(res.data);
-      });
-    };
-    getProjects();
-  }, []);
+  const { data: thisOrg, status: thisOrgStatus } = useQuery({
+    queryKey: ["org", orgId],
+    queryFn: () => getOrganisationById(orgId),
+  });
+
+  const { data: projects } = useQuery({
+    queryKey: ["projects", orgId],
+    queryFn: () => getProjectsByOrganisation(orgId),
+  });
 
   return (
     <View
@@ -70,7 +56,7 @@ const ViewOrg = () => {
         ]}
       >
         <View style={{ position: "relative" }}>
-          <Image source={organisation.image} style={styles.img} />
+          <Image source={thisOrg?.data?.image} style={styles.img} />
           <View
             style={[
               styles.img,
@@ -84,12 +70,12 @@ const ViewOrg = () => {
         </View>
 
         <Text style={{ marginTop: 16, fontSize: 24, fontWeight: "600" }}>
-          {organisation.name}
+          {thisOrg?.data?.name}
         </Text>
         <Text style={{ fontSize: 16, color: Colors.gray }}>
-          {organisation.subtitle}
+          {thisOrg?.data?.subtitle}
         </Text>
-        <Text style={{ marginTop: 24 }}>{organisation.description}</Text>
+        <Text style={{ marginTop: 24 }}>{thisOrg?.data?.description}</Text>
         <Text
           style={{
             marginTop: 32,
@@ -101,7 +87,7 @@ const ViewOrg = () => {
           Projects
         </Text>
         <View style={{ gap: 4 }}>
-          {projects?.map((project, i) => (
+          {projects?.data?.map((project, i) => (
             <Link
               asChild
               href={`/(modals)/view-project/${project.project_id}`}
@@ -157,15 +143,16 @@ const ViewOrg = () => {
               bottom: 32,
             },
           ]}
-          onPress={() => {
-            if (loading || !orgId) return;
+          onPress={async () => {
+            if (thisOrgStatus === "pending" || !orgId) return;
             if (inOrg) {
               // leaveOrganisation(orgId, userId).then((res) => {
               //   if (!res.error) setInOrg(false);
               // });
             } else {
-              joinOrganisation(orgId, userId).then((res) => {
-                if (!res.error) setInOrg(true);
+              const userId = await getUserId();
+              joinOrganisation(orgId, userId!).then((res) => {
+                queryClient.invalidateQueries({ queryKey: ["myOrgs"] });
               });
             }
             router.back();
@@ -173,7 +160,7 @@ const ViewOrg = () => {
         >
           <View>
             <Text style={{ color: Colors.lightGray, fontSize: 16 }}>
-              {loading
+              {thisOrgStatus === "pending" || myOrgsStatus === "pending"
                 ? "Loading..."
                 : inOrg
                 ? "Leave Organisation"
