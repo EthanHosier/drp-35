@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
 import {Image} from "expo-image";
-import {useLocalSearchParams} from "expo-router";
+import {router, useLocalSearchParams} from "expo-router";
 import {getProfilePicUrl} from "@/utils/api/profile-pics";
 import {getProfileByUserId} from "@/utils/api/profiles";
 import {ScrollView} from "react-native-gesture-handler";
 import Colors from "@/constants/Colors";
 import StarRating from "react-native-star-rating-widget";
+import {getUserId} from "@/utils/supabase";
+import {addReview} from "@/utils/api/reviews";
 
 const TEXT_FIELDS = [
   "Communication",
@@ -17,9 +19,18 @@ const TEXT_FIELDS = [
 
 const ReviewMember = () => {
 
-  const userId = useLocalSearchParams().profileId as string;
-  const { data: image } = getProfilePicUrl(userId);
+  const [reviewerId, setReviewerId] = useState<string | null>(null);
+  const revieweeId = useLocalSearchParams().profileId as string;
+  const { data: image } = getProfilePicUrl(revieweeId);
   const [fullName, setFullName] = useState<string | null>(null);
+
+  const getReviewerId = async () => {
+    await getUserId().then((id) => setReviewerId(id ? id as string : null));
+  }
+
+  useEffect(() => {
+    getReviewerId();
+  }, []);
 
   const [ratings, setRatings] = useState({
     communication: 0,
@@ -29,7 +40,7 @@ const ReviewMember = () => {
   });
 
   useEffect(() => {
-    getProfileByUserId(userId).then((response) => {
+    getProfileByUserId(revieweeId).then((response) => {
       if (!response.error) setFullName(response.data.full_name)
     })}, []);
 
@@ -66,7 +77,17 @@ const ReviewMember = () => {
               </View>
           ))}
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              if (!reviewerId) return;
+              addReview(reviewerId, revieweeId, ratings.communication);
+              addReview(reviewerId, revieweeId, ratings.participation);
+              addReview(reviewerId, revieweeId, ratings.timeManagement);
+              addReview(reviewerId, revieweeId, ratings.contribution);
+              router.back();
+            }}
+        >
           <Text style={styles.buttonText}>
             Submit
           </Text>
