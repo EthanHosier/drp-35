@@ -105,7 +105,7 @@ const Layout = () => {
               <Ionicons
                 name="chatbubble-ellipses-outline"
                 size={SIZE}
-                color={Colors.gray}
+                color={Colors.darkGray}
               />
             )}
           </TouchableOpacity>
@@ -124,7 +124,7 @@ const Layout = () => {
               <Ionicons
                 name="compass-outline"
                 size={SIZE + 4}
-                color={Colors.gray}
+                color={Colors.darkGray}
               />
             )}
           </TouchableOpacity>
@@ -143,7 +143,7 @@ const Layout = () => {
               <FontAwesome
                 name="user-circle-o"
                 size={SIZE}
-                color={Colors.gray}
+                color={Colors.darkGray}
               />
             )}
           </TouchableOpacity>
