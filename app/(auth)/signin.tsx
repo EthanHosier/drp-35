@@ -1,38 +1,16 @@
 import {
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
-import { Link, router } from "expo-router";
-import { supabase } from "@/utils/supabase";
-import { defaultStyles } from "@/constants/DefaultStyles";
+import { Link } from "expo-router";
 import SignUpButton from "@/components/auth/SignUpButton";
 
 const Index = () => {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const signInWithEmail = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: false,
-      },
-    });
-    if (error) {
-      alert(error.message);
-    } else {
-      router.push({ pathname: "/otp", params: { email } });
-    }
-    setLoading(false);
-  };
 
   return (
     <View style={styles.container}>
@@ -46,6 +24,7 @@ const Index = () => {
         style={styles.textInput}
         value={email}
         onChangeText={(text) => setEmail(text)}
+        autoCapitalize="none"
       />
       <View style={styles.dontHaveAccountContainer}>
         <Text style={{ color: Colors.gray }}>Don't have an account yet? </Text>
