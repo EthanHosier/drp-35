@@ -7,7 +7,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import {AntDesign, FontAwesome6, Ionicons} from "@expo/vector-icons";
 import TinderSwipe from "@/components/projects/tinder-swipe";
 import InfoSheet from "@/components/projects/info-sheet";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
@@ -57,7 +57,6 @@ const InfoTab = () => {
       ]}
     >
       <Image source={{ uri: projectData.image_uri }} style={styles.img} />
-
       <Text
         style={{
           fontWeight: "bold",
@@ -68,15 +67,20 @@ const InfoTab = () => {
       >
         {projectData?.name}
       </Text>
-      <Text style={{ marginTop: 4, color: Colors.gray }}>
-        {formatHumanReadableDate(projectData.start_date_time)}
-      </Text>
       <View style={[styles.attributeContainer, { marginTop: 24 }]}>
         <View style={styles.attributeIconContainer}>
           <Ionicons name="people-outline" size={24} color="black" />
         </View>
         <Text style={styles.attributeText}>
           {projectData.min_group_size} - {projectData.max_group_size} members
+        </Text>
+      </View>
+      <View style={[styles.attributeContainer, { marginTop: 24 }]}>
+        <View style={styles.attributeIconContainer}>
+          <FontAwesome6 name="clock" size={24} color="black" />
+        </View>
+        <Text style={styles.attributeText}>
+          {formatHumanReadableDate(projectData.start_date_time)}
         </Text>
       </View>
       <Text style={{ marginTop: 24 }}>
