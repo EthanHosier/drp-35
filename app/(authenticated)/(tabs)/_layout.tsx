@@ -73,7 +73,7 @@ const Layout = () => {
       </Tabs>
       <BlurView
         tint="extraLight"
-        intensity={80}
+        intensity={95}
         style={{
           flexDirection: "row",
           gap: 4,
