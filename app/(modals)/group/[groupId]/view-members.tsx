@@ -170,6 +170,9 @@ const ViewMembers = () => {
               >
                 <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
+                  onLongPress={() => {
+                    router.navigate(`/(modals)/review/${member.id}`);
+                  }}
                 >
                   <Image
                     source={member.imageUrl}

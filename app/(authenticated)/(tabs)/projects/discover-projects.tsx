@@ -45,7 +45,7 @@ const DiscoverProjects = () => {
         projectId: project.project_id,
         startDateTime: new Date(project.start_date_time),
         image: project.image_uri,
-      }));
+      })).sort((a, b) => a.startDateTime.getTime() - b.startDateTime.getTime());
       return processedData;
     },
   });
