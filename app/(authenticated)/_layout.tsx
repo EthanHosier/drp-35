@@ -69,7 +69,7 @@ const Layout = () => {
         addGroupChat(res.data);
       });
       supabase
-        .channel("custom-insert-channel")
+        .channel(`channel:messages:group_id=${group.id}`)
         .on(
           "postgres_changes",
           {
