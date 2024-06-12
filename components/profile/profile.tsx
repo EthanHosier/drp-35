@@ -16,6 +16,7 @@ interface ProfileProps {
   github: string;
   linkedin: string;
   website: string;
+  bio: string;
 }
 
 const Profile: React.FC<ProfileProps> = ({
@@ -29,6 +30,7 @@ const Profile: React.FC<ProfileProps> = ({
   github,
   linkedin,
   website,
+  bio,
 }) => {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -78,10 +80,7 @@ const Profile: React.FC<ProfileProps> = ({
             <Text style={styles2.attributeText}>I study {course}</Text>
           </View>
           <Text style={{ marginTop: 24 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            {bio || "This user has not written a bio yet."}
           </Text>
           <Text style={{ fontSize: 20, fontWeight: "600", marginTop: 24 }}>
             I'm skilled at

@@ -4,7 +4,6 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { TEXT_FIELDS } from "@/components/profile/profile-card";
 
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
@@ -13,6 +12,17 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import { useQuery } from "@tanstack/react-query";
 import { getProfileByUserId } from "@/utils/api/profiles";
+
+const TEXT_FIELDS = [
+  "Full Name",
+  "Pronouns",
+  "University",
+  "Course",
+  "LinkedIn",
+  "GitHub",
+  "Website",
+  "Bio",
+];
 
 const EditTab = () => {
   const { data: profile } = useQuery({

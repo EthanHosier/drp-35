@@ -22,6 +22,8 @@ type ProfileStore = {
   website: string;
   setWebsite: (newWebsite: string) => void;
   setDetails: (details: string[]) => void;
+  bio: string;
+  setBio: (newBio: string) => void;
 };
 
 export const useProfileStore = create<ProfileStore>((set) => ({
@@ -67,7 +69,7 @@ export const useProfileStore = create<ProfileStore>((set) => ({
     set({ website: newWebsite });
   },
   setDetails: (details) => {
-    if (details.length !== 7) return;
+    if (details.length !== 8) return;
     set({
       fullName: details[0],
       pronouns: details[1],
@@ -76,7 +78,12 @@ export const useProfileStore = create<ProfileStore>((set) => ({
       linkedin: details[4],
       github: details[5],
       website: details[6],
+      bio: details[7],
     });
+  },
+  bio: "",
+  setBio: (newBio) => {
+    set({ bio: newBio });
   },
 }));
 
@@ -89,4 +96,5 @@ export const useDetails = () =>
     state.linkedin,
     state.github,
     state.website,
+    state.bio,
   ]);
