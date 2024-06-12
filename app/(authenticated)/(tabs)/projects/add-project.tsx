@@ -218,15 +218,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     textAlign: "justify",
   },
-  button: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: Colors.primary,
-    marginBottom: 50,
-    height: 50,
-  },
 });
 
 export default AddProjectPage;

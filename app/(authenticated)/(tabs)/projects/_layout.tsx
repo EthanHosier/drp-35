@@ -142,6 +142,8 @@ const Layout = () => {
       return;
     }
 
+    queryClient.invalidateQueries({ queryKey: ["allOrgs"] });
+
     router.back();
   };
 
