@@ -19,10 +19,7 @@ import { GroupChat, getGroupchat, sendMessage } from "@/utils/api/groupchats";
 import Skeleton from "@/components/LoadingSkeleton";
 import { getProfilePicUrl } from "@/utils/api/profile-pics";
 import { useUserIdStore } from "@/utils/store/user-id-store";
-import {
-  useGetGroupChat,
-  useGroupchatStore,
-} from "@/utils/store/groupchat-store";
+import { useGroupchatStore } from "@/utils/store/groupchat-store";
 
 // DELETE THIS FUNCTION IF NOT NEEDED WHEN HOOK UP REAL BACKEND:
 function convertToHumanReadable(datetime: string) {
@@ -51,9 +48,16 @@ const ChatId = () => {
   const chatId = useLocalSearchParams().chatId;
   const userId = useUserIdStore((state) => state.userId);
 
+  const [groupChat, setGroupChat] = useState<GroupChat | null>(null);
   const [message, setMessage] = useState("");
-  const groupChat = useGetGroupChat(chatId as string);
   const addMessage = useGroupchatStore((state) => state.addMessage);
+  const { groupChats } = useGroupchatStore();
+
+  useEffect(() => {
+    const gc = groupChats.find((g) => g.group_id === chatId);
+    if (!gc) setGroupChat(null);
+    setGroupChat(gc!);
+  }, [groupChats]);
 
   if (!groupChat) return <Skeleton />;
 
@@ -220,7 +224,7 @@ const ChatId = () => {
                     borderRadius: 24,
                   }}
                   onPress={() => {
-                    sendMessage(chatId as string, message, addMessage);
+                    sendMessage(chatId as string, message);
                   }}
                 >
                   <Feather name="send" size={16} color={Colors.background} />

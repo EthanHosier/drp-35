@@ -21,9 +21,8 @@ export type GroupChat = {
 
 export const sendMessage: (
   groupId: string,
-  content: string,
-  addMessage: (groupId: string, message: Message) => void
-) => Promise<DRPResponse<null>> = async (groupId, content, addMessage) => {
+  content: string
+) => Promise<DRPResponse<null>> = async (groupId, content) => {
   const { data, error } = await supabase
     .from("messages")
     .insert({ group_id: groupId, content })
@@ -32,7 +31,6 @@ export const sendMessage: (
 
   if (error) return { data: null, error };
 
-  addMessage(groupId, data);
   return { data: null, error: null };
 };
 

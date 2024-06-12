@@ -25,25 +25,13 @@ export const useGroupchatStore = create<GroupChatStore>((set) => ({
       );
       if (!groupChat) return state;
 
-      return {
-        groupChats: state.groupChats.map((groupChat) => {
-          if (groupChat.group_id === groupId) {
-            return {
-              ...groupChat,
-              messages: [...groupChat.messages, message],
-            };
-          }
-          return groupChat;
-        }),
-      };
+      groupChat.messages = [...groupChat.messages, message];
+
+      let newGroupchats = [...state.groupChats];
+      newGroupchats.filter((g) => g.group_id != groupId);
+      newGroupchats = [...newGroupchats, groupChat];
+
+      return { groupChats: newGroupchats };
     });
   },
 }));
-
-export const useGetGroupChat: (groupId: string) => GroupChat = (
-  groupId: string
-) => {
-  return useGroupchatStore
-    .getState()
-    .groupChats.find((groupChat) => groupChat.group_id === groupId)!;
-};
