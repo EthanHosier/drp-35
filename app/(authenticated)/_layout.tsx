@@ -6,61 +6,23 @@ import { useUserIdStore } from "@/utils/store/user-id-store";
 import { getProjectPicUrl } from "@/utils/api/project-pics";
 import { getGroupchat } from "@/utils/api/groupchats";
 import { useGroupchatStore } from "@/utils/store/groupchat-store";
+import { useQuery } from "@tanstack/react-query";
+import { getMyGroups } from "@/utils/api/groups";
 
 const Layout = () => {
-  const { groups, setGroups } = useMyGroupsStore();
   const { addGroupChat, addMessage } = useGroupchatStore();
-  const { userId } = useUserIdStore();
 
-  const getMyGroups = async () => {
-    const { data, error } = await supabase
-      .from("group_members")
-      .select(
-        "group_id, groups(description, projects(name, max_group_size, project_id))"
-      )
-      .eq("user_id", userId);
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    const groupIds = data.map((group) => group.group_id);
-
-    const currentGroupSizes = new Map<string, number>();
-    await Promise.all(
-      groupIds.map(async (groupId) => {
-        const { count, error } = await supabase
-          .from("group_members")
-          .select("*", { count: "exact", head: true })
-          .eq("group_id", groupId);
-        if (error) {
-          alert(error.message);
-        }
-        currentGroupSizes.set(groupId, count ?? 0);
-      })
-    );
-
-    setGroups(
-      data.map((group) => ({
-        id: group.group_id,
-        projectName: group.groups?.projects?.name ?? "",
-        projectId: group.groups?.projects?.project_id!,
-        maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
-        currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
-        image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
-      }))
-    );
-  };
+  const { data: myGroups } = useQuery({
+    queryKey: ["myGroups"],
+    queryFn: getMyGroups,
+    staleTime: Infinity,
+  });
 
   useEffect(() => {
-    if (!userId) return;
-    getMyGroups();
-  }, [userId]);
+    if (!myGroups) return;
+    if (!myGroups || myGroups.length < 0) return;
 
-  useEffect(() => {
-    if (groups?.length < 0) return;
-
-    groups.forEach((group) => {
+    myGroups.forEach((group) => {
       getGroupchat(group.id).then((res) => {
         if (res.error) {
           alert(res.error.message);
@@ -92,7 +54,7 @@ const Layout = () => {
         )
         .subscribe();
     });
-  }, [groups]);
+  }, [myGroups]);
 
   return (
     <Stack>
