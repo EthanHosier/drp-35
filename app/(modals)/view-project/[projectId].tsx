@@ -114,6 +114,8 @@ const GroupsTab = () => {
     .eq("groups.project_id", projectId)
     .single();
     if (!error && data.groups) setGroupId(data.groups!.group_id);
+
+    await getMembersNeeded();
   }
 
   const getMembersNeeded = async () => {
