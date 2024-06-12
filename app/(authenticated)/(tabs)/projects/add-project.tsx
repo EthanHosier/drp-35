@@ -90,6 +90,7 @@ const AddProjectPage = () => {
               placeholder={"0"}
               value={minGroupSize}
               onChange={(text: string) => setMinGroupSize(text)}
+              keyboardType={"numeric"}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -98,6 +99,7 @@ const AddProjectPage = () => {
               label={PROJECT_FIELDS[3]}
               value={maxGroupSize}
               onChange={(text: string) => setMaxGroupSize(text)}
+              keyboardType={"numeric"}
             />
           </View>
         </View>
@@ -105,14 +107,14 @@ const AddProjectPage = () => {
       <View style={[styles.fieldsContainer]}>
         <Text style={styles.fieldLabel}>Start Date & Time</Text>
         <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
-          {/*<RNDateTimePicker*/}
-          {/*  onChange={(_, date) => {*/}
-          {/*    setStartDateTime(date!);*/}
-          {/*  }}*/}
-          {/*  value={startDateTime}*/}
-          {/*  mode="datetime"*/}
-          {/*  style={{ marginLeft: -10 }}*/}
-          {/*/>*/}
+          <RNDateTimePicker
+            onChange={(_, date) => {
+              setStartDateTime(date!);
+            }}
+            value={startDateTime}
+            mode="datetime"
+            style={{ marginLeft: -10 }}
+          />
         </View>
       </View>
     </KeyboardAwareScrollView>
@@ -124,6 +126,7 @@ const ProjectField = ({
   placeholder = label,
   value,
   onChange,
+  keyboardType = "default",
   style,
 }: {
   label: string;
@@ -131,13 +134,14 @@ const ProjectField = ({
   value: string;
   height?: number;
   onChange: (value: any) => void;
+  keyboardType?: "default" | "numeric";
   style?: any;
 }) => {
   return (
     <>
       <Text style={styles.fieldLabel}>{label}</Text>
       <TextInput
-        style={{
+        style={[{
           marginTop: 8,
           width: "100%",
           height: 40,
@@ -145,10 +149,11 @@ const ProjectField = ({
           borderColor: Colors.lightGray,
           padding: 8,
           borderRadius: 12,
-        }}
+        }, style]}
         placeholder={placeholder}
         onChangeText={onChange}
         value={value}
+        keyboardType={keyboardType}
       />
     </>
   );

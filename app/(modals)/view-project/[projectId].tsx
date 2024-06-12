@@ -23,7 +23,12 @@ import { useFilterStore } from "@/utils/store/filter-store";
 import LottieView from "lottie-react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {acceptRequestToJoinGroup, isMatch, requestToJoinGroup} from "@/utils/api/groups";
+import {
+  acceptRequestToJoinGroup,
+  getGroupById,
+  isMatch,
+  requestToJoinGroup
+} from "@/utils/api/groups";
 import {useUserIdStore} from "@/utils/store/user-id-store";
 import {supabase} from "@/utils/supabase";
 
@@ -92,6 +97,7 @@ const GroupsTab = () => {
   const projectId = useLocalSearchParams().projectId as string;
   const userId = useUserIdStore((state) => state.userId);
   const [groupId, setGroupId] = useState<string | null>(null);
+  const [membersNeeded, setMembersNeeded] = useState<number>(100);
 
   const getGroupId = async () => {
     const { data, error } = await supabase
@@ -110,13 +116,38 @@ const GroupsTab = () => {
     if (!error && data.groups) setGroupId(data.groups!.group_id);
   }
 
+  const getMembersNeeded = async () => {
+    const { data: project, error: maxError } = await supabase
+      .from("projects")
+      .select("max_group_size")
+      .eq("project_id", projectId)
+      .single();
+    if (maxError) return console.error(maxError);
+
+    await getGroupById(groupId as string).then((res) => {
+      if (res.data) setMembersNeeded(project.max_group_size - res.data.members.length)
+    });
+  }
+
+  const getGroupData = async () => {
+    await getMembersNeeded();
+    await getProjectGroups(projectId).then((res) => {
+      if (!res.data) return;
+      console.log(membersNeeded);
+      setProjectGroups(res.data.filter((group) =>
+          (group.group_id !== groupId) &&
+          (group.members.length <= membersNeeded)
+      ));
+    });
+  }
+
   useEffect(() => {
     getGroupId();
-    getProjectGroups(projectId).then((res) => {
-      if (!res.data) return;
-      setProjectGroups(res.data);
-    });
   }, []);
+
+  useEffect(() => {
+    getGroupData();
+  }, [groupId]);
 
   const router = useRouter();
 
@@ -130,7 +161,6 @@ const GroupsTab = () => {
       const { data, error } =
           await isMatch(groupId as string, targetGroupId);
       if (error) return console.log(error);
-      console.log(data);
       if (data) {
         const { error } = await acceptRequestToJoinGroup(targetGroupId, groupId)
         if (error) return console.log(error);
@@ -210,7 +240,6 @@ const GroupsTab = () => {
               projectGroups
                 ? projectGroups.filter((group) => {
                     return (
-                      (group.group_id !== groupId) &&
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||

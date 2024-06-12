@@ -19,7 +19,7 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
         asChild
         href={`/(modals)/view-project/${project.projectId}`}
       >
-        <TouchableOpacity onPress={() => console.log("yeahh")}>
+        <TouchableOpacity>
           <View style={{ width: 320, aspectRatio: 5 / 3 }}>
             <ImageBackground
               source={{ uri: project.image }}
