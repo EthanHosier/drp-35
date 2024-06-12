@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
@@ -10,14 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { getUserId, supabase } from "@/utils/supabase";
-import { useProfileStore } from "@/utils/store/profile-store";
-import { useMyGroupsStore } from "@/utils/store/my-groups-store";
-import {
-  Organisation,
-  getAllJoinedOrganisations,
-} from "@/utils/api/organisations";
-import { useUserIdStore } from "@/utils/store/user-id-store";
-import { getProjectPicUrl } from "@/utils/api/project-pics";
+import {getAllJoinedOrganisations,} from "@/utils/api/organisations";
 import { useQuery } from "@tanstack/react-query";
 import { getMyGroups } from "@/utils/api/groups";
 import { queryClient } from "@/app/_layout";

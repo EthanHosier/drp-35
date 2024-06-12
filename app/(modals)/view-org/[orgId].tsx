@@ -10,8 +10,7 @@ import {
   getAllJoinedOrganisations,
   getOrganisationById,
   getProjectsByOrganisation,
-  joinOrganisation,
-  leaveOrganisation,
+  joinOrganisation
 } from "@/utils/api/organisations";
 import { FontAwesome } from "@expo/vector-icons";
 import { Project } from "@/utils/api/project-details";

@@ -27,6 +27,7 @@ const ViewTab = () => {
       skills={profile?.data?.skills ?? []}
       languages={profile?.data?.skills ?? []}
       imageUrl={profile?.data?.imageUrl ?? ""}
+      bio={profile?.data?.bio ?? ""}
     />
   );
 };

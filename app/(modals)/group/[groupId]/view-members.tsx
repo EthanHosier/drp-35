@@ -17,11 +17,10 @@ import {
   rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
 import { useUserIdStore } from "@/utils/store/user-id-store";
-import { Profile } from "@/utils/api/profiles";
 import { Group } from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 import { RefreshControl } from "react-native-gesture-handler";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
 
 const ViewMembers = () => {

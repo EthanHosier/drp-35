@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, Tabs, useRouter, useSegments } from "expo-router";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { BlurView } from "expo-blur";
-import { supabase } from "@/utils/supabase";
-import { useUserIdStore } from "@/utils/store/user-id-store";
-import { useProfileStore } from "@/utils/store/profile-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SIZE = 25;
