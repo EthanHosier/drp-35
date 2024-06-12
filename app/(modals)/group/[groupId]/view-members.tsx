@@ -31,7 +31,7 @@ const ViewMembers = () => {
   const [interested, setInterested] = useState<Group[]>([]);
 
   const { data: group, status } = useQuery({
-    queryKey: ["myGroup"],
+    queryKey: ["myGroup", groupId],
     queryFn: () => getGroupById(groupId as string),
     staleTime: Infinity,
   });
@@ -61,7 +61,7 @@ const ViewMembers = () => {
 
   const refresh = () => {
     console.log("refresh");
-    queryClient.invalidateQueries({ queryKey: ["myGroup"] });
+    queryClient.invalidateQueries({ queryKey: ["myGroup", groupId] });
   };
 
   if (loading)
