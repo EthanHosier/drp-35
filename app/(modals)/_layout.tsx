@@ -81,6 +81,11 @@ const Layout = () => {
           }}
       />
       <Stack.Screen name="filter" options={{headerShown: false}}/>
+      <Stack.Screen name="review" options={{
+        presentation: "fullScreenModal",
+        title: "Review Member",
+        headerTitleAlign: "center",
+      }}/>
     </Stack>
   );
 };
