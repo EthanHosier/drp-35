@@ -32,6 +32,31 @@ export const getAllProjects: () => Promise<
   return { data, error: null };
 };
 
+export const getAllProjectsExceptJoined: (
+  userId: string
+) => Promise<DRPResponse<Project[]>> = async (userId) => {
+  const { data, error } = await supabase.from("projects").select(
+    `
+    *,
+    groups(
+      group_members(user_id)
+    )
+    `
+  );
+  if (error) return { data: null, error };
+  const filteredData = data.filter((project) => {
+    const userJoined = project.groups.some((group) =>
+      group.group_members.some((member) => member.user_id === userId)
+    );
+    return !userJoined;
+  });
+  const processedData = filteredData.map((project) => ({
+    ...project,
+    image_uri: getProjectPicUrl(project.project_id).data!,
+  }));
+  return { data: processedData, error: null };
+};
+
 export const getProjectDetails: (
   projectId: string
 ) => Promise<DRPResponse<Project>> = async (projectId) => {
