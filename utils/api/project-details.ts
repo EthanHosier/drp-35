@@ -70,7 +70,6 @@ export const getProjectGroups: (
     )
     .eq("project_id", projectId);
 
-  console.log(error);
   // Handle any errors from the query
   if (error) return { data: null, error };
 
@@ -81,7 +80,6 @@ export const getProjectGroups: (
       description: group.description,
       members: group.group_members.map((member, i) => {
         const { user_id, ...profile } = member.profiles;
-        console.log(member.profiles);
         return {
           ...profile,
           imageUrl: getProfilePicUrl(user_id).data ?? "",

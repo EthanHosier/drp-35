@@ -97,7 +97,7 @@ const GroupsTab = () => {
   const projectId = useLocalSearchParams().projectId as string;
   const userId = useUserIdStore((state) => state.userId);
   const [groupId, setGroupId] = useState<string | null>(null);
-  const [membersNeeded, setMembersNeeded] = useState<number>(0);
+  const [membersNeeded, setMembersNeeded] = useState<number>(100);
 
   const getGroupId = async () => {
     const { data, error } = await supabase
@@ -114,8 +114,6 @@ const GroupsTab = () => {
     .eq("groups.project_id", projectId)
     .single();
     if (!error && data.groups) setGroupId(data.groups!.group_id);
-
-    await getMembersNeeded();
   }
 
   const getMembersNeeded = async () => {
@@ -127,17 +125,29 @@ const GroupsTab = () => {
     if (maxError) return console.error(maxError);
 
     await getGroupById(groupId as string).then((res) => {
-      if (res.data) setMembersNeeded(project.max_group_size - res.data?.members.length)
+      if (res.data) setMembersNeeded(project.max_group_size - res.data.members.length)
+    });
+  }
+
+  const getGroupData = async () => {
+    await getMembersNeeded();
+    await getProjectGroups(projectId).then((res) => {
+      if (!res.data) return;
+      console.log(membersNeeded);
+      setProjectGroups(res.data.filter((group) =>
+          (group.group_id !== groupId) &&
+          (group.members.length <= membersNeeded)
+      ));
     });
   }
 
   useEffect(() => {
     getGroupId();
-    getProjectGroups(projectId).then((res) => {
-      if (!res.data) return;
-      setProjectGroups(res.data);
-    });
   }, []);
+
+  useEffect(() => {
+    getGroupData();
+  }, [groupId]);
 
   const router = useRouter();
 
@@ -230,8 +240,6 @@ const GroupsTab = () => {
               projectGroups
                 ? projectGroups.filter((group) => {
                     return (
-                      (group.group_id !== groupId) &&
-                      // (group.members.length <= membersNeeded) &&
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||
