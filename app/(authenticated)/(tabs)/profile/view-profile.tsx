@@ -161,7 +161,11 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Groups
         </Text>
-        {myGroups.map((group, i) => (
+        {myGroups.length <= 0 ?
+            <Text style={{color: Colors.gray, marginTop: 16}}>
+              You are not in any groups
+            </Text> :
+            myGroups.map((group, i) => (
           <Link
             asChild
             href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}&projectId=${group.projectId}`}
@@ -203,7 +207,11 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Organisations
         </Text>
-        {orgs?.map((org, i) => (
+        { (orgs && orgs.length <= 0) ?
+            <Text style={{color: Colors.gray, marginTop: 16}}>
+              You are not in any organisations
+            </Text> :
+          orgs?.map((org, i) => (
           <Link asChild href={`/(modals)/view-org/${org.org_id}`} key={i}>
             <TouchableOpacity
               style={{
