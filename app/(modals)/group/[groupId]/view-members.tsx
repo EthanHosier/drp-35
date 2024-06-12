@@ -13,7 +13,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import {
   getGroupById,
-  getGroupRequests,
+  getGroupRequests, rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { Profile } from "@/utils/api/profiles";
@@ -46,6 +46,12 @@ const ViewMembers = () => {
     if (!groupId || !userId) return;
     setLoading(true);
     await Promise.all([loadGroup(), loadInterested()]);
+    if (members?.length && members.length >= parseInt(maxGroupSize as string)) {
+      await Promise.all(
+          interested.map(group => rejectRequestToJoinGroup(group.group_id, groupId as string))
+      );
+      setInterested([]);
+    }
     setLoading(false);
   }
 
@@ -232,31 +238,32 @@ const ViewMembers = () => {
         </ScrollView>
 
       </ScrollView>
-      <TouchableOpacity
-        style={[
-          defaultStyles.pillButton,
-          {
-            backgroundColor: Colors.primary,
-            position: "absolute",
-            bottom: 32,
-            alignSelf: "center",
-            width: "90%",
-            zIndex: 100,
-          },
-        ]}
-        onPress={() => {
-          router.navigate(`/(modals)/view-project/${projectId}`)
-        }}
-      >
-      <Text
-          style={{
-            fontSize: 16,
-            color: Colors.background,
+      { (members?.length && members.length < parseInt(maxGroupSize as string)) &&
+        <TouchableOpacity
+          style={[
+            defaultStyles.pillButton,
+            {
+              backgroundColor: Colors.primary,
+              position: "absolute",
+              bottom: 32,
+              alignSelf: "center",
+              width: "90%",
+              zIndex: 100,
+            },
+          ]}
+          onPress={() => {
+            router.navigate(`/(modals)/view-project/${projectId}`)
           }}
       >
-        Search for Group Members
-      </Text>
-    </TouchableOpacity>
+        <Text
+            style={{
+              fontSize: 16,
+              color: Colors.background,
+            }}
+        >
+          Search for Group Members
+        </Text>
+      </TouchableOpacity> }
     </View>
   );
 };
