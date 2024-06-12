@@ -39,6 +39,24 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   
   const { width } = Dimensions.get("window");
 
+  const OverlayLabelLeft = useCallback(() => {
+    return (
+      <View
+        style={[
+          styles.overlayLabelContainer,
+          {
+            backgroundColor: Colors.primary,
+            opacity: 0.7,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        ]}
+      >
+        <Ionicons name="sad-outline" size={80} color={Colors.background} />
+      </View>
+    );
+  }, []);
+
   const OverlayLabelRight = useCallback(() => {
     return (
       <View
@@ -230,6 +248,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         onSwipeStart={() => {}}
         onSwipeEnd={() => {}}
         OverlayLabelRight={OverlayLabelRight}
+        OverlayLabelLeft={OverlayLabelLeft}
       />
     </View>
   );
