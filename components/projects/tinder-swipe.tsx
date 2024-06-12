@@ -218,27 +218,17 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
           for (let i = 0; i < groups.length; i++) {
             ref.current?.swipeBack();
             setGroupIndex((i) => (i > 0 ? i - 1 : i));
-            console.log("swipeBack");
             await sleep(50);
           }
         }}
         onSwipeLeft={(cardIndex) => {
-          console.log("onSwipeLeft", cardIndex);
           setGroupIndex((i) => (i < groups.length - 1 ? i + 1 : i));
           setMemberIndex(0);
         }}
-        onSwipeTop={(cardIndex) => {
-          console.log("onSwipeTop", cardIndex);
-        }}
-        onSwipeActive={() => {
-          console.log("onSwipeActive");
-        }}
-        onSwipeStart={() => {
-          console.log("onSwipeStart");
-        }}
-        onSwipeEnd={() => {
-          console.log("onSwipeEnd");
-        }}
+        onSwipeTop={(cardIndex) => {}}
+        onSwipeActive={() => {}}
+        onSwipeStart={() => {}}
+        onSwipeEnd={() => {}}
         OverlayLabelRight={OverlayLabelRight}
       />
     </View>

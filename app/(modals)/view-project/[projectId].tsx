@@ -151,7 +151,6 @@ const GroupsTab = () => {
       const { data, error } =
           await isMatch(groupId as string, targetGroupId);
       if (error) return console.log(error);
-      console.log(data);
       if (data) {
         const { error } = await acceptRequestToJoinGroup(targetGroupId, groupId)
         if (error) return console.log(error);
@@ -232,7 +231,7 @@ const GroupsTab = () => {
                 ? projectGroups.filter((group) => {
                     return (
                       (group.group_id !== groupId) &&
-                      (group.members.length <= membersNeeded) &&
+                      // (group.members.length <= membersNeeded) &&
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||

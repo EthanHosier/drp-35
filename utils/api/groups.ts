@@ -60,7 +60,6 @@ export const getGroupRequests: (
       description: group.groups!.description,
       members: group.groups!.group_members.map((member) => {
         const { user_id, ...profile } = member.profiles!;
-        console.log(member.profiles);
         return {
           ...profile,
           id: user_id,

@@ -5,7 +5,7 @@ import {
 } from "@/utils/api/profiles";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import React, { Text } from "react-native";
+import React from "react-native";
 
 const EMPTY_PROFILE = {
   imageUrl: "",
@@ -34,7 +34,6 @@ const ProfileId = () => {
         setLoading(false);
         return;
       }
-      console.log(res.data);
       setProfile(res.data);
       setLoading(false);
     });
