@@ -14,7 +14,13 @@ import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import Colors from "@/constants/Colors";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 export {
   // Catch any errors thrown by the Layout component.

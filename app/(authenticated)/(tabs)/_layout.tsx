@@ -13,31 +13,6 @@ const SIZE = 25;
 const Layout = () => {
   const router = useRouter();
   const segments = useSegments();
-  const setUserId = useUserIdStore((state) => state.setUserId);
-  const setFullName = useProfileStore((state) => state.setFullName);
-
-  useEffect(() => {
-    const getUserIdAndFullName = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        alert("User not found");
-        return;
-      }
-      setUserId(user.id);
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("user_id", user.id)
-        .single();
-      if (error) return;
-      setFullName(data.full_name);
-    };
-
-    getUserIdAndFullName();
-  }, []);
 
   return (
     <>

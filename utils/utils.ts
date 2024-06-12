@@ -76,3 +76,11 @@ export function formatHumanReadableDate(dateString: string): string {
 
   return `${dayOfWeek}, ${month} ${day}, ${hours}:${minutesStr}${ampm}`;
 }
+
+export function toTitleCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}

@@ -1,27 +1,32 @@
-import Colors from "@/constants/Colors";
-import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useProfileStore } from "@/utils/store/profile-store";
 import React from "react";
-import { useSkillsStore } from "@/utils/store/skills-store";
-import { useLanguagesStore } from "@/utils/store/languages-store";
 
 import Profile from "./profile";
+import { useQuery } from "@tanstack/react-query";
+import { getUserId } from "@/utils/supabase";
+import { getProfileByUserId } from "@/utils/api/profiles";
 
 const ViewTab = () => {
-  const profile = useProfileStore();
-
-  const { skills } = useSkillsStore();
-  const { languages } = useLanguagesStore();
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getProfileByUserId(userId!);
+    },
+    staleTime: Infinity,
+  });
 
   return (
     <Profile
-      {...profile}
-      skills={skills}
-      languages={languages}
-      imageUrl={profile.imageUri}
+      fullName={profile?.data?.full_name ?? ""}
+      pronouns={profile?.data?.pronouns ?? ""}
+      university={profile?.data?.university ?? ""}
+      course={profile?.data?.course ?? ""}
+      linkedin={profile?.data?.linkedin ?? ""}
+      github={profile?.data?.github ?? ""}
+      website={profile?.data?.website ?? ""}
+      skills={profile?.data?.skills ?? []}
+      languages={profile?.data?.skills ?? []}
+      imageUrl={profile?.data?.imageUrl ?? ""}
     />
   );
 };

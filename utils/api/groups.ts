@@ -3,6 +3,7 @@ import { DRPResponse } from "./error-types";
 import { getProfilePicUrl } from "./profile-pics";
 import { Profile } from "./profiles";
 import { Group } from "./project-details";
+import { getProjectPicUrl } from "./project-pics";
 
 export const getGroupById: (
   groupId: string
@@ -81,7 +82,12 @@ export const requestToJoinGroup: (
   requestGroupId: string | null,
   projectId: string,
   userId: string
-) => Promise<DRPResponse<null>> = async (groupId, requestGroupId, projectId, userId) => {
+) => Promise<DRPResponse<null>> = async (
+  groupId,
+  requestGroupId,
+  projectId,
+  userId
+) => {
   const { data, error } = await checkIfUserHasGroup(projectId, userId);
   if (error) return { data: null, error };
   if (data && requestGroupId) {
@@ -167,13 +173,13 @@ export const acceptRequestToJoinGroup: (
     .eq("group_id", requestGroupId);
   if (joinError) return { data: null, error: joinError };
 
-  const { error: mergeRequestsError} = await supabase
+  const { error: mergeRequestsError } = await supabase
     .from("group_requests")
     .update({ target_group_id: targetGroupId })
     .eq("target_group_id", requestGroupId);
   if (mergeRequestsError) return { data: null, error: mergeRequestsError };
 
-  const {error: deleteError} = await supabase
+  const { error: deleteError } = await supabase
     .from("groups")
     .delete()
     .eq("group_id", requestGroupId);
@@ -229,4 +235,48 @@ export const getGroupIdFromProjectIdAndUserId = async (
   if (error) return { data: null, error };
 
   return { data: data[0].groups?.group_id, error };
+};
+
+export const getMyGroups = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from("group_members")
+    .select(
+      "group_id, groups(description, projects(name, max_group_size, project_id))"
+    )
+    .eq("user_id", user!.id);
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  const groupIds = data.map((group) => group.group_id);
+
+  const currentGroupSizes = new Map<string, number>();
+  await Promise.all(
+    groupIds.map(async (groupId) => {
+      const { count, error } = await supabase
+        .from("group_members")
+        .select("*", { count: "exact", head: true })
+        .eq("group_id", groupId);
+      if (error) {
+        alert(error.message);
+      }
+      currentGroupSizes.set(groupId, count ?? 0);
+    })
+  );
+
+  const ret = data.map((group) => ({
+    id: group.group_id,
+    projectId: group.groups?.projects?.project_id!,
+    projectName: group.groups?.projects?.name ?? "",
+    maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
+    currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
+    image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
+  }));
+
+  return ret;
 };

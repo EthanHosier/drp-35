@@ -9,7 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { supabase } from "@/utils/supabase";
+import { getUserId, supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 import {
@@ -18,78 +18,49 @@ import {
 } from "@/utils/api/organisations";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { getProjectPicUrl } from "@/utils/api/project-pics";
+import { useQuery } from "@tanstack/react-query";
+import { getMyGroups } from "@/utils/api/groups";
+import { queryClient } from "@/app/_layout";
+import { getProfileByUserId } from "@/utils/api/profiles";
 
 const ViewProfile = () => {
-  const image = useProfileStore((state) => state.imageUri);
-  const fullName = useProfileStore((state) => state.fullName);
-  const myGroups = useMyGroupsStore((state) => state.groups);
-  const setGroups = useMyGroupsStore((state) => state.setGroups);
-  const userId = useUserIdStore((state) => state.userId);
-  const [orgs, setOrgs] = useState<Organisation[] | null>([]);
-  const [loading, setLoading] = useState(false);
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getProfileByUserId(userId!);
+    },
+    staleTime: Infinity,
+  });
 
-  const getMyGroups = async () => {
-    const { data, error } = await supabase
-      .from("group_members")
-      .select(
-        "group_id, groups(description, projects(name, max_group_size, project_id))"
-      )
-      .eq("user_id", userId);
-    if (error) {
-      alert(error.message);
-      return;
-    }
+  const { data: myGroups } = useQuery({
+    queryKey: ["myGroups"],
+    queryFn: getMyGroups,
+    staleTime: Infinity,
+  });
 
-    const groupIds = data.map((group) => group.group_id);
-
-    const currentGroupSizes = new Map<string, number>();
-    await Promise.all(
-      groupIds.map(async (groupId) => {
-        const { count, error } = await supabase
-          .from("group_members")
-          .select("*", { count: "exact", head: true })
-          .eq("group_id", groupId);
-        if (error) {
-          alert(error.message);
-        }
-        currentGroupSizes.set(groupId, count ?? 0);
-      })
-    );
-
-    setGroups(
-      data.map((group) => ({
-        id: group.group_id,
-        projectId: group.groups?.projects?.project_id!,
-        projectName: group.groups?.projects?.name ?? "",
-        maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
-        currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
-        image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
-      }))
-    );
-  };
-
-  const getOrganisations = () => {
-    getAllJoinedOrganisations(userId).then((res) => {
-      if (!res.data) return;
-      setOrgs(res.data);
-    });
-  };
+  const { data: orgs } = useQuery({
+    queryKey: ["myOrgs"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getAllJoinedOrganisations(userId!);
+    },
+  });
 
   const refresh = async () => {
-    setLoading(true);
-    await Promise.all([getMyGroups(), getOrganisations()]);
-    setLoading(false);
+    queryClient.invalidateQueries({
+      queryKey: ["myGroups"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["myOrgs"],
+    });
   };
-
-  useEffect(() => {
-    getOrganisations();
-  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={refresh} />
+          <RefreshControl refreshing={false} onRefresh={refresh} />
         }
         contentContainerStyle={[
           styles.container,
@@ -109,14 +80,16 @@ const ViewProfile = () => {
         >
           <Image
             source={
-              image
-                ? { uri: image }
+              profile?.data
+                ? { uri: profile?.data?.imageUrl ?? "" }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}
           />
           <View>
-            <Text style={{ fontSize: 16, fontWeight: "500" }}>{fullName}</Text>
+            <Text style={{ fontSize: 16, fontWeight: "500" }}>
+              {profile?.data?.full_name}
+            </Text>
             <Text style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}>
               Pro User
             </Text>
@@ -161,87 +134,93 @@ const ViewProfile = () => {
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Groups
         </Text>
-        {myGroups.length <= 0 ?
-            <Text style={{color: Colors.gray, marginTop: 16}}>
-              You are not in any groups
-            </Text> :
-            myGroups.map((group, i) => (
-          <Link
-            asChild
-            href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}&projectId=${group.projectId}`}
-            key={i}
-          >
-            <TouchableOpacity
-              style={{
-                paddingTop: i == 0 ? 16 : 12,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderColor: Colors.lightGray,
-                paddingVertical: 8,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+        {myGroups && myGroups.length <= 0 ? (
+          <Text style={{ color: Colors.gray, marginTop: 16 }}>
+            You are not in any groups
+          </Text>
+        ) : (
+          myGroups &&
+          myGroups.map((group, i) => (
+            <Link
+              asChild
+              href={`/(modals)/group/${group.id}/view-members?maxGroupSize=${group.maxGroupSize}&projectId=${group.projectId}`}
+              key={i}
             >
-              <Image
-                source={group.image}
-                style={{ width: 64, height: 64, borderRadius: 32 }}
-              />
-              <View style={{ marginLeft: 16 }}>
-                <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                  {group.projectName}
-                </Text>
-                <Text
-                  style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
-                >
-                  {group.currentGroupSize}/{group.maxGroupSize} team members
-                </Text>
-              </View>
-              <FontAwesome
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-                style={{ marginLeft: "auto" }}
-              />
-            </TouchableOpacity>
-          </Link>
-        ))}
+              <TouchableOpacity
+                style={{
+                  paddingTop: i == 0 ? 16 : 12,
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderColor: Colors.lightGray,
+                  paddingVertical: 8,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={group.image}
+                  style={{ width: 64, height: 64, borderRadius: 32 }}
+                />
+                <View style={{ marginLeft: 16 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                    {group.projectName}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}
+                  >
+                    {group.currentGroupSize}/{group.maxGroupSize} team members
+                  </Text>
+                </View>
+                <FontAwesome
+                  name="chevron-right"
+                  size={16}
+                  color={Colors.dark}
+                  style={{ marginLeft: "auto" }}
+                />
+              </TouchableOpacity>
+            </Link>
+          ))
+        )}
         <Text style={{ marginTop: 32, fontSize: 24, fontWeight: "600" }}>
           My Organisations
         </Text>
-        { (orgs && orgs.length <= 0) ?
-            <Text style={{color: Colors.gray, marginTop: 16}}>
-              You are not in any organisations
-            </Text> :
-          orgs?.map((org, i) => (
-          <Link asChild href={`/(modals)/view-org/${org.org_id}`} key={i}>
-            <TouchableOpacity
-              style={{
-                paddingTop: i == 0 ? 16 : 12,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                borderColor: Colors.lightGray,
-                paddingVertical: 8,
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              key={i}
-            >
-              <Image
-                source={org.image}
-                style={{ width: 64, height: 64, borderRadius: 32 }}
-              />
-              <View style={{ marginLeft: 16 }}>
-                <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                  {org.name}
-                </Text>
-              </View>
-              <FontAwesome
-                name="chevron-right"
-                size={16}
-                color={Colors.dark}
-                style={{ marginLeft: "auto" }}
-              />
-            </TouchableOpacity>
-          </Link>
-        ))}
+        {orgs?.data && orgs.data.length <= 0 ? (
+          <Text style={{ color: Colors.gray, marginTop: 16 }}>
+            You are not in any organisations
+          </Text>
+        ) : (
+          orgs?.data &&
+          orgs.data.map((org, i) => (
+            <Link asChild href={`/(modals)/view-org/${org.org_id}`} key={i}>
+              <TouchableOpacity
+                style={{
+                  paddingTop: i == 0 ? 16 : 12,
+                  borderBottomWidth: StyleSheet.hairlineWidth,
+                  borderColor: Colors.lightGray,
+                  paddingVertical: 8,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+                key={i}
+              >
+                <Image
+                  source={org.image}
+                  style={{ width: 64, height: 64, borderRadius: 32 }}
+                />
+                <View style={{ marginLeft: 16 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                    {org.name}
+                  </Text>
+                </View>
+                <FontAwesome
+                  name="chevron-right"
+                  size={16}
+                  color={Colors.dark}
+                  style={{ marginLeft: "auto" }}
+                />
+              </TouchableOpacity>
+            </Link>
+          ))
+        )}
       </ScrollView>
     </View>
   );

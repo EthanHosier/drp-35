@@ -1,23 +1,24 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import {Link, useLocalSearchParams} from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
-import {RefreshControl, ScrollView} from "react-native-gesture-handler";
+import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { Group } from "@/utils/api/project-details";
-import {useUserIdStore} from "@/utils/store/user-id-store";
+import { useUserIdStore } from "@/utils/store/user-id-store";
 import {
   acceptRequestToJoinGroup,
   getGroupRequests,
-  rejectRequestToJoinGroup
+  rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
 
 const ViewInterested = () => {
-
   const userId = useUserIdStore((state) => state.userId);
   const [loading, setLoading] = useState(false);
   const { groupId, interested } = useLocalSearchParams();
-  const [groups, setGroups] = useState(JSON.parse(interested as string) as Group[]);
+  const [groups, setGroups] = useState(
+    JSON.parse(interested as string) as Group[]
+  );
 
   const refreshGroups = async () => {
     if (!groupId || !userId) return;
@@ -28,13 +29,13 @@ const ViewInterested = () => {
       }
       setGroups(res.data);
     });
-  }
+  };
 
   const refresh = async () => {
     setLoading(true);
     await Promise.all([refreshGroups()]);
     setLoading(false);
-  }
+  };
 
   return (
     <View style={[styles.container]}>
@@ -61,11 +62,14 @@ const ViewInterested = () => {
               </Text>
               <View style={{ flexDirection: "row", gap: 8 }}>
                 <TouchableOpacity
-                    style={styles.button}
-                    onPress={async () => {
-                      await acceptRequestToJoinGroup(group.group_id, groupId as string)
-                      await refresh()
-                    }}
+                  style={styles.button}
+                  onPress={async () => {
+                    await acceptRequestToJoinGroup(
+                      group.group_id,
+                      groupId as string
+                    );
+                    await refresh();
+                  }}
                 >
                   <Text
                     style={[styles.buttonText, { color: Colors.background }]}
@@ -74,11 +78,14 @@ const ViewInterested = () => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.button, styles.rejectButton]}
-                    onPress={async () => {
-                      await rejectRequestToJoinGroup(group.group_id, groupId as string)
-                      await refresh()
-                    }}
+                  style={[styles.button, styles.rejectButton]}
+                  onPress={async () => {
+                    await rejectRequestToJoinGroup(
+                      group.group_id,
+                      groupId as string
+                    );
+                    await refresh();
+                  }}
                 >
                   <Text style={[styles.buttonText, {}]}>Decline</Text>
                 </TouchableOpacity>
@@ -91,14 +98,18 @@ const ViewInterested = () => {
               contentContainerStyle={{ paddingLeft: 16, gap: 16 }}
             >
               {group.members.map((member, id) => (
-                  <Link href={`/(modals)/view-profile/${member.id}`} asChild key={id}>
-                    <TouchableOpacity key={id} style={{ marginRight: 12 }}>
-                      <Image source={member.imageUrl} style={styles.image} />
-                      <Text style={[styles.text, { marginTop: 8 }]}>
-                        {member.full_name.split(" ")[0]}
-                      </Text>
-                    </TouchableOpacity>
-                  </Link>
+                <Link
+                  href={`/(modals)/view-profile/${member.id}`}
+                  asChild
+                  key={id}
+                >
+                  <TouchableOpacity key={id} style={{ marginRight: 12 }}>
+                    <Image source={member.imageUrl} style={styles.image} />
+                    <Text style={[styles.text, { marginTop: 8 }]}>
+                      {member.full_name.split(" ")[0]}
+                    </Text>
+                  </TouchableOpacity>
+                </Link>
               ))}
             </ScrollView>
             {index < groups.length - 1 && (

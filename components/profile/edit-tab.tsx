@@ -2,39 +2,31 @@ import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
-import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TEXT_FIELDS } from "@/components/profile/profile-card";
-import { useDetails, useProfileStore } from "@/utils/store/profile-store";
+
 import * as ImagePicker from "expo-image-picker";
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase";
+import React, { useState } from "react";
+import { getUserId } from "@/utils/supabase";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useUserIdStore } from "@/utils/store/user-id-store";
-import { useSkillsStore } from "@/utils/store/skills-store";
-import { useLanguagesStore } from "@/utils/store/languages-store";
+
+import { useQuery } from "@tanstack/react-query";
+import { getProfileByUserId } from "@/utils/api/profiles";
 
 const EditTab = () => {
-  const [progress, setProgress] = useState<number>(0);
-  const details = useDetails();
-  const {
-    imageUri,
-    setImageFromPicker,
-    setFullName,
-    setPronouns,
-    setUniversity,
-    setCourse,
-    setLinkedin,
-    setGithub,
-    setWebsite,
-    setDetails,
-  } = useProfileStore();
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getProfileByUserId(userId!);
+    },
+    staleTime: Infinity,
+  });
 
-  const userId = useUserIdStore((state) => state.userId);
-  const skills = useSkillsStore((state) => state.skills);
-  const setSkills = useSkillsStore((state) => state.setSkills);
-  const languages = useLanguagesStore((state) => state.languages);
-  const setLanguages = useLanguagesStore((state) => state.setLanguages);
+  const [progress, setProgress] = useState<number>(0);
+
+  const setImageFromPicker = (e: any) => {};
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -45,48 +37,6 @@ const EditTab = () => {
     if (canceled) return;
     setImageFromPicker(assets[0]);
   };
-
-  useEffect(() => {
-    const getDetails = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select()
-        .eq("user_id", userId)
-        .single();
-      if (error) return;
-      setFullName(data.full_name);
-      setPronouns(data.pronouns);
-      setUniversity(data.university);
-      setCourse(data.course);
-      setLinkedin(data.linkedin);
-      setGithub(data.github);
-      setWebsite(data.website);
-      setProgress(
-        (Object.values(data).filter((d) => d).length - 1) / TEXT_FIELDS.length
-      );
-    };
-    getDetails();
-
-    const getSkills = async () => {
-      const { data, error } = await supabase
-        .from("user_skills")
-        .select("skill_name")
-        .eq("user_id", userId);
-      if (error) return;
-      setSkills(data.map((skill) => skill.skill_name));
-    };
-    getSkills();
-
-    const getLanguages = async () => {
-      const { data, error } = await supabase
-        .from("user_languages")
-        .select("language_name")
-        .eq("user_id", userId);
-      if (error) return;
-      setLanguages(data.map((language) => language.language_name));
-    };
-    getLanguages();
-  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -134,8 +84,8 @@ const EditTab = () => {
         <TouchableOpacity onPress={pickImage}>
           <Image
             source={
-              imageUri
-                ? { uri: imageUri }
+              profile?.data
+                ? { uri: profile?.data.imageUrl }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}
@@ -160,16 +110,24 @@ const EditTab = () => {
                   padding: 8,
                   borderRadius: 12,
                 }}
-                value={details[i]}
+                value={
+                  profile?.data
+                    ? field === "Full Name"
+                      ? profile?.data?.full_name
+                      : (profile?.data?.[
+                          field.toLowerCase() as keyof typeof profile.data
+                        ] as string)
+                    : ""
+                }
                 placeholderTextColor={Colors.gray}
                 placeholder={field}
                 onChangeText={(text) => {
-                  const newDetails = [...details];
-                  newDetails[i] = text;
-                  setDetails(newDetails);
-                  setProgress(
-                    newDetails.filter((d) => d).length / TEXT_FIELDS.length
-                  );
+                  // const newDetails = [...details];
+                  // newDetails[i] = text;
+                  // setDetails(newDetails);
+                  // setProgress(
+                  //   newDetails.filter((d) => d).length / TEXT_FIELDS.length
+                  // );
                 }}
               />
             </View>
@@ -193,7 +151,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {skills.join(", ")}
+                {profile?.data?.skills.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
@@ -217,7 +175,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {languages.join(", ")}
+                {profile?.data?.languages.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
