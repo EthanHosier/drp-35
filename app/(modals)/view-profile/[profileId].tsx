@@ -19,6 +19,7 @@ const EMPTY_PROFILE = {
   skills: [],
   languages: [],
   id: "",
+  bio: "",
 };
 
 const ProfileId = () => {

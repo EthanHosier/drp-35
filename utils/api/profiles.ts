@@ -14,6 +14,7 @@ export type Profile = {
   skills: string[];
   languages: string[];
   id: string;
+  bio: string;
 };
 
 export const getProfileByUserId: (

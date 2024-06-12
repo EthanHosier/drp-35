@@ -21,6 +21,7 @@ const TEXT_FIELDS = [
   "LinkedIn",
   "GitHub",
   "Website",
+  "Bio",
 ];
 
 const EditTab = () => {
@@ -36,6 +37,7 @@ const EditTab = () => {
     setLinkedin,
     setGithub,
     setWebsite,
+    setBio,
     setDetails,
   } = useProfileStore();
 
@@ -70,6 +72,7 @@ const EditTab = () => {
       setLinkedin(data.linkedin);
       setGithub(data.github);
       setWebsite(data.website);
+      setBio(data.bio);
       setProgress(
         (Object.values(data).filter((d) => d).length - 1) / TEXT_FIELDS.length
       );
