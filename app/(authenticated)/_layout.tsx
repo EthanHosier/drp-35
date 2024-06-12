@@ -64,6 +64,7 @@ const Layout = () => {
     if (!!(groups?.length < 0)) return;
 
     groups.forEach((group) => {
+      console.log(group.id);
       getGroupchat(group.id).then((res) => {
         if (res.error) {
           alert(res.error.message);
@@ -72,7 +73,7 @@ const Layout = () => {
         addGroupChat(res.data);
       });
       supabase
-        .channel("custom-all-channel")
+        .channel("custom-insert-channel")
         .on(
           "postgres_changes",
           {
@@ -82,6 +83,7 @@ const Layout = () => {
             filter: `group_id=eq.${group.id}`,
           },
           (payload) => {
+            console.log(payload);
             const { id, group_id, content, created_at, sender_id } =
               payload.new;
             addMessage(group_id, {

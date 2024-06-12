@@ -21,13 +21,13 @@ export const useGroupchatStore = create<GroupChatStore>((set) => ({
   addMessage: (groupId: string, message: Message) => {
     set((state) => {
       const groupChat = state.groupChats.find(
-        (groupChat) => groupChat.id === groupId
+        (groupChat) => groupChat.group_id === groupId
       );
       if (!groupChat) return state;
 
       return {
         groupChats: state.groupChats.map((groupChat) => {
-          if (groupChat.id === groupId) {
+          if (groupChat.group_id === groupId) {
             return {
               ...groupChat,
               messages: [...groupChat.messages, message],
@@ -39,3 +39,11 @@ export const useGroupchatStore = create<GroupChatStore>((set) => ({
     });
   },
 }));
+
+export const useGetGroupChat: (groupId: string) => GroupChat = (
+  groupId: string
+) => {
+  return useGroupchatStore
+    .getState()
+    .groupChats.find((groupChat) => groupChat.group_id === groupId)!;
+};

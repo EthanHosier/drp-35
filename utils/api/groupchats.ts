@@ -1,3 +1,4 @@
+import { useGroupchatStore } from "../store/groupchat-store";
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
 import { getProjectPicUrl } from "./project-pics";
@@ -20,13 +21,18 @@ export type GroupChat = {
 
 export const sendMessage: (
   groupId: string,
-  content: string
-) => Promise<DRPResponse<null>> = async (groupId, content) => {
-  const { error } = await supabase
+  content: string,
+  addMessage: (groupId: string, message: Message) => void
+) => Promise<DRPResponse<null>> = async (groupId, content, addMessage) => {
+  const { data, error } = await supabase
     .from("messages")
-    .insert({ group_id: groupId, content });
+    .insert({ group_id: groupId, content })
+    .select()
+    .single();
 
   if (error) return { data: null, error };
+
+  addMessage(groupId, data);
   return { data: null, error: null };
 };
 
