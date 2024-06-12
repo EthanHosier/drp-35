@@ -17,70 +17,19 @@ const Layout = () => {
   const imageBase64 = useProfileStore((state) => state.imageBase64);
   const imageMimeType = useProfileStore((state) => state.imageMimeType);
   const setImageUri = useProfileStore((state) => state.setImageUri);
-  const { fullName, pronouns, university, course, linkedin, github, website, bio } =
-    useProfileStore();
+  const {
+    fullName,
+    pronouns,
+    university,
+    course,
+    linkedin,
+    github,
+    website,
+    bio,
+  } = useProfileStore();
 
   const skills = useSkillsStore((state) => state.skills);
   const languages = useLanguagesStore((state) => state.languages);
-
-  const setGroups = useMyGroupsStore((state) => state.setGroups);
-
-  useEffect(() => {
-    const getImage = async () => {
-      const { data, error } = await supabase.storage
-        .from("profilepics")
-        .download(userId);
-      if (error) return;
-
-      const fr = new FileReader();
-      fr.readAsDataURL(data!);
-      fr.onload = () => {
-        setImageUri(fr.result as string);
-      };
-    };
-    getImage();
-
-    const getMyGroups = async () => {
-      const { data, error } = await supabase
-        .from("group_members")
-        .select(
-          "group_id, groups(description, projects(name, max_group_size, project_id))"
-        )
-        .eq("user_id", userId);
-      if (error) {
-        alert(error.message);
-        return;
-      }
-
-      const groupIds = data.map((group) => group.group_id);
-
-      const currentGroupSizes = new Map<string, number>();
-      await Promise.all(
-        groupIds.map(async (groupId) => {
-          const { count, error } = await supabase
-            .from("group_members")
-            .select("*", { count: "exact", head: true })
-            .eq("group_id", groupId);
-          if (error) {
-            alert(error.message);
-          }
-          currentGroupSizes.set(groupId, count ?? 0);
-        })
-      );
-
-      setGroups(
-        data.map((group) => ({
-          id: group.group_id,
-          projectName: group.groups?.projects?.name ?? "",
-          projectId: group.groups?.projects?.project_id!,
-          maxGroupSize: group.groups?.projects?.max_group_size ?? 0,
-          currentGroupSize: currentGroupSizes.get(group.group_id) ?? 0,
-          image: getProjectPicUrl(group.groups?.projects?.project_id!).data!,
-        }))
-      );
-    };
-    getMyGroups();
-  }, []);
 
   const saveProfile = async () => {
     const { error } = await supabase.from("profiles").upsert({
