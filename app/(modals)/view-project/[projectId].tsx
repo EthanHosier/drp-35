@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
@@ -49,40 +49,42 @@ const InfoTab = () => {
         { flex: 1, backgroundColor: Colors.background },
       ]}
     >
-      <Image
-        source={{ uri: projectData ? projectData?.data?.image_uri : "" }}
-        style={styles.img}
-      />
-      <Text
-        style={{
-          fontWeight: "bold",
-          fontSize: 24,
-          color: Colors.dark,
-          marginTop: 16,
-        }}
-      >
-        {projectData?.data?.name}
-      </Text>
-      <View style={[styles.attributeContainer, { marginTop: 24 }]}>
-        <View style={styles.attributeIconContainer}>
-          <Ionicons name="people-outline" size={24} color="black" />
-        </View>
-        <Text style={styles.attributeText}>
-          {projectData?.data?.min_group_size} -{" "}
-          {projectData?.data?.max_group_size} members
+      <ScrollView>
+        <Image
+          source={{ uri: projectData ? projectData?.data?.image_uri : "" }}
+          style={styles.img}
+        />
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 24,
+            color: Colors.dark,
+            marginTop: 16,
+          }}
+        >
+          {projectData?.data?.name}
         </Text>
-      </View>
-      <View style={[styles.attributeContainer, { marginTop: 24 }]}>
-        <View style={styles.attributeIconContainer}>
-          <FontAwesome6 name="clock" size={24} color="black" />
+        <View style={[styles.attributeContainer, { marginTop: 24 }]}>
+          <View style={styles.attributeIconContainer}>
+            <Ionicons name="people-outline" size={24} color="black" />
+          </View>
+          <Text style={styles.attributeText}>
+            {projectData?.data?.min_group_size} -{" "}
+            {projectData?.data?.max_group_size} members
+          </Text>
         </View>
-        <Text style={styles.attributeText}>
-          {formatHumanReadableDate(projectData?.data?.start_date_time ?? "")}
+        <View style={[styles.attributeContainer, { marginTop: 24 }]}>
+          <View style={styles.attributeIconContainer}>
+            <FontAwesome6 name="clock" size={24} color="black" />
+          </View>
+          <Text style={styles.attributeText}>
+            {formatHumanReadableDate(projectData?.data?.start_date_time ?? "")}
+          </Text>
+        </View>
+        <Text style={{ marginTop: 24 }}>
+          {projectData?.data?.description || "No description provided."}
         </Text>
-      </View>
-      <Text style={{ marginTop: 24 }}>
-        {projectData?.data?.description || "No description provided."}
-      </Text>
+      </ScrollView>
     </View>
   );
 };
