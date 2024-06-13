@@ -10,11 +10,11 @@ import {
 import { Swiper, type SwiperCardRefType } from "rn-swiper-list";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { sleep } from "@/utils/utils";
+import { sleep, toOneDecimalPlace } from "@/utils/utils";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { Group } from "@/utils/api/project-details";
-import {StarRatingDisplay} from "react-native-star-rating-widget";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
 
 interface TinderSwipeProps {
   onSwipeRight: (groupId: string) => void;
@@ -37,7 +37,6 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   pressed,
   setPressed,
 }) => {
-
   const { width } = Dimensions.get("window");
 
   const OverlayLabelLeft = useCallback(() => {
@@ -80,14 +79,17 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
 
   const renderCard = (group: Group, index: number) => {
     const topOfPile = index === groupIndex;
-    const member = group.members[Math.min(memberIndex, group.members.length - 1)];
+    const member =
+      group.members[Math.min(memberIndex, group.members.length - 1)];
     const handleTap = (xIndex: number, screenWidth: number) => {
       const quarterWidth = screenWidth / 4;
-      if(!topOfPile) return;
+      if (!topOfPile) return;
       if (xIndex >= 0 && xIndex < quarterWidth) {
         setMemberIndex((i) => Math.max(0, i - 1));
       } else if (xIndex >= quarterWidth * 3 && xIndex < screenWidth) {
-        setMemberIndex((i) => Math.min(i + 1, groups[groupIndex].members.length - 1));
+        setMemberIndex((i) =>
+          Math.min(i + 1, groups[groupIndex].members.length - 1)
+        );
       }
     };
     if (!member) return <></>;
@@ -188,30 +190,43 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
               borderBottomRightRadius: 16,
             }}
           >
-            <View style={{
-              flexDirection: "row",
-              gap: 8,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 8,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <Text style={{ fontWeight: "600", fontSize: 20 }}>
                 {member.full_name}
               </Text>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <View
-                    style={{
-                      backgroundColor: Colors.lightGray,
-                      height: 32,
-                      paddingHorizontal: 12,
-                      borderRadius: 16,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                >
-                  <Text style={{ fontWeight: "500" }}>
-                    {member.languages.map((l) => l.split(" ")[0]).join("")}
+              <View
+                style={{
+                  marginLeft: "auto",
+                  height: 28,
+                  borderRadius: 16,
+                  backgroundColor: Colors.lightGray,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingHorizontal: 12,
+                  gap: 4,
+                }}
+              >
+                {member && (
+                  <Text style={{ fontSize: 14, fontWeight: "600" }}>
+                    {toOneDecimalPlace(
+                      Number.isNaN(member.rating) ? 5 : member.rating
+                    )}
                   </Text>
-                </View>
+                )}
+                <Ionicons
+                  name="star"
+                  size={16}
+                  color={Colors.gold}
+                  style={{ marginBottom: 2 }}
+                />
               </View>
             </View>
           </View>
