@@ -6,6 +6,7 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import React from "react-native";
+import {getAverageRating} from "@/utils/api/reviews";
 
 const EMPTY_PROFILE = {
   imageUrl: "",
@@ -25,6 +26,7 @@ const EMPTY_PROFILE = {
 const ProfileId = () => {
   const profileId = useLocalSearchParams().profileId as string;
   const [profile, setProfile] = useState<ProfileType>(EMPTY_PROFILE);
+  const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,10 +40,14 @@ const ProfileId = () => {
       setProfile(res.data);
       setLoading(false);
     });
+    getAverageRating(profileId).then((res) => {
+      if (res.error) return console.error(res.error);
+      setRating(res.data);
+    });
   }, [profileId]);
 
   return (
-    !loading && <Profile {...profile} fullName={profile?.full_name ?? ""} />
+    !loading && <Profile {...profile} fullName={profile?.full_name ?? ""} rating={rating} />
   );
 };
 

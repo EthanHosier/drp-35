@@ -4,6 +4,7 @@ import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ExternalLink from "./external-link";
+import {StarRatingDisplay} from "react-native-star-rating-widget";
 
 interface ProfileProps {
   imageUrl: string;
@@ -17,6 +18,7 @@ interface ProfileProps {
   linkedin: string;
   website: string;
   bio: string;
+  rating: number;
 }
 
 const Profile: React.FC<ProfileProps> = ({
@@ -31,6 +33,7 @@ const Profile: React.FC<ProfileProps> = ({
   linkedin,
   website,
   bio,
+  rating,
 }) => {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -66,6 +69,23 @@ const Profile: React.FC<ProfileProps> = ({
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
               {pronouns}
             </Text>
+          </View>
+          <View style={{flexDirection: "row", marginTop: 8}}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "600",
+                color: Colors.dark,
+                marginRight: 8
+              }}
+            >
+              Rating
+            </Text>
+            <StarRatingDisplay
+                rating={rating}
+                color={Colors.primary}
+                emptyColor={Colors.primaryMuted}
+            />
           </View>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
             <View style={styles2.attributeIconContainer}>

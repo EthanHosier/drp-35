@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Image} from "expo-image";
 import {router, useLocalSearchParams} from "expo-router";
 import {getProfilePicUrl} from "@/utils/api/profile-pics";
@@ -24,13 +24,11 @@ const ReviewMember = () => {
   const { data: image } = getProfilePicUrl(revieweeId as string);
   const [fullName, setFullName] = useState<string | null>(null);
 
-  const weightedAverage = (ratings: { [key: string]: number }) => {
-    const total =
-        ratings.communication +
-        ratings.participation +
-        ratings.timeManagement +
-        2 * ratings.contribution;
-    return total / 5;
+  const weightedAverage = (ratings: number[]) => {
+    return ratings[0] * 0.2 +
+        ratings[1] * 0.2 +
+        ratings[2] * 0.2 +
+        ratings[3] * 0.4;
   }
 
   const getReviewerId = async () => {
@@ -41,12 +39,7 @@ const ReviewMember = () => {
     getReviewerId();
   }, []);
 
-  const [ratings, setRatings] = useState({
-    communication: 0,
-    participation: 0,
-    timeManagement: 0,
-    contribution: 0,
-  });
+  const [ratings, setRatings] = useState([0 ,0 ,0 ,0]);
 
   useEffect(() => {
     getProfileByUserId(revieweeId as string).then((response) => {
@@ -71,12 +64,11 @@ const ReviewMember = () => {
                   {field}
                 </Text>
                 <StarRating
-                    rating={ratings[field.toLowerCase() as keyof typeof ratings]}
+                    rating={ratings[i]}
                     onChange={(rating) => {
-                      setRatings({
-                        ...ratings,
-                        [field.toLowerCase()]: rating,
-                      });
+                      const newRatings = [...ratings];
+                      newRatings[i] = rating;
+                      setRatings(newRatings);
                     }}
                     color={Colors.primary}
                     emptyColor={Colors.primaryMuted}

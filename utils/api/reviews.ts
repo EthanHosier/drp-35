@@ -10,7 +10,6 @@ export const addReview: (
   const { error } = await supabase
     .from("reviews")
     .upsert({ reviewer_id, reviewee_id, project_id, rating });
-  console.log(error);
   if (error) return { data: null, error };
   return { data: null, error: null };
 };
