@@ -65,27 +65,51 @@ const Layout = () => {
       />
 
       <Stack.Screen
-          name="view-project"
-          options={{
-            presentation: "fullScreenModal",
-            title: "View Project",
-            headerRight: () => (
-                <TouchableOpacity onPress={router.back}>
-                  <Text
-                      style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-                  >
-                    Done
-                  </Text>
-                </TouchableOpacity>
-            ),
-          }}
+        name="view-project"
+        options={{
+          presentation: "fullScreenModal",
+          title: "View Project",
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
       />
-      <Stack.Screen name="filter" options={{headerShown: false}}/>
-      <Stack.Screen name="review" options={{
-        presentation: "fullScreenModal",
-        title: "Review Member",
-        headerTitleAlign: "center",
-      }}/>
+      <Stack.Screen name="filter" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="review"
+        options={{
+          presentation: "fullScreenModal",
+          title: "Review Member",
+          headerLeft: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Ionicons
+                name="chevron-back-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <Ionicons
+                name="ellipsis-horizontal-sharp"
+                size={24}
+                color={Colors.primary}
+                style={{
+                  alignSelf: "center",
+                }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
     </Stack>
   );
 };
