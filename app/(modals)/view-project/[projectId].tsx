@@ -34,6 +34,7 @@ import {
 import { getUserId, supabase } from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
+import { RefreshControl } from "react-native-gesture-handler";
 
 const InfoTab = () => {
   const id = useLocalSearchParams().projectId;
@@ -112,6 +113,8 @@ const getGroupId = async (projectId: string) => {
     .eq("user_id", userId!)
     .eq("groups.project_id", projectId)
     .single();
+  console.log({ projectId });
+  console.log({ data });
   if (!error && data.groups) return data.groups.group_id;
   return null;
 };
@@ -189,6 +192,18 @@ const GroupsTab = () => {
       const userId = await getUserId();
       await requestToJoinGroup(targetGroupId, myGroupId, projectId, userId!);
     }
+  };
+
+  const refresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["thisProjectGroups", projectId],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["myGroupId", projectId],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["membersNeeded", projectId],
+    });
   };
 
   return projectGroupsStatus != "pending" && myGroupIdStatus != "pending" ? (
@@ -285,35 +300,50 @@ const GroupsTab = () => {
         </>
       ) : (
         <>
-          <View
-            style={{
-              flex: 1,
-              padding: 24,
-              position: "relative",
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={false}
+                onRefresh={() => {
+                  refresh();
+                }}
+              />
+            }
+            style={{ height: "100%" }}
+            contentContainerStyle={{
+              height: "100%",
               justifyContent: "center",
             }}
           >
-            <LottieView
-              autoPlay
-              ref={animation}
+            <View
               style={{
-                marginTop: -200,
-                width: "100%",
-                height: 200,
-              }}
-              source={require("@/assets/images/tumbleweed.json")}
-            />
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 28,
-                fontWeight: "600",
-                color: Colors.dark,
+                padding: 24,
+                position: "relative",
+                justifyContent: "center",
               }}
             >
-              No groups found
-            </Text>
-          </View>
+              <LottieView
+                autoPlay
+                ref={animation}
+                style={{
+                  marginTop: -200,
+                  width: "100%",
+                  height: 200,
+                }}
+                source={require("@/assets/images/tumbleweed.json")}
+              />
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 28,
+                  fontWeight: "600",
+                  color: Colors.dark,
+                }}
+              >
+                No groups found
+              </Text>
+            </View>
+          </ScrollView>
           {!creatingGroup && (
             <TouchableOpacity
               disabled={creatingGroup}
@@ -323,20 +353,12 @@ const GroupsTab = () => {
                 await createGroup(projectId, userId!);
 
                 queryClient.invalidateQueries({
-                  queryKey: ["projectGroups", projectId],
-                });
-                queryClient.invalidateQueries({
-                  queryKey: ["thisProjectGroups", projectId],
-                });
-                queryClient.invalidateQueries({
-                  queryKey: ["myGroupId", projectId],
-                });
-                queryClient.invalidateQueries({
-                  queryKey: ["membersNeeded", projectId],
+                  queryKey: ["projectGroups"],
                 });
                 queryClient.invalidateQueries({
                   queryKey: ["myGroups"],
                 });
+                refresh();
                 setCreatingGroup(false);
               }}
               style={[
