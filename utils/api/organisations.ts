@@ -1,6 +1,8 @@
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
 import { getOrganisationPicUrl } from "./organisation-pics";
+import { getProfilePicUrl } from "./profile-pics";
+import { Profile } from "./profiles";
 import { Project } from "./project-details";
 import { getProjectPicUrl } from "./project-pics";
 
@@ -163,7 +165,10 @@ export const getAllAffiliatedOrganisations: (
 
     // Check for errors in either function
     if (organisationsByLeader.error || joinedOrganisations.error) {
-      return { data: null, error: organisationsByLeader.error || joinedOrganisations.error };
+      return {
+        data: null,
+        error: organisationsByLeader.error || joinedOrganisations.error,
+      };
     }
 
     // Combine the data from both functions
@@ -176,4 +181,31 @@ export const getAllAffiliatedOrganisations: (
   } catch (error) {
     return { data: null, error };
   }
+};
+
+export const getAllMembersInOrganisation: (
+  org_id: string
+) => Promise<DRPResponse<Profile[]>> = async (org_id) => {
+  const { data: rawData, error } = await supabase
+    .from("organisation_members")
+    .select(
+      "profiles(*, user_skills(skill_name), user_languages(language_name))"
+    )
+    .eq("org_id", org_id);
+  if (error) return { data: null, error };
+
+  const data: Profile[] = rawData.map((member) => {
+    const profile = member.profiles!;
+    return {
+      ...profile,
+      id: profile.user_id,
+      skills: profile.user_skills.map((skill) => skill.skill_name),
+      languages: profile.user_languages.map(
+        (language) => language.language_name
+      ),
+      imageUrl: getProfilePicUrl(profile.user_id).data!,
+      rating: 0,
+    };
+  });
+  return { data, error: null };
 };

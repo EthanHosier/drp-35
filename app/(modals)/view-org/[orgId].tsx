@@ -8,6 +8,7 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import {
   getAllJoinedOrganisations,
+  getAllMembersInOrganisation,
   getOrganisationById,
   getProjectsByOrganisation,
   joinOrganisation,
@@ -39,6 +40,11 @@ const ViewOrg = () => {
   const { data: projects } = useQuery({
     queryKey: ["projects", orgId],
     queryFn: () => getProjectsByOrganisation(orgId),
+  });
+
+  const { data: members } = useQuery({
+    queryKey: ["members", orgId],
+    queryFn: () => getAllMembersInOrganisation(orgId),
   });
 
   return (
@@ -127,6 +133,41 @@ const ViewOrg = () => {
                 />
               </TouchableOpacity>
             </Link>
+          ))}
+        </View>
+        <Text
+          style={{
+            marginTop: 32,
+            marginBottom: 4,
+            fontSize: 24,
+            fontWeight: "600",
+          }}
+        >
+          Organisation Members
+        </Text>
+        <View style={{ gap: 4 }}>
+          {members?.data?.map((member, i) => (
+            <TouchableOpacity
+              key={i}
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => {
+                router.navigate(`/(modals)/view-profile/${member.id}`);
+              }}
+            >
+              <Image
+                source={member.imageUrl}
+                style={{ width: 80, height: 80, borderRadius: 40 }}
+              />
+              <Text style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}>
+                {member.full_name}
+              </Text>
+              <FontAwesome
+                name="chevron-right"
+                size={16}
+                color={Colors.dark}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
