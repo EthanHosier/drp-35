@@ -25,6 +25,7 @@ import Skeleton from "@/components/LoadingSkeleton";
 import { getProfilePicUrl } from "@/utils/api/profile-pics";
 import { useUserIdStore } from "@/utils/store/user-id-store";
 import { useGroupchatStore } from "@/utils/store/groupchat-store";
+import { getUserId } from "@/utils/supabase";
 
 // DELETE THIS FUNCTION IF NOT NEEDED WHEN HOOK UP REAL BACKEND:
 function convertToHumanReadable(datetime: string) {
@@ -51,7 +52,7 @@ const BORDER_RADIUS = 20;
 
 const ChatId = () => {
   const chatId = useLocalSearchParams().chatId;
-  const userId = useUserIdStore((state) => state.userId);
+  const [userId, setUserId] = useState<string>();
 
   const flatListRef = useRef<FlatList<Message>>(null);
 
@@ -64,6 +65,7 @@ const ChatId = () => {
     const gc = groupChats.find((g) => g.group_id === chatId);
     if (!gc) setGroupChat(null);
     setGroupChat(gc!);
+    getUserId().then(setUserId);
   }, [groupChats]);
 
   if (!groupChat) return <Skeleton />;
@@ -139,7 +141,9 @@ const ChatId = () => {
                           : BORDER_RADIUS,
                     },
                 ,
-                index === groupChat.messages.length - 1 && { marginBottom: 92 },
+                index === groupChat.messages.length - 1 && {
+                  marginBottom: 172,
+                },
               ]}
             >
               <Text
