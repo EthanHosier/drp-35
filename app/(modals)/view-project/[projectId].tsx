@@ -111,11 +111,10 @@ const getGroupId = async (projectId: string) => {
       `
     )
     .eq("user_id", userId!)
-    .eq("groups.project_id", projectId)
-    .single();
-  console.log({ projectId });
-  console.log({ data });
-  if (!error && data.groups) return data.groups.group_id;
+    .eq("groups.project_id", projectId);
+
+  if (!error && data.length > 0 && data[0].groups && data[0].groups.group_id)
+    return data[0].groups.group_id;
   return null;
 };
 
