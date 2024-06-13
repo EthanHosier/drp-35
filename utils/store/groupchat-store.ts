@@ -15,7 +15,10 @@ export const useGroupchatStore = create<GroupChatStore>((set) => ({
   },
   addGroupChat: (groupChat: GroupChat) => {
     set((state) => ({
-      groupChats: [...state.groupChats, groupChat],
+      groupChats: [
+        ...state.groupChats.filter((g) => g.group_id != groupChat.group_id),
+        groupChat,
+      ],
     }));
   },
   addMessage: (groupId: string, message: Message) => {
