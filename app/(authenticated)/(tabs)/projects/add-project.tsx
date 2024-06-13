@@ -61,8 +61,8 @@ const AddProjectPage = () => {
     setImageFromPicker(assets[0]);
   };
 
-  const { data: myOrgs, isLoading } = useQuery({
-    queryKey: ["myOrgs"],
+  const { data: myOrgsAsLeader, isLoading } = useQuery({
+    queryKey: ["myOrgsAsLeader"],
     queryFn: async () => {
       const userId = await getUserId();
       return getOrganisationsByLeader(userId!);
@@ -102,7 +102,7 @@ const AddProjectPage = () => {
           onChange={(text: string) => setName(text)}
         />
         <OrganisationPicker
-          orgs={myOrgs!.data!}
+          orgs={myOrgsAsLeader!.data!}
           setOrganisation={setOrganisation}
         />
         <ProjectField
