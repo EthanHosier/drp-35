@@ -171,11 +171,31 @@ const DiscoverProjects = () => {
                 There are {allProjects?.length} new projects in your area.
               </Text>
             </View>
-            <View style={[defaultStyles.textInput, styles.textInputView]}>
+            <View
+              style={[
+                defaultStyles.textInput,
+                styles.textInputView,
+                {
+                  shadowColor: Colors.gray,
+                  shadowOffset: {
+                    width: 0,
+                    height: 9,
+                  },
+                  shadowOpacity: 0.6,
+                  shadowRadius: 12.35,
+
+                  elevation: 19,
+                },
+              ]}
+            >
               <Ionicons name="search" size={20} color={Colors.gray} />
 
               <TextInput
-                style={{ flex: 1, marginLeft: 8, fontSize: 16 }}
+                style={{
+                  flex: 1,
+                  marginLeft: 8,
+                  fontSize: 16,
+                }}
                 onChangeText={(text) => setSearch(text)}
                 placeholder="Search for a project"
                 cursorColor={Colors.primary}
