@@ -83,6 +83,7 @@ const Layout = () => {
   };
 
   const {
+    imageUri: organisationImageUri,
     imageBase64: organisationImageBase64,
     imageMimeType: organisationImageMimeType,
     name: organisationName,
@@ -130,17 +131,9 @@ const Layout = () => {
     const { data: urlData, error: getUrlError } = getOrganisationPicUrl(
       data.org_id
     );
+    console.log(urlData);
     if (getUrlError) {
       alert(getUrlError.message);
-      return;
-    }
-
-    const { error: updatePicError } = await supabase
-      .from("organisations")
-      .update({ image: urlData })
-      .eq("org_id", data.org_id);
-    if (updatePicError) {
-      alert(updatePicError.message);
       return;
     }
 

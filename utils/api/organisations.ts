@@ -1,5 +1,6 @@
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
+import { getOrganisationPicUrl } from "./organisation-pics";
 import { Project } from "./project-details";
 import { getProjectPicUrl } from "./project-pics";
 
@@ -21,7 +22,10 @@ export const getOrganisationById: (
     .single();
   if (error) return { data: null, error };
 
-  const data: Organisation = rawData!;
+  const data = {
+    ...rawData,
+    image: getOrganisationPicUrl(rawData.org_id).data!,
+  };
   return { data, error: null };
 };
 
@@ -35,7 +39,10 @@ export const getAllJoinedOrganisations: (
   if (error) return { data: null, error };
 
   const data: Organisation[] = rawData.map(
-    (organisation) => organisation.organisations!
+    (organisation) => ({
+      ...organisation.organisations!,
+      image: getOrganisationPicUrl(organisation.organisations!.org_id).data!,
+    })
   );
   return { data, error: null };
 };
@@ -53,7 +60,11 @@ export const getAllOrganisationsExceptJoined: (
       !organisation.organisation_members.some(
         (member) => member.user_id === userId
       )
-  );
+  ).map((organisation) => ({
+    ...organisation,
+    image: getOrganisationPicUrl(organisation.org_id).data!,
+  }));
+
   return { data, error: null };
 };
 

@@ -10,17 +10,17 @@ export const getOrganisationPicUrl: (organisationId: string) => DRPResponse<stri
 };
 
 export const uploadOrganisationPic: (
-  projectId: string,
+  organisationId: string,
   imageBase64: string,
   imageMimeType: string
 ) => Promise<DRPResponse<null>> = async (
-  projectId,
+  organisationId,
   imageBase64,
   imageMimeType
 ) => {
   const { error } = await supabase.storage
     .from("organisationpics")
-    .upload(projectId, decode(imageBase64), {
+    .upload(organisationId, decode(imageBase64), {
       contentType: imageMimeType,
     });
   if (error) return { data: null, error };
