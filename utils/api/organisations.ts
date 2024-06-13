@@ -58,7 +58,7 @@ export const getAllOrganisationsExceptJoined: (
       (organisation) =>
         !organisation.organisation_members.some(
           (member) => member.user_id === userId
-        )
+        ) && organisation.leader !== userId
     )
     .map((organisation) => ({
       ...organisation,
@@ -149,4 +149,31 @@ export const getOrganisationsByLeader: (
     image: getOrganisationPicUrl(organisation.org_id).data!,
   }));
   return { data, error: null };
+};
+
+export const getAllAffiliatedOrganisations: (
+  userId: string
+) => Promise<DRPResponse<Organisation[]>> = async (userId) => {
+  try {
+    // Execute both functions concurrently
+    const [organisationsByLeader, joinedOrganisations] = await Promise.all([
+      getOrganisationsByLeader(userId),
+      getAllJoinedOrganisations(userId),
+    ]);
+
+    // Check for errors in either function
+    if (organisationsByLeader.error || joinedOrganisations.error) {
+      return { data: null, error: organisationsByLeader.error || joinedOrganisations.error };
+    }
+
+    // Combine the data from both functions
+    const combinedData = [
+      ...organisationsByLeader.data!,
+      ...joinedOrganisations.data!,
+    ];
+
+    return { data: combinedData, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 };

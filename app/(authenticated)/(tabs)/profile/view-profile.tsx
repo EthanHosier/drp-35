@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { getUserId, supabase } from "@/utils/supabase";
-import { getAllJoinedOrganisations } from "@/utils/api/organisations";
+import { getAllAffiliatedOrganisations } from "@/utils/api/organisations";
 import { useQuery } from "@tanstack/react-query";
 import { getMyGroups } from "@/utils/api/groups";
 import { queryClient } from "@/app/_layout";
@@ -36,7 +36,7 @@ const ViewProfile = () => {
     queryKey: ["myOrgs"],
     queryFn: async () => {
       const userId = await getUserId();
-      return getAllJoinedOrganisations(userId!);
+      return getAllAffiliatedOrganisations(userId!);
     },
   });
 
