@@ -70,12 +70,13 @@ const Profile: React.FC<ProfileProps> = ({
               {pronouns}
             </Text>
             <StarRatingDisplay
-              rating={5}
+              rating={rating}
               color={Colors.gold}
-              emptyColor={Colors.primaryMuted}
+              emptyColor={Colors.gray}
               starSize={24}
               style={{ marginLeft: "auto" }}
               starStyle={{ marginLeft: 2, marginRight: 2 }}
+              enableHalfStar
             />
           </View>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
