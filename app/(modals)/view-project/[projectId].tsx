@@ -101,20 +101,22 @@ const InfoTab = () => {
 const getGroupId = async (projectId: string) => {
   const userId = await getUserId();
   const { data, error } = await supabase
-    .from("group_members")
+    .from("groups")
     .select(
       `
-      groups(
-        group_id,
-        project_id
+      group_id,
+      project_id,
+      group_members(
+        user_id
       )
       `
     )
-    .eq("user_id", userId!)
-    .eq("groups.project_id", projectId);
+    .eq("project_id", projectId)
+    .eq("group_members.user_id", userId!);
 
-  if (!error && data.length > 0 && data[0].groups && data[0].groups.group_id)
-    return data[0].groups.group_id;
+  console.log({ data: data });
+
+  if (!error && data && data.length > 0) return data[0].group_id;
   return null;
 };
 
