@@ -38,12 +38,10 @@ export const getAllJoinedOrganisations: (
     .eq("user_id", userId);
   if (error) return { data: null, error };
 
-  const data: Organisation[] = rawData.map(
-    (organisation) => ({
-      ...organisation.organisations!,
-      image: getOrganisationPicUrl(organisation.organisations!.org_id).data!,
-    })
-  );
+  const data: Organisation[] = rawData.map((organisation) => ({
+    ...organisation.organisations!,
+    image: getOrganisationPicUrl(organisation.organisations!.org_id).data!,
+  }));
   return { data, error: null };
 };
 
@@ -55,15 +53,17 @@ export const getAllOrganisationsExceptJoined: (
     .select("*, organisation_members(user_id)");
   if (error) return { data: null, error };
 
-  const data: Organisation[] = rawData.filter(
-    (organisation) =>
-      !organisation.organisation_members.some(
-        (member) => member.user_id === userId
-      )
-  ).map((organisation) => ({
-    ...organisation,
-    image: getOrganisationPicUrl(organisation.org_id).data!,
-  }));
+  const data: Organisation[] = rawData
+    .filter(
+      (organisation) =>
+        !organisation.organisation_members.some(
+          (member) => member.user_id === userId
+        )
+    )
+    .map((organisation) => ({
+      ...organisation,
+      image: getOrganisationPicUrl(organisation.org_id).data!,
+    }));
 
   return { data, error: null };
 };
@@ -134,4 +134,19 @@ export const leaveOrganisation: (
     .delete()
     .eq("org_id", orgId)
     .eq("user_id", userId);
+};
+
+export const getOrganisationsByLeader: (
+  leader: string
+) => Promise<DRPResponse<Organisation[]>> = async (leader) => {
+  const { data: rawData, error } = await supabase
+    .from("organisations")
+    .select()
+    .eq("leader", leader);
+  if (error) return { data: null, error };
+  const data: Organisation[] = rawData.map((organisation) => ({
+    ...organisation,
+    image: getOrganisationPicUrl(organisation.org_id).data!,
+  }));
+  return { data, error: null };
 };

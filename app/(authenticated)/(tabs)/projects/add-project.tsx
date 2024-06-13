@@ -6,13 +6,21 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useProjectFieldsStore } from "@/utils/store/add-project-store";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as ImagePicker from "expo-image-picker";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Organisation,
+  getOrganisationsByLeader,
+} from "@/utils/api/organisations";
+import { getUserId } from "@/utils/supabase";
+import SelectDropdown from "react-native-select-dropdown";
+import Skeleton from "@/components/LoadingSkeleton";
 
 const PROJECT_FIELDS = [
   "Name",
@@ -29,6 +37,8 @@ const AddProjectPage = () => {
     setImageFromPicker,
     name,
     setName,
+    organisation,
+    setOrganisation,
     description,
     setDescription,
     minGroupSize,
@@ -50,6 +60,17 @@ const AddProjectPage = () => {
     if (canceled) return;
     setImageFromPicker(assets[0]);
   };
+
+  const { data: myOrgs, isLoading } = useQuery({
+    queryKey: ["myOrgs"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getOrganisationsByLeader(userId!);
+    },
+    staleTime: Infinity,
+  });
+
+  if (isLoading) return <Skeleton />;
 
   return (
     <KeyboardAwareScrollView style={styles.container}>
@@ -79,6 +100,10 @@ const AddProjectPage = () => {
           label={PROJECT_FIELDS[0]}
           value={name}
           onChange={(text: string) => setName(text)}
+        />
+        <OrganisationPicker
+          orgs={myOrgs!.data!}
+          setOrganisation={setOrganisation}
         />
         <ProjectField
           label={PROJECT_FIELDS[1]}
@@ -122,12 +147,12 @@ const AddProjectPage = () => {
         <Text style={styles.fieldLabel}>End Date & Time</Text>
         <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
           <RNDateTimePicker
-              onChange={(_, date) => {
-                setEndDateTime(date!);
-              }}
-              value={endDateTime}
-              mode="datetime"
-              style={{ marginLeft: -10 }}
+            onChange={(_, date) => {
+              setEndDateTime(date!);
+            }}
+            value={endDateTime}
+            mode="datetime"
+            style={{ marginLeft: -10 }}
           />
         </View>
       </View>
@@ -155,19 +180,67 @@ const ProjectField = ({
     <>
       <Text style={styles.fieldLabel}>{label}</Text>
       <TextInput
-        style={[{
-          marginTop: 8,
-          width: "100%",
-          height: 40,
-          borderWidth: 1,
-          borderColor: Colors.lightGray,
-          padding: 8,
-          borderRadius: 12,
-        }, style]}
+        style={[
+          {
+            marginTop: 8,
+            width: "100%",
+            height: 40,
+            borderWidth: 1,
+            borderColor: Colors.lightGray,
+            padding: 8,
+            borderRadius: 12,
+          },
+          style,
+        ]}
         placeholder={placeholder}
         onChangeText={onChange}
         value={value}
         keyboardType={keyboardType}
+      />
+    </>
+  );
+};
+
+const OrganisationPicker = ({
+  orgs,
+  setOrganisation,
+}: {
+  orgs: Organisation[];
+  setOrganisation: (organisation: string) => void;
+}) => {
+  return (
+    <>
+      <Text style={styles.fieldLabel}>Organisation</Text>
+      <SelectDropdown
+        data={orgs}
+        onSelect={(selectedItem: Organisation, index) => {
+          console.log(selectedItem.name);
+          setOrganisation(selectedItem.org_id);
+        }}
+        renderButton={(selectedItem, isOpened) => (
+          <View style={dropdownStyles.dropdownButtonStyle}>
+            <Text style={styles.fieldInput}>
+              {(selectedItem && selectedItem.name) || "Select organisation"}
+            </Text>
+            <Ionicons
+              name={isOpened ? "chevron-up" : "chevron-down"}
+              style={dropdownStyles.dropdownButtonArrowStyle}
+              color={Colors.gray}
+            />
+          </View>
+        )}
+        renderItem={(item, index, isSelected) => (
+          <View
+            style={{
+              ...dropdownStyles.dropdownItemStyle,
+              ...(isSelected && { backgroundColor: "#D2D9DF" }),
+            }}
+          >
+            <Text style={dropdownStyles.dropdownItemTxtStyle}>{item.name}</Text>
+          </View>
+        )}
+        showsVerticalScrollIndicator={false}
+        dropdownStyle={dropdownStyles.dropdownMenuStyle}
       />
     </>
   );
@@ -231,6 +304,54 @@ const styles = StyleSheet.create({
     color: "black",
     textAlignVertical: "top",
     textAlign: "justify",
+  },
+});
+
+const dropdownStyles = StyleSheet.create({
+  dropdownButtonStyle: {
+    width: 200,
+    height: 50,
+    backgroundColor: Colors.lightGray,
+    borderRadius: 12,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 12,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 28,
+  },
+  dropdownButtonIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: "#E9ECEF",
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: "100%",
+    flexDirection: "row",
+    paddingHorizontal: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#151E26",
+  },
+  dropdownItemIconStyle: {
+    fontSize: 28,
+    marginRight: 8,
   },
 });
 

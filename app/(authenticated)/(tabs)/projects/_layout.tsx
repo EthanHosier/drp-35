@@ -28,6 +28,7 @@ const Layout = () => {
     maxGroupSize,
     startDateTime,
     endDateTime,
+    organisation,
   } = useProjectFieldsStore();
 
   const checkProjectFields: () => string = () => {
@@ -59,6 +60,7 @@ const Layout = () => {
         max_group_size: max,
         start_date_time: startDateTime.toISOString(),
         end_date_time: endDateTime.toISOString(),
+        org_id: organisation || null,
       })
       .select("project_id")
       .single();

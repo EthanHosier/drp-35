@@ -8,6 +8,8 @@ type ProjectFieldsStore = {
   setImageFromPicker: (imagePickerAsset: ImagePickerAsset) => void;
   name: string;
   setName: (name: string) => void;
+  organisation: string;
+  setOrganisation: (organisation: string) => void;
   description: string;
   setDescription: (description: string) => void;
   minGroupSize: string;
@@ -34,6 +36,10 @@ export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
   name: "",
   setName: (name: string) => {
     set({ name });
+  },
+  organisation: "",
+  setOrganisation: (organisation: string) => {
+    set({ organisation });
   },
   description: "",
   setDescription: (description: string) => {
