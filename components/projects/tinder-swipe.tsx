@@ -14,6 +14,7 @@ import { sleep } from "@/utils/utils";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { Group } from "@/utils/api/project-details";
+import {StarRatingDisplay} from "react-native-star-rating-widget";
 
 interface TinderSwipeProps {
   onSwipeRight: (groupId: string) => void;
@@ -36,7 +37,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
   pressed,
   setPressed,
 }) => {
-  
+
   const { width } = Dimensions.get("window");
 
   const OverlayLabelLeft = useCallback(() => {
@@ -90,7 +91,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
       }
     };
     if (!member) return <></>;
-    
+
     return (
       <View style={[styles.renderCardContainer, { height: "100%" }]}>
         <>
@@ -183,32 +184,34 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
               bottom: 0,
               padding: 16,
               paddingLeft: 24,
-              flexDirection: "row",
-              gap: 8,
-              alignItems: "center",
-              justifyContent: "space-between",
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
             }}
           >
-            <Text style={{ fontWeight: "600", fontSize: 20 }}>
-              {member.full_name}
-            </Text>
-
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <View
-                style={{
-                  backgroundColor: Colors.lightGray,
-                  height: 32,
-                  paddingHorizontal: 12,
-                  borderRadius: 16,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ fontWeight: "500" }}>
-                  {member.languages.map((l) => l.split(" ")[0]).join("")}
-                </Text>
+            <View style={{
+              flexDirection: "row",
+              gap: 8,
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}>
+              <Text style={{ fontWeight: "600", fontSize: 20 }}>
+                {member.full_name}
+              </Text>
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <View
+                    style={{
+                      backgroundColor: Colors.lightGray,
+                      height: 32,
+                      paddingHorizontal: 12,
+                      borderRadius: 16,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                >
+                  <Text style={{ fontWeight: "500" }}>
+                    {member.languages.map((l) => l.split(" ")[0]).join("")}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

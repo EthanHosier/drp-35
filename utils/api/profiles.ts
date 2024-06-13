@@ -1,6 +1,7 @@
 import { supabase } from "../supabase";
 import { DRPResponse } from "./error-types";
 import { getProfilePicUrl } from "./profile-pics";
+import {getAverageRating} from "@/utils/api/reviews";
 
 export type Profile = {
   imageUrl: string;
@@ -15,6 +16,7 @@ export type Profile = {
   languages: string[];
   id: string;
   bio: string;
+  rating: number;
 };
 
 export const getProfileByUserId: (
@@ -27,6 +29,7 @@ export const getProfileByUserId: (
     .single();
   if (error) return { data: null, error };
   const imageUrl = getProfilePicUrl(userId).data!;
+  const rating = (await getAverageRating(userId)).data!;
   return {
     data: {
       fullName: data.full_name,
@@ -35,6 +38,7 @@ export const getProfileByUserId: (
       imageUrl,
       skills: data.user_skills.map((skill) => skill.skill_name),
       languages: data.user_languages.map((language) => language.language_name),
+      rating,
     },
     error: null,
   };
