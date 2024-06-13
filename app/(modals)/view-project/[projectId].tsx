@@ -4,6 +4,7 @@ import {
   Text,
   View,
   useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
@@ -22,16 +23,17 @@ import {
 } from "@/utils/api/project-details";
 import { useFilterStore } from "@/utils/store/filter-store";
 import LottieView from "lottie-react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import {
   acceptRequestToJoinGroup,
+  createGroup,
   getGroupById,
   isMatch,
   requestToJoinGroup,
 } from "@/utils/api/groups";
 import { getUserId, supabase } from "@/utils/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/app/_layout";
 
 const InfoTab = () => {
   const id = useLocalSearchParams().projectId;
@@ -95,8 +97,43 @@ const InfoTab = () => {
   );
 };
 
+const getGroupId = async (projectId: string) => {
+  const userId = await getUserId();
+  const { data, error } = await supabase
+    .from("group_members")
+    .select(
+      `
+      groups(
+        group_id,
+        project_id
+      )
+      `
+    )
+    .eq("user_id", userId!)
+    .eq("groups.project_id", projectId)
+    .single();
+  if (!error && data.groups) return data.groups.group_id;
+  return null;
+};
+
+const getMembersNeeded = async (groupId: string, projectId: string) => {
+  const { data: project, error: maxError } = await supabase
+    .from("projects")
+    .select("max_group_size")
+    .eq("project_id", projectId)
+    .single();
+  if (maxError) return console.error(maxError);
+
+  await getGroupById(groupId as string).then((res) => {
+    if (res.data) return project.max_group_size - res.data.members.length;
+  });
+
+  return -1;
+};
+
 const GroupsTab = () => {
-  const [projectGroups, setProjectGroups] = useState<Group[] | null>(null);
+  const id = useLocalSearchParams().projectId;
+
   const [memberIndex, setMemberIndex] = useState<number>(0);
   const [groupIndex, setGroupIndex] = useState<number>(0);
   const animation = useRef(null);
@@ -104,62 +141,27 @@ const GroupsTab = () => {
   const [pressed, setPressed] = useState<boolean>(false);
 
   const projectId = useLocalSearchParams().projectId as string;
-  const [groupId, setGroupId] = useState<string | null>(null);
-  const [membersNeeded, setMembersNeeded] = useState<number>(100);
 
-  const getGroupId = async () => {
-    const userId = await getUserId();
-    const { data, error } = await supabase
-      .from("group_members")
-      .select(
-        `
-        groups(
-          group_id,
-          project_id
-        )
-        `
-      )
-      .eq("user_id", userId!)
-      .eq("groups.project_id", projectId)
-      .single();
-    if (!error && data.groups) setGroupId(data.groups!.group_id);
-  };
+  const [creatingGroup, setCreatingGroup] = useState<boolean>(false);
 
-  const getMembersNeeded = async () => {
-    const { data: project, error: maxError } = await supabase
-      .from("projects")
-      .select("max_group_size")
-      .eq("project_id", projectId)
-      .single();
-    if (maxError) return console.error(maxError);
+  const { data: projectGroups } = useQuery({
+    queryKey: ["thisProjectGroups", projectId],
+    queryFn: () => getProjectGroups(projectId),
+    staleTime: Infinity,
+  });
 
-    await getGroupById(groupId as string).then((res) => {
-      if (res.data)
-        setMembersNeeded(project.max_group_size - res.data.members.length);
-    });
-  };
+  const { data: myGroupId } = useQuery({
+    queryKey: ["myGroupId", projectId],
+    queryFn: () => getGroupId(projectId),
+    staleTime: Infinity,
+  });
 
-  const getGroupData = async () => {
-    await getMembersNeeded();
-    await getProjectGroups(projectId).then((res) => {
-      if (!res.data) return;
-      console.log(membersNeeded);
-      setProjectGroups(
-        res.data.filter(
-          (group) =>
-            group.group_id !== groupId && group.members.length <= membersNeeded
-        )
-      );
-    });
-  };
-
-  useEffect(() => {
-    getGroupId();
-  }, []);
-
-  useEffect(() => {
-    getGroupData();
-  }, [groupId]);
+  const { data: membersNeeded } = useQuery({
+    queryKey: ["membersNeeded", projectId],
+    queryFn: () => getMembersNeeded(myGroupId!, projectId),
+    staleTime: Infinity,
+    enabled: !!myGroupId,
+  });
 
   const router = useRouter();
 
@@ -169,13 +171,13 @@ const GroupsTab = () => {
   const skills = useFilterStore((state) => state.skills);
 
   const handleSwipeRight = async (targetGroupId: string) => {
-    if (groupId) {
-      const { data, error } = await isMatch(groupId as string, targetGroupId);
+    if (myGroupId) {
+      const { data, error } = await isMatch(myGroupId as string, targetGroupId);
       if (error) return console.log(error);
       if (data) {
         const { error } = await acceptRequestToJoinGroup(
           targetGroupId,
-          groupId
+          myGroupId
         );
         if (error) return console.log(error);
         router.push({
@@ -184,17 +186,14 @@ const GroupsTab = () => {
         });
         return;
       }
-    }
-    const userId = await getUserId();
-    await requestToJoinGroup(targetGroupId, groupId, projectId, userId!);
-    if (!groupId) {
-      await getGroupId();
+      const userId = await getUserId();
+      await requestToJoinGroup(targetGroupId, myGroupId, projectId, userId!);
     }
   };
 
   return (
     <View style={{ flex: 1, position: "relative" }}>
-      {projectGroups && projectGroups.length > 0 ? (
+      {projectGroups && projectGroups.data && projectGroups.data.length > 0 ? (
         <>
           <View
             style={{
@@ -251,8 +250,8 @@ const GroupsTab = () => {
             pressed={pressed}
             setPressed={setPressed}
             groups={
-              projectGroups
-                ? projectGroups.filter((group) => {
+              projectGroups && projectGroups.data
+                ? projectGroups.data.filter((group) => {
                     return (
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
@@ -278,8 +277,8 @@ const GroupsTab = () => {
           />
           <InfoSheet
             profile={
-              projectGroups
-                ? projectGroups[groupIndex].members[memberIndex]
+              projectGroups && projectGroups.data
+                ? projectGroups.data[groupIndex].members[memberIndex]
                 : null
             }
           />
@@ -315,23 +314,47 @@ const GroupsTab = () => {
               No groups found
             </Text>
           </View>
-          <TouchableOpacity
-            style={[
-              defaultStyles.pillButton,
-              {
-                backgroundColor: Colors.primary,
-                width: "90%",
-                alignSelf: "center",
-                position: "absolute",
-
-                bottom: 24,
-              },
-            ]}
-          >
-            <Text style={{ fontSize: 16, color: Colors.background }}>
-              Create group
-            </Text>
-          </TouchableOpacity>
+          {!creatingGroup && (
+            <TouchableOpacity
+              disabled={creatingGroup}
+              onPress={async () => {
+                setCreatingGroup(true);
+                const userId = await getUserId();
+                await createGroup(projectId, userId!);
+                queryClient.invalidateQueries({
+                  queryKey: ["project", projectId],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["projectGroups", projectId],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["thisProjectGroups", projectId],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["myGroupId", projectId],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["membersNeeded", projectId],
+                });
+                setCreatingGroup(false);
+              }}
+              style={[
+                defaultStyles.pillButton,
+                {
+                  backgroundColor: Colors.primary,
+                  width: "90%",
+                  alignSelf: "center",
+                  position: "absolute",
+                  bottom: 24,
+                  zIndex: 100000,
+                },
+              ]}
+            >
+              <Text style={{ fontSize: 16, color: Colors.background }}>
+                Create group
+              </Text>
+            </TouchableOpacity>
+          )}
         </>
       )}
     </View>
