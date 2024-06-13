@@ -44,6 +44,8 @@ export default function MessagesList() {
     Alert.alert("Removed");
   }
 
+  console.log({ groupChats });
+
   return (
     <>
       <Stack.Screen options={{ title: "Messages" }} />
@@ -111,9 +113,23 @@ export default function MessagesList() {
               </Text>
             </View>
           }
-          data={groupChats.filter((chat) =>
-            chat.name.toLowerCase().includes(search.toLowerCase())
-          )}
+          data={groupChats
+            .filter((chat) =>
+              chat.name.toLowerCase().includes(search.toLowerCase())
+            )
+            .sort(
+              (a, b) =>
+                -(a.messages.length > 0
+                  ? new Date(
+                      a.messages[a.messages.length - 1].created_at
+                    ).getTime()
+                  : -1) +
+                (b.messages.length > 0
+                  ? new Date(
+                      b.messages[b.messages.length - 1].created_at
+                    ).getTime()
+                  : -1)
+            )}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => (
             <ListItem id={index} item={item} onRemove={onRemove} />
