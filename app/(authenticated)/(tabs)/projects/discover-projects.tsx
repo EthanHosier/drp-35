@@ -142,7 +142,7 @@ const DiscoverProjects = () => {
                     paddingRight: 4,
                     gap: 4,
                   }}
-                  intensity={80}
+                  intensity={50}
                 >
                   <Text
                     style={{
