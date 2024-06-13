@@ -121,9 +121,7 @@ const Profile: React.FC<ProfileProps> = ({
             </View>
             <Text style={styles2.attributeText}>I study {course}</Text>
           </View>
-          <Text style={{ marginTop: 24 }}>
-            {bio || "This user has not written a bio yet."}
-          </Text>
+          {bio && <Text style={{ marginTop: 24 }}>{bio}</Text>}
           <Text style={{ fontSize: 20, fontWeight: "600", marginTop: 24 }}>
             I'm skilled at
           </Text>
