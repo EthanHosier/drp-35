@@ -20,9 +20,18 @@ const TEXT_FIELDS = [
 const ReviewMember = () => {
 
   const [reviewerId, setReviewerId] = useState<string | null>(null);
-  const revieweeId = useLocalSearchParams().profileId as string;
-  const { data: image } = getProfilePicUrl(revieweeId);
+  const { profileId: revieweeId, projectId } = useLocalSearchParams();
+  const { data: image } = getProfilePicUrl(revieweeId as string);
   const [fullName, setFullName] = useState<string | null>(null);
+
+  const weightedAverage = (ratings: { [key: string]: number }) => {
+    const total =
+        ratings.communication +
+        ratings.participation +
+        ratings.timeManagement +
+        2 * ratings.contribution;
+    return total / 5;
+  }
 
   const getReviewerId = async () => {
     await getUserId().then((id) => setReviewerId(id ? id as string : null));
@@ -40,7 +49,7 @@ const ReviewMember = () => {
   });
 
   useEffect(() => {
-    getProfileByUserId(revieweeId).then((response) => {
+    getProfileByUserId(revieweeId as string).then((response) => {
       if (!response.error) setFullName(response.data.full_name)
     })}, []);
 
@@ -81,10 +90,7 @@ const ReviewMember = () => {
             style={styles.button}
             onPress={() => {
               if (!reviewerId) return;
-              addReview(reviewerId, revieweeId, ratings.communication);
-              addReview(reviewerId, revieweeId, ratings.participation);
-              addReview(reviewerId, revieweeId, ratings.timeManagement);
-              addReview(reviewerId, revieweeId, ratings.contribution);
+              addReview(reviewerId, revieweeId as string, projectId as string, weightedAverage(ratings));
               router.back();
             }}
         >

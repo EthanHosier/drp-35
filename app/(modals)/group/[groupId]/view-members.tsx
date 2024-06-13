@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
@@ -14,21 +14,17 @@ import { defaultStyles } from "@/constants/DefaultStyles";
 import {
   getGroupById,
   getGroupRequests,
-  rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
-import { useUserIdStore } from "@/utils/store/user-id-store";
-import { Group } from "@/utils/api/project-details";
 import Skeleton from "@/components/LoadingSkeleton";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
-import { getUserId } from "@/utils/supabase";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
 
-  const { data: group, status } = useQuery({
+  const { data: group } = useQuery({
     queryKey: ["myGroup", groupId],
     queryFn: () => getGroupById(groupId as string),
     staleTime: Infinity,
@@ -170,7 +166,7 @@ const ViewMembers = () => {
                 <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
                   onLongPress={() => {
-                    router.navigate(`/(modals)/review/${member.id}`);
+                    router.navigate(`/(modals)/review/${member.id}?projectId=${projectId}`);
                   }}
                 >
                   <Image

@@ -282,21 +282,31 @@ export type Database = {
       }
       reviews: {
         Row: {
+          project_id: string | null
           rating: number
           reviewee_id: string
           reviewer_id: string
         }
         Insert: {
+          project_id?: string | null
           rating: number
           reviewee_id: string
           reviewer_id: string
         }
         Update: {
+          project_id?: string | null
           rating?: number
           reviewee_id?: string
           reviewer_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "reviews_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["project_id"]
+          },
           {
             foreignKeyName: "reviews_reviewee_id_fkey"
             columns: ["reviewee_id"]

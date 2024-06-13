@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
-import { Group } from "@/utils/api/project-details";
-import { useUserIdStore } from "@/utils/store/user-id-store";
 import {
   acceptRequestToJoinGroup,
   getGroupRequests,

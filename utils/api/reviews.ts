@@ -4,11 +4,13 @@ import { DRPResponse } from "./error-types";
 export const addReview: (
   reviewer_id: string,
   reviewee_id: string,
+  projectId: string,
   rating: number
-) => Promise<DRPResponse<null>> = async (reviewer_id, reviewee_id, rating) => {
+) => Promise<DRPResponse<null>> = async (reviewer_id, reviewee_id, project_id, rating) => {
   const { error } = await supabase
     .from("reviews")
-    .insert({ reviewer_id, reviewee_id, rating });
+    .upsert({ reviewer_id, reviewee_id, project_id, rating });
+  console.log(error);
   if (error) return { data: null, error };
   return { data: null, error: null };
 };
