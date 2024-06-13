@@ -150,7 +150,7 @@ const GroupsTab = () => {
     staleTime: Infinity,
   });
 
-  const { data: myGroupId } = useQuery({
+  const { data: myGroupId, status: myGroupIdStatus } = useQuery({
     queryKey: ["myGroupId", projectId],
     queryFn: () => getGroupId(projectId),
     staleTime: Infinity,
@@ -191,7 +191,7 @@ const GroupsTab = () => {
     }
   };
 
-  return projectGroupsStatus != "pending" ? (
+  return projectGroupsStatus != "pending" && myGroupIdStatus != "pending" ? (
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.data && projectGroups.data.length > 0 ? (
         <>
