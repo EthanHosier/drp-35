@@ -19,6 +19,8 @@ import Skeleton from "@/components/LoadingSkeleton";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
+import {getProjectDetails} from "@/utils/api/project-details";
+import {formatHumanReadableDate} from "@/utils/utils";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
@@ -36,6 +38,14 @@ const ViewMembers = () => {
       return getGroupRequests(groupId as string);
     },
   });
+
+  const { data: projectData } = useQuery({
+    queryKey: ["project", projectId],
+    queryFn: () => getProjectDetails(projectId as string),
+    staleTime: Infinity,
+  });
+
+  const isOver = projectData?.data && Date.parse(projectData.data.end_date_time) < Date.now();
 
   // const rejectOversizedGroups = async () => {
   //   if (group && group.data?.members?.length) {
@@ -148,6 +158,12 @@ const ViewMembers = () => {
             </Text>{" "}
             members
           </Text>
+          {
+            isOver &&
+              <Text style={{ alignSelf: "center", textAlign: "center", fontSize: 16, color: Colors.gray }}>
+                The project is now over. Click on a member to review them.
+              </Text>
+          }
           <View
             style={{
               marginTop: 32,
@@ -158,15 +174,15 @@ const ViewMembers = () => {
             }}
           >
             {group?.data?.members?.map((member, i) => (
-              <Link
-                href={`/(modals)/view-profile/${member.id}`}
-                asChild
-                key={i}
-              >
                 <TouchableOpacity
+                  key={i}
                   style={{ flexDirection: "row", alignItems: "center" }}
-                  onLongPress={() => {
-                    router.navigate(`/(modals)/review/${member.id}?projectId=${projectId}`);
+                  onPress={() => {
+                    if (isOver) {
+                      router.navigate(`/(modals)/review/${member.id}?projectId=${projectId}`);
+                    } else {
+                      router.navigate(`/(modals)/view-profile/${member.id}`);
+                    }
                   }}
                 >
                   <Image
@@ -185,7 +201,6 @@ const ViewMembers = () => {
                     style={{ marginLeft: "auto" }}
                   />
                 </TouchableOpacity>
-              </Link>
             ))}
           </View>
           {interested?.data && interested.data.length > 0 && (

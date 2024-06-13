@@ -245,6 +245,7 @@ export type Database = {
       projects: {
         Row: {
           description: string
+          end_date_time: string
           max_group_size: number
           min_group_size: number
           name: string
@@ -254,6 +255,7 @@ export type Database = {
         }
         Insert: {
           description?: string
+          end_date_time?: string
           max_group_size?: number
           min_group_size?: number
           name: string
@@ -263,6 +265,7 @@ export type Database = {
         }
         Update: {
           description?: string
+          end_date_time?: string
           max_group_size?: number
           min_group_size?: number
           name?: string
