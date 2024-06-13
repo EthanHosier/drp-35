@@ -5,6 +5,7 @@ import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ExternalLink from "./external-link";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { toOneDecimalPlace } from "@/utils/utils";
 
 interface ProfileProps {
   imageUrl: string;
@@ -44,17 +45,28 @@ const Profile: React.FC<ProfileProps> = ({
           paddingBottom: 48,
         }}
       >
-        <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
+        <View style={{ paddingHorizontal: 24 }}>
           <Image
             source={
               imageUrl
                 ? { uri: imageUrl }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
-            style={styles2.img}
+            style={[styles2.img]}
           />
-          <View
-            style={{
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "flex-end",
+          }}
+        >
+          <ScrollView
+            horizontal
+            style={{ marginRight: 16 }}
+            contentContainerStyle={{
+              marginLeft: 24,
               flexDirection: "row",
               marginTop: 16,
               gap: 8,
@@ -69,16 +81,34 @@ const Profile: React.FC<ProfileProps> = ({
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
               {pronouns}
             </Text>
-            <StarRatingDisplay
-              rating={rating}
+          </ScrollView>
+          <View
+            style={{
+              marginLeft: "auto",
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: Colors.lightGray,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 16,
+              gap: 4,
+              marginRight: 24,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "600" }}>
+              {toOneDecimalPlace(Number.isNaN(rating) ? 5 : rating)}
+            </Text>
+            <Ionicons
+              name="star"
+              size={18}
               color={Colors.gold}
-              emptyColor={Colors.gray}
-              starSize={24}
-              style={{ marginLeft: "auto" }}
-              starStyle={{ marginLeft: 2, marginRight: 2 }}
-              enableHalfStar
+              style={{ marginBottom: 2 }}
             />
           </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 24 }}>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="school-outline" size={24} color="black" />
@@ -91,9 +121,7 @@ const Profile: React.FC<ProfileProps> = ({
             </View>
             <Text style={styles2.attributeText}>I study {course}</Text>
           </View>
-          <Text style={{ marginTop: 24 }}>
-            {bio || "This user has not written a bio yet."}
-          </Text>
+          {bio && <Text style={{ marginTop: 24 }}>{bio}</Text>}
           <Text style={{ fontSize: 20, fontWeight: "600", marginTop: 24 }}>
             I'm skilled at
           </Text>

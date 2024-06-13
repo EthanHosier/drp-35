@@ -20,7 +20,6 @@ import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
 import {getProjectDetails} from "@/utils/api/project-details";
-import {formatHumanReadableDate} from "@/utils/utils";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
@@ -32,7 +31,7 @@ const ViewMembers = () => {
     staleTime: Infinity,
   });
 
-  const { data: interested } = useQuery({
+  const { data: rawInterested } = useQuery({
     queryKey: ["interested", groupId],
     queryFn: async () => {
       return getGroupRequests(groupId as string);
@@ -44,6 +43,11 @@ const ViewMembers = () => {
     queryFn: () => getProjectDetails(projectId as string),
     staleTime: Infinity,
   });
+
+  const interested = rawInterested?.data?.filter(
+    (other) => (group?.data) &&
+        (other.members.length + group?.data?.members.length <= parseInt(maxGroupSize as string))
+  );
 
   const isOver = projectData?.data && Date.parse(projectData.data.end_date_time) < Date.now();
 
@@ -203,18 +207,16 @@ const ViewMembers = () => {
                 </TouchableOpacity>
             ))}
           </View>
-          {interested?.data && interested.data.length > 0 && (
+          {interested && interested.length > 0 && (
             <Link
-              href={`./view-interested?interested=${JSON.stringify(
-                interested
-              )}`}
+              href={`./view-interested?maxGroupSize=${maxGroupSize}`}
               asChild
               style={{ marginTop: 16 }}
             >
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
-                {interested.data.slice(0, 2).map((e, index) => (
+                {interested.slice(0, 2).map((e, index) => (
                   <Image
                     key={index}
                     source={e.members[0].imageUrl}
@@ -225,7 +227,7 @@ const ViewMembers = () => {
                         borderRadius: 40,
                       },
                       index === 0 && {
-                        marginRight: interested.data.length > 1 ? -64 : 0,
+                        marginRight: interested.length > 1 ? -64 : 0,
                         zIndex: 100,
                         borderColor: Colors.background,
                         borderWidth: 2,
@@ -247,7 +249,7 @@ const ViewMembers = () => {
                   }}
                 >
                   <Text style={{ color: Colors.background }}>
-                    {interested.data.length}
+                    {interested.length}
                   </Text>
                 </View>
                 <Text

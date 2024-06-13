@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import {
-  acceptRequestToJoinGroup,
+  acceptRequestToJoinGroup, getGroupById,
   getGroupRequests,
   rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
@@ -13,14 +13,23 @@ import { queryClient } from "@/app/_layout";
 import { useQuery } from "@tanstack/react-query";
 
 const ViewInterested = () => {
-  const { groupId } = useLocalSearchParams();
+  const { groupId, maxGroupSize } = useLocalSearchParams();
+  const {data: group} = useQuery({
+    queryKey: ["myGroup", groupId],
+    queryFn: () => getGroupById(groupId as string),
+  });
 
-  const { data: interested, status } = useQuery({
+  const { data: rawInterested, status } = useQuery({
     queryKey: ["interested", groupId],
     queryFn: async () => {
       return getGroupRequests(groupId as string);
     },
   });
+
+  const interested = rawInterested?.data?.filter(
+      (other) =>
+          (group?.data) && other.members.length + group.data.members.length <= parseInt(maxGroupSize as string)
+  )
 
   const refresh = async () => {
     queryClient.invalidateQueries({ queryKey: ["interested", groupId] });
@@ -39,8 +48,8 @@ const ViewInterested = () => {
         style={{ paddingTop: 24 }}
         contentContainerStyle={{ gap: 16 }}
       >
-        {interested?.data &&
-          interested.data.map((group, index) => (
+        {interested &&
+          interested.map((group, index) => (
             <View style={{}} key={index}>
               <View
                 style={{
@@ -107,7 +116,7 @@ const ViewInterested = () => {
                   </Link>
                 ))}
               </ScrollView>
-              {index < interested.data.length - 1 && (
+              {index < interested.length - 1 && (
                 <View style={{ width: "100%", paddingHorizontal: 24 }}>
                   <View
                     style={{

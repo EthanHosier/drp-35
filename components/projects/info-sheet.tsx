@@ -8,7 +8,8 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Profile } from "@/utils/api/profiles";
 import { openBrowserAsync } from "expo-web-browser";
 import ExternalLink from "../profile/external-link";
-import {StarRatingDisplay} from "react-native-star-rating-widget";
+import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { toOneDecimalPlace } from "@/utils/utils";
 
 interface InfoSheetProps {
   profile: Profile | null;
@@ -32,22 +33,41 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ profile }) => {
       snapPoints={snapPoints}
     >
       <BottomSheetView style={styles.contentContainer}>
-
-        <View style={{flexDirection: "row", alignItems: "center", marginLeft: 24, width: "100%"}}>
-          <Text style={{fontSize: 16, fontWeight: "600"}}>
-            Rating
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              marginLeft: 24,
+              marginTop: 12,
+            }}
+          >
+            I'm skilled at
           </Text>
-          <StarRatingDisplay
-              rating={profile?.rating ?? 0}
-              style={{marginTop: 4, marginLeft: 20}}
-              color={Colors.primary}
-              emptyColor={Colors.primaryMuted}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 8,
+              marginLeft: "auto",
+              marginRight: 24,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: Colors.lightGray,
+                height: 32,
+                paddingHorizontal: 12,
+                borderRadius: 16,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontWeight: "500" }}>
+                {profile?.languages.map((l) => l.split(" ")[0]).join("")}
+              </Text>
+            </View>
+          </View>
         </View>
-
-        <Text style={{ fontSize: 16, fontWeight: "600", marginLeft: 24, marginTop: 12 }}>
-          I'm skilled at
-        </Text>
 
         <View>
           <ScrollView
