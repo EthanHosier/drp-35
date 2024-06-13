@@ -16,6 +16,8 @@ type ProjectFieldsStore = {
   setMaxGroupSize: (maxGroupSize: string) => void;
   startDateTime: Date;
   setStartDateTime: (startDateTime: Date) => void;
+  endDateTime: Date;
+  setEndDateTime: (endDateTime: Date) => void;
 };
 
 export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
@@ -48,5 +50,9 @@ export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
   startDateTime: new Date(),
   setStartDateTime: (startDateTime: Date) => {
     set({ startDateTime });
+  },
+  endDateTime: new Date(),
+  setEndDateTime: (endDateTime: Date) => {
+    set({ endDateTime });
   },
 }));
