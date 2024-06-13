@@ -321,9 +321,7 @@ const GroupsTab = () => {
                 setCreatingGroup(true);
                 const userId = await getUserId();
                 await createGroup(projectId, userId!);
-                queryClient.invalidateQueries({
-                  queryKey: ["project", projectId],
-                });
+
                 queryClient.invalidateQueries({
                   queryKey: ["projectGroups", projectId],
                 });
@@ -335,6 +333,9 @@ const GroupsTab = () => {
                 });
                 queryClient.invalidateQueries({
                   queryKey: ["membersNeeded", projectId],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["myGroups"],
                 });
                 setCreatingGroup(false);
               }}
