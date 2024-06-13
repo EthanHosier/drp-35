@@ -144,7 +144,7 @@ const GroupsTab = () => {
 
   const [creatingGroup, setCreatingGroup] = useState<boolean>(false);
 
-  const { data: projectGroups } = useQuery({
+  const { data: projectGroups, status: projectGroupsStatus } = useQuery({
     queryKey: ["thisProjectGroups", projectId],
     queryFn: () => getProjectGroups(projectId),
     staleTime: Infinity,
@@ -191,7 +191,7 @@ const GroupsTab = () => {
     }
   };
 
-  return (
+  return projectGroupsStatus != "pending" ? (
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.data && projectGroups.data.length > 0 ? (
         <>
@@ -359,6 +359,8 @@ const GroupsTab = () => {
         </>
       )}
     </View>
+  ) : (
+    <Text>Loading...</Text>
   );
 };
 
