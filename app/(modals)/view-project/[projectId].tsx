@@ -269,6 +269,8 @@ const GroupsTab = () => {
               projectGroups && projectGroups.data
                 ? projectGroups.data.filter((group) => {
                     return (
+                      (!myGroupId || group.group_id !== myGroupId) &&
+                      (!membersNeeded || group.members.length < membersNeeded) &&
                       (numMembers <= 0 ||
                         group.members.length === numMembers) &&
                       (languages.length <= 0 ||
