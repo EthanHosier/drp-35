@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.background,
-    fontSize: 20,
-    fontWeight: "500",
+    fontSize: 16,
   },
 });
