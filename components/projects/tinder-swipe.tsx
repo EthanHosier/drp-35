@@ -45,14 +45,14 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
         style={[
           styles.overlayLabelContainer,
           {
-            backgroundColor: Colors.primary,
+            backgroundColor: Colors.darkGray,
             opacity: 0.7,
             alignItems: "center",
             justifyContent: "center",
           },
         ]}
       >
-        <Ionicons name="sad-outline" size={80} color={Colors.background} />
+        <Ionicons name="close-sharp" size={80} color={Colors.background} />
       </View>
     );
   }, []);
