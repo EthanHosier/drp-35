@@ -10,4 +10,5 @@ export default {
   gray: "#B0B5C2",
   darkGray: "#787C8A",
   lightGray: "#EBECF6",
+  gold: "#FAD200",
 };
