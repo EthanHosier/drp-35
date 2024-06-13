@@ -14,13 +14,19 @@ interface ProjectPreviewProps {
 
 const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
   return (
-    <View style={{ marginLeft: 24 }}>
-      <Link
-        asChild
-        href={`/(modals)/view-project/${project.projectId}`}
-      >
+    <View
+      style={{
+        marginLeft: 24,
+      }}
+    >
+      <Link asChild href={`/(modals)/view-project/${project.projectId}`}>
         <TouchableOpacity>
-          <View style={{ width: 320, aspectRatio: 5 / 3 }}>
+          <View
+            style={{
+              width: 320,
+              aspectRatio: 5 / 3,
+            }}
+          >
             <ImageBackground
               source={{ uri: project.image }}
               style={{ borderRadius: 24, aspectRatio: 5 / 3, width: "100%" }}
@@ -78,9 +84,9 @@ const ProjectPreview: React.FC<ProjectPreviewProps> = ({ project }) => {
                 marginTop: 1,
               }}
             >
-              {project.minGroupSize === project.maxGroupSize ?
-                `${project.minGroupSize} team members` :
-                `${project.minGroupSize}-${project.maxGroupSize} team members`}
+              {project.minGroupSize === project.maxGroupSize
+                ? `${project.minGroupSize} team members`
+                : `${project.minGroupSize}-${project.maxGroupSize} team members`}
             </Text>
           </View>
         </TouchableOpacity>

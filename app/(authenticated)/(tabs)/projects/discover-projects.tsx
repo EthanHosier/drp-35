@@ -102,9 +102,9 @@ const DiscoverProjects = () => {
     <View>
       <LinearGradient
         // Background Linear Gradient
-        colors={[Colors.primaryMuted, "#fff"]}
+        colors={[Colors.primary, Colors.primaryMuted, Colors.background]}
         style={{ height: "100%" }}
-        locations={[0, 1]} // Adjust the second value to make the transition earlier or later
+        locations={[0, 0.2, 0.6]} // Adjust the second value to make the transition earlier or later
       >
         <ScrollView
           refreshControl={
