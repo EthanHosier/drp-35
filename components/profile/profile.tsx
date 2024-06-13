@@ -5,6 +5,7 @@ import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ExternalLink from "./external-link";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { toOneDecimalPlace } from "@/utils/utils";
 
 interface ProfileProps {
   imageUrl: string;
@@ -69,15 +70,29 @@ const Profile: React.FC<ProfileProps> = ({
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
               {pronouns}
             </Text>
-            <StarRatingDisplay
-              rating={rating}
-              color={Colors.gold}
-              emptyColor={Colors.gray}
-              starSize={24}
-              style={{ marginLeft: "auto" }}
-              starStyle={{ marginLeft: 2, marginRight: 2 }}
-              enableHalfStar
-            />
+            <View
+              style={{
+                marginLeft: "auto",
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: Colors.lightGray,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 16,
+                gap: 4,
+              }}
+            >
+              <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                {toOneDecimalPlace(Number.isNaN(rating) ? 5 : rating)}
+              </Text>
+              <Ionicons
+                name="star"
+                size={18}
+                color={Colors.gold}
+                style={{ marginBottom: 2 }}
+              />
+            </View>
           </View>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
             <View style={styles2.attributeIconContainer}>
