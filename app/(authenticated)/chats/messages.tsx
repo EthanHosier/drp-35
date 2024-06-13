@@ -39,7 +39,6 @@ export default function MessagesList() {
   const { groupChats } = useGroupchatStore();
 
   const [search, setSearch] = useState("");
-  const [filteredChats, setFilteredChats] = useState<GroupChat[]>(groupChats);
 
   function onRemove() {
     Alert.alert("Removed");
@@ -96,11 +95,6 @@ export default function MessagesList() {
                 placeholder="Search"
                 onChangeText={(e) => {
                   setSearch(e);
-                  setFilteredChats(
-                    groupChats.filter((chat) =>
-                      chat.name.toLowerCase().includes(e.toLowerCase())
-                    )
-                  );
                 }}
               />
               <Text
@@ -117,7 +111,9 @@ export default function MessagesList() {
               </Text>
             </View>
           }
-          data={filteredChats}
+          data={groupChats.filter((chat) =>
+            chat.name.toLowerCase().includes(search.toLowerCase())
+          )}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item, index }) => (
             <ListItem id={index} item={item} onRemove={onRemove} />
