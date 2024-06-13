@@ -20,6 +20,7 @@ const PROJECT_FIELDS = [
   "Min Group Size",
   "Max Group Size",
   "Start Date",
+  "End Date",
 ];
 
 const AddProjectPage = () => {
@@ -36,6 +37,8 @@ const AddProjectPage = () => {
     setMaxGroupSize,
     startDateTime,
     setStartDateTime,
+    endDateTime,
+    setEndDateTime,
   } = useProjectFieldsStore();
 
   const pickImage = async () => {
@@ -114,6 +117,17 @@ const AddProjectPage = () => {
             value={startDateTime}
             mode="datetime"
             style={{ marginLeft: -10 }}
+          />
+        </View>
+        <Text style={styles.fieldLabel}>End Date & Time</Text>
+        <View style={{ flex: 1, flexDirection: "row", marginTop: 8, gap: 8 }}>
+          <RNDateTimePicker
+              onChange={(_, date) => {
+                setEndDateTime(date!);
+              }}
+              value={endDateTime}
+              mode="datetime"
+              style={{ marginLeft: -10 }}
           />
         </View>
       </View>
