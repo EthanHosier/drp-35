@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyGroups } from "@/utils/api/groups";
 
 const Layout = () => {
-  const { addGroupChat, addMessage } = useGroupchatStore();
+  const { addGroupChat, addMessage, setGroupChats } = useGroupchatStore();
 
   const { data: myGroups } = useQuery({
     queryKey: ["myGroups"],
@@ -21,6 +21,7 @@ const Layout = () => {
   useEffect(() => {
     if (!myGroups) return;
     if (!myGroups || myGroups.length < 0) return;
+    setGroupChats([]);
 
     myGroups.forEach((group) => {
       getGroupchat(group.id).then((res) => {

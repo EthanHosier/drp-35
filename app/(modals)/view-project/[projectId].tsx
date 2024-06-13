@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";

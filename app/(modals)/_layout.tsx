@@ -69,6 +69,8 @@ const Layout = () => {
         options={{
           presentation: "fullScreenModal",
           title: "View Project",
+          headerShadowVisible: false,
+
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
