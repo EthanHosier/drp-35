@@ -7,7 +7,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Colors from "@/constants/Colors";
 import { TextInput } from "react-native-gesture-handler";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -15,7 +15,12 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import { useLocalSearchParams } from "expo-router";
-import { GroupChat, getGroupchat, sendMessage } from "@/utils/api/groupchats";
+import {
+  GroupChat,
+  Message,
+  getGroupchat,
+  sendMessage,
+} from "@/utils/api/groupchats";
 import Skeleton from "@/components/LoadingSkeleton";
 import { getProfilePicUrl } from "@/utils/api/profile-pics";
 import { useUserIdStore } from "@/utils/store/user-id-store";
@@ -48,6 +53,8 @@ const ChatId = () => {
   const chatId = useLocalSearchParams().chatId;
   const userId = useUserIdStore((state) => state.userId);
 
+  const flatListRef = useRef<FlatList<Message>>(null);
+
   const [groupChat, setGroupChat] = useState<GroupChat | null>(null);
   const [message, setMessage] = useState("");
   const addMessage = useGroupchatStore((state) => state.addMessage);
@@ -75,7 +82,10 @@ const ChatId = () => {
         }}
       >
         <FlatList
-          ListFooterComponent={<View style={{ height: 80 }} />}
+          onContentSizeChange={() =>
+            flatListRef.current?.scrollToEnd({ animated: false })
+          }
+          ref={flatListRef}
           ListHeaderComponent={
             <Text
               style={{
@@ -128,6 +138,8 @@ const ChatId = () => {
                           ? 0
                           : BORDER_RADIUS,
                     },
+                ,
+                index === groupChat.messages.length - 1 && { marginBottom: 92 },
               ]}
             >
               <Text
@@ -224,6 +236,7 @@ const ChatId = () => {
                     borderRadius: 24,
                   }}
                   onPress={() => {
+                    setMessage("");
                     sendMessage(chatId as string, message);
                   }}
                 >
