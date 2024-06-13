@@ -52,13 +52,13 @@ const Layout = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>John Doe</Text>
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>Sunday meal prep</Text>
             </View>
           ),
           headerRight: () => (
             <TouchableOpacity>
               <Image
-                source="https://media.licdn.com/dms/image/D4E03AQFLn8iwSgskug/profile-displayphoto-shrink_800_800/0/1700180573782?e=2147483647&v=beta&t=NOzU847G3z8sbatSzna7FNvjC5ruJSo-8GbJPTycEIY"
+                source="https://olsulwhgajbuuitnzwzk.supabase.co/storage/v1/object/public/projectpics/61cc2218-5537-44ef-94c5-8f3f21044c5f"
                 style={{ width: 40, height: 40, borderRadius: 50 }}
               />
             </TouchableOpacity>
