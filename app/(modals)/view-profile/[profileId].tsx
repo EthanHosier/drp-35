@@ -21,6 +21,7 @@ const EMPTY_PROFILE = {
   languages: [],
   id: "",
   bio: "",
+  rating: 0,
 };
 
 const ProfileId = () => {
