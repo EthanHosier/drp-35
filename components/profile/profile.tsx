@@ -45,17 +45,28 @@ const Profile: React.FC<ProfileProps> = ({
           paddingBottom: 48,
         }}
       >
-        <View style={{ paddingHorizontal: 24, paddingTop: 24 }}>
+        <View style={{ paddingHorizontal: 24 }}>
           <Image
             source={
               imageUrl
                 ? { uri: imageUrl }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
-            style={styles2.img}
+            style={[styles2.img]}
           />
-          <View
-            style={{
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "flex-end",
+          }}
+        >
+          <ScrollView
+            horizontal
+            style={{ marginRight: 16 }}
+            contentContainerStyle={{
+              marginLeft: 24,
               flexDirection: "row",
               marginTop: 16,
               gap: 8,
@@ -70,30 +81,34 @@ const Profile: React.FC<ProfileProps> = ({
             <Text style={{ color: Colors.gray, fontSize: 16, marginTop: 6 }}>
               {pronouns}
             </Text>
-            <View
-              style={{
-                marginLeft: "auto",
-                height: 32,
-                borderRadius: 16,
-                backgroundColor: Colors.lightGray,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                paddingHorizontal: 16,
-                gap: 4,
-              }}
-            >
-              <Text style={{ fontSize: 16, fontWeight: "600" }}>
-                {toOneDecimalPlace(Number.isNaN(rating) ? 5 : rating)}
-              </Text>
-              <Ionicons
-                name="star"
-                size={18}
-                color={Colors.gold}
-                style={{ marginBottom: 2 }}
-              />
-            </View>
+          </ScrollView>
+          <View
+            style={{
+              marginLeft: "auto",
+              height: 32,
+              borderRadius: 16,
+              backgroundColor: Colors.lightGray,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 16,
+              gap: 4,
+              marginRight: 24,
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "600" }}>
+              {toOneDecimalPlace(Number.isNaN(rating) ? 5 : rating)}
+            </Text>
+            <Ionicons
+              name="star"
+              size={18}
+              color={Colors.gold}
+              style={{ marginBottom: 2 }}
+            />
           </View>
+        </View>
+
+        <View style={{ paddingHorizontal: 24 }}>
           <View style={[styles2.attributeContainer, { marginTop: 24 }]}>
             <View style={styles2.attributeIconContainer}>
               <Ionicons name="school-outline" size={24} color="black" />
