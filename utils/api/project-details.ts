@@ -13,6 +13,7 @@ export type Project = {
   start_date_time: string;
   project_id: string;
   image_uri: string;
+  end_date_time: string;
 };
 
 export type Group = {
