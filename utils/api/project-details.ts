@@ -77,9 +77,8 @@ export const getProjectDetails: (
 };
 
 export const getProjectGroups: (
-  projectId: string,
-  myGroupId: string
-) => Promise<DRPResponse<Group[]>> = async (projectId, myGroupId) => {
+  projectId: string
+) => Promise<DRPResponse<Group[]>> = async (projectId) => {
   // Fetch groups and their members in a single query
   const { data, error } = await supabase
     .from("groups")
@@ -112,25 +111,24 @@ export const getProjectGroups: (
   );
 
   // Transform the data to the desired structure
-  const groups = data
-    .filter((group) => group.group_id != myGroupId) // don't show my group
-    .map((group, i) => {
-      return {
-        group_id: group.group_id,
-        description: group.description,
-        members: group.group_members.map((member, j) => {
-          const { user_id, ...profile } = member.profiles;
-          return {
-            ...profile,
-            imageUrl: getProfilePicUrl(user_id).data ?? "",
-            rating: ratings[i][j] ?? 0,
-            skills: profile.user_skills.map((skill) => skill.skill_name),
-            languages: profile.user_languages.map(
-              (language) => language.language_name
-            ),
-          };
-        }),
-      };
-    });
+  const groups = data.map((group, i) => {
+    return {
+      group_id: group.group_id,
+      description: group.description,
+      members: group.group_members.map((member, j) => {
+        const { user_id, ...profile } = member.profiles;
+        return {
+          ...profile,
+          id: user_id,
+          imageUrl: getProfilePicUrl(user_id).data ?? "",
+          rating: ratings[i][j] ?? 0,
+          skills: profile.user_skills.map((skill) => skill.skill_name),
+          languages: profile.user_languages.map(
+            (language) => language.language_name
+          ),
+        };
+      }),
+    };
+  });
   return { data: groups, error: null };
 };

@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { formatHumanReadableDate } from "@/utils/utils";
 import {
+  Group,
   getProjectDetails,
   getProjectGroups,
 } from "@/utils/api/project-details";
@@ -76,9 +77,10 @@ const InfoTab = () => {
             <Ionicons name="people-outline" size={24} color="black" />
           </View>
           <Text style={styles.attributeText}>
-          {projectData?.data?.min_group_size === projectData?.data?.max_group_size
-            ? `${projectData?.data?.min_group_size} team members`
-            : `${projectData?.data?.min_group_size}-${projectData?.data?.max_group_size} team members`}
+            {projectData?.data?.min_group_size ===
+            projectData?.data?.max_group_size
+              ? `${projectData?.data?.min_group_size} team members`
+              : `${projectData?.data?.min_group_size}-${projectData?.data?.max_group_size} team members`}
           </Text>
         </View>
         <View style={[styles.attributeContainer, { marginTop: 24 }]}>
@@ -135,7 +137,7 @@ const getMembersNeeded = async (groupId: string, projectId: string) => {
 };
 
 const GroupsTab = () => {
-  const id = useLocalSearchParams().projectId;
+  const [myGroup, setMyGroup] = useState<Group | null>(null);
 
   const [memberIndex, setMemberIndex] = useState<number>(0);
   const [groupIndex, setGroupIndex] = useState<number>(0);
@@ -147,65 +149,100 @@ const GroupsTab = () => {
 
   const [creatingGroup, setCreatingGroup] = useState<boolean>(false);
 
-  const { data: myGroupId, status: myGroupIdStatus } = useQuery({
-    queryKey: ["myGroupId", projectId],
-    queryFn: () => getGroupId(projectId),
-    staleTime: Infinity,
-  });
+  const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
 
   const { data: projectGroups, status: projectGroupsStatus } = useQuery({
     queryKey: ["thisProjectGroups", projectId],
-    queryFn: () => getProjectGroups(projectId, myGroupId ?? ""),
+    queryFn: () => getProjectGroups(projectId),
     staleTime: Infinity,
-    enabled: myGroupId != undefined,
   });
 
-  const { data: membersNeeded, status: membersNeededStatus } = useQuery({
-    queryKey: ["membersNeeded", projectId],
-    queryFn: () => getMembersNeeded(myGroupId!, projectId),
-    staleTime: Infinity,
-    enabled: !!myGroupId,
-  });
+  const findMyGroupAndSet = async (allGroups: Group[]) => {
+    const id = await getUserId();
+
+    const myGroup = allGroups.find((group) =>
+      group.members.some((member) => member.id === id)
+    );
+    if (myGroup) setMyGroup(myGroup);
+  };
 
   const router = useRouter();
 
   // FilterMain settings
-  const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
   const skills = useFilterStore((state) => state.skills);
   const rating = useFilterStore((state) => state.rating);
 
-  const filteredGroups = projectGroups && projectGroups.data
-      ? projectGroups.data.filter((group) => {
-    return (
-        (!myGroupId || group.group_id !== myGroupId) &&
-        // (!membersNeeded || group.members.length < membersNeeded) &&
-        (numMembers <= 0 ||
-            group.members.length === numMembers) &&
-        (languages.length <= 0 ||
-            group.members.every((member) =>
-                member.languages.some((language) =>
-                    languages.includes(language)
-                )
-            )) &&
-        (skills.length <= 0 ||
-            group.members.every((member) =>
-                member.skills.some((skill) => skills.includes(skill))
-            )) &&
-        (rating <= 0 ||
-            group.members.every((member) => member.rating >= rating)
-        )
+  useEffect(() => {
+    if (
+      !projectGroups ||
+      !projectGroups.data ||
+      projectGroups.data.length === 0
+    )
+      return;
+
+    findMyGroupAndSet(projectGroups.data);
+  }, [projectGroups]);
+
+  useEffect(() => {
+    console.log({ filteredGroups });
+  }, [filteredGroups]);
+
+  const updateFilteredGroups = async () => {
+    if (!projectGroups?.data) return;
+    if (!languages && !skills && !rating) return;
+
+    const userId = await getUserId();
+
+    console.log("Project groups 0:", projectGroups.data);
+
+    // group id
+    let newFilteredGroups = projectGroups.data.filter(
+      (group) => group.group_id != myGroup?.group_id
     );
-  }) : [];
+
+    console.log({ userId });
+    console.log(
+      "New filtered groups 1:",
+      newFilteredGroups.map((group) => group.members.map((member) => member.id))
+    );
+
+    // skills
+    if (skills.length > 0) {
+      newFilteredGroups = newFilteredGroups.filter((group) =>
+        group.members.some((member) =>
+          member.skills.some((skill) => skills.includes(skill))
+        )
+      );
+    }
+    console.log("New filtered groups 2:", newFilteredGroups);
+
+    // languages
+    if (languages.length > 0) {
+      newFilteredGroups = newFilteredGroups.filter((group) =>
+        group.members.every((member) => member.rating >= rating)
+      );
+    }
+    console.log("New filtered groups 3:", newFilteredGroups);
+
+    setFilteredGroups(newFilteredGroups);
+  };
+
+  useEffect(() => {
+    updateFilteredGroups();
+  }, [languages, skills, rating, myGroup, projectGroups]);
 
   const handleSwipeRight = async (targetGroupId: string) => {
-    if (myGroupId) {
-      const { data, error } = await isMatch(myGroupId as string, targetGroupId);
+    if (myGroup?.group_id) {
+      const { data, error } = await isMatch(
+        myGroup.group_id as string,
+        targetGroupId
+      );
       if (error) return console.log(error);
       if (data) {
         const { error } = await acceptRequestToJoinGroup(
           targetGroupId,
-          myGroupId
+          myGroup?.group_id
         );
         if (error) return console.log(error);
         router.push({
@@ -215,25 +252,22 @@ const GroupsTab = () => {
         return;
       }
       const userId = await getUserId();
-      await requestToJoinGroup(targetGroupId, myGroupId, projectId, userId!);
+      await requestToJoinGroup(
+        targetGroupId,
+        myGroup.group_id,
+        projectId,
+        userId!
+      );
     }
   };
 
   const refresh = () => {
     queryClient.invalidateQueries({
-      queryKey: ["thisProjectGroups", projectId],
-    });
-    queryClient.invalidateQueries({
       queryKey: ["myGroupId", projectId],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["membersNeeded", projectId],
     });
   };
 
-  return projectGroupsStatus === "pending" ||
-    myGroupIdStatus === "pending" ||
-    membersNeededStatus === "pending" ? (
+  return projectGroupsStatus === "pending" ? (
     <Text>Loading...</Text>
   ) : (
     <View style={{ flex: 1, position: "relative" }}>
@@ -301,9 +335,7 @@ const GroupsTab = () => {
             onSwipeRight={handleSwipeRight}
           />
           <InfoSheet
-            profile={
-              filteredGroups[groupIndex].members[memberIndex]
-            }
+            profile={filteredGroups[groupIndex].members[memberIndex]}
           />
         </>
       ) : (

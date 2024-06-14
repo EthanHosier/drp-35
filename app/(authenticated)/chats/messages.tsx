@@ -44,8 +44,6 @@ export default function MessagesList() {
     Alert.alert("Removed");
   }
 
-  console.log({ groupChats });
-
   return (
     <>
       <Stack.Screen options={{ title: "Messages" }} />

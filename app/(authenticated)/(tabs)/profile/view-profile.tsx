@@ -41,7 +41,6 @@ const ViewProfile = () => {
   });
 
   const refresh = async () => {
-    console.log("refreshing");
     queryClient.invalidateQueries({
       queryKey: ["myGroups"],
     });

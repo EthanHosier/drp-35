@@ -11,15 +11,12 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { FontAwesome } from "@expo/vector-icons";
 import { defaultStyles } from "@/constants/DefaultStyles";
-import {
-  getGroupById,
-  getGroupRequests,
-} from "@/utils/api/groups";
+import { getGroupById, getGroupRequests } from "@/utils/api/groups";
 import Skeleton from "@/components/LoadingSkeleton";
 import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
-import {getProjectDetails} from "@/utils/api/project-details";
+import { getProjectDetails } from "@/utils/api/project-details";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
@@ -45,11 +42,15 @@ const ViewMembers = () => {
   });
 
   const interested = rawInterested?.data?.filter(
-    (other) => (group?.data) &&
-        (other.members.length + group?.data?.members.length <= parseInt(maxGroupSize as string))
+    (other) =>
+      group?.data &&
+      other.members.length + group?.data?.members.length <=
+        parseInt(maxGroupSize as string)
   );
 
-  const isOver = projectData?.data && Date.parse(projectData.data.end_date_time) < Date.now();
+  const isOver =
+    projectData?.data &&
+    Date.parse(projectData.data.end_date_time) < Date.now();
 
   // const rejectOversizedGroups = async () => {
   //   if (group && group.data?.members?.length) {
@@ -68,7 +69,6 @@ const ViewMembers = () => {
   // };
 
   const refresh = () => {
-    console.log("refresh");
     queryClient.invalidateQueries({ queryKey: ["myGroup", groupId] });
     queryClient.invalidateQueries({ queryKey: ["interested", groupId] });
   };
@@ -162,12 +162,18 @@ const ViewMembers = () => {
             </Text>{" "}
             members
           </Text>
-          {
-            isOver &&
-              <Text style={{ alignSelf: "center", textAlign: "center", fontSize: 16, color: Colors.gray }}>
-                The project is now over. Click on a member to review them.
-              </Text>
-          }
+          {isOver && (
+            <Text
+              style={{
+                alignSelf: "center",
+                textAlign: "center",
+                fontSize: 16,
+                color: Colors.gray,
+              }}
+            >
+              The project is now over. Click on a member to review them.
+            </Text>
+          )}
           <View
             style={{
               marginTop: 32,
@@ -178,33 +184,35 @@ const ViewMembers = () => {
             }}
           >
             {group?.data?.members?.map((member, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                  onPress={() => {
-                    if (isOver) {
-                      router.navigate(`/(modals)/review/${member.id}?projectId=${projectId}`);
-                    } else {
-                      router.navigate(`/(modals)/view-profile/${member.id}`);
-                    }
-                  }}
+              <TouchableOpacity
+                key={i}
+                style={{ flexDirection: "row", alignItems: "center" }}
+                onPress={() => {
+                  if (isOver) {
+                    router.navigate(
+                      `/(modals)/review/${member.id}?projectId=${projectId}`
+                    );
+                  } else {
+                    router.navigate(`/(modals)/view-profile/${member.id}`);
+                  }
+                }}
+              >
+                <Image
+                  source={member.imageUrl}
+                  style={{ width: 80, height: 80, borderRadius: 40 }}
+                />
+                <Text
+                  style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}
                 >
-                  <Image
-                    source={member.imageUrl}
-                    style={{ width: 80, height: 80, borderRadius: 40 }}
-                  />
-                  <Text
-                    style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}
-                  >
-                    {member.full_name}
-                  </Text>
-                  <FontAwesome
-                    name="chevron-right"
-                    size={16}
-                    color={Colors.dark}
-                    style={{ marginLeft: "auto" }}
-                  />
-                </TouchableOpacity>
+                  {member.full_name}
+                </Text>
+                <FontAwesome
+                  name="chevron-right"
+                  size={16}
+                  color={Colors.dark}
+                  style={{ marginLeft: "auto" }}
+                />
+              </TouchableOpacity>
             ))}
           </View>
           {interested && interested.length > 0 && (

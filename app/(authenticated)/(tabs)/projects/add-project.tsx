@@ -214,7 +214,6 @@ const OrganisationPicker = ({
       <SelectDropdown
         data={orgs}
         onSelect={(selectedItem: Organisation, index) => {
-          console.log(selectedItem.name);
           setOrganisation(selectedItem.org_id);
         }}
         renderButton={(selectedItem, isOpened) => (

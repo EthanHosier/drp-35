@@ -39,8 +39,6 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
 }) => {
   const { width } = Dimensions.get("window");
 
-  console.log({ groups });
-
   const OverlayLabelLeft = useCallback(() => {
     return (
       <View

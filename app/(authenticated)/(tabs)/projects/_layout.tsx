@@ -133,7 +133,6 @@ const Layout = () => {
     const { data: urlData, error: getUrlError } = getOrganisationPicUrl(
       data.org_id
     );
-    console.log(urlData);
     if (getUrlError) {
       alert(getUrlError.message);
       return;
