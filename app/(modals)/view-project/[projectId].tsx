@@ -78,8 +78,9 @@ const InfoTab = () => {
             <Ionicons name="people-outline" size={24} color="black" />
           </View>
           <Text style={styles.attributeText}>
-            {projectData?.data?.min_group_size} -{" "}
-            {projectData?.data?.max_group_size} members
+          {projectData?.data?.min_group_size === projectData?.data?.max_group_size
+            ? `${projectData?.data?.min_group_size} team members`
+            : `${projectData?.data?.min_group_size}-${projectData?.data?.max_group_size} team members`}
           </Text>
         </View>
         <View style={[styles.attributeContainer, { marginTop: 24 }]}>
