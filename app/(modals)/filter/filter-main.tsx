@@ -24,7 +24,7 @@ const FilterMain = () => {
         <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
           <Text style={styles.fieldsTitle}>Number of Members</Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="number-pad"
             style={styles.textInput}
             value={numMembers}
             placeholderTextColor={Colors.gray}
@@ -38,7 +38,7 @@ const FilterMain = () => {
         <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
           <Text style={styles.fieldsTitle}>Rating</Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="number-pad"
             style={styles.textInput}
             value={rating}
             placeholderTextColor={Colors.gray}
