@@ -176,6 +176,26 @@ const GroupsTab = () => {
   const languages = useFilterStore((state) => state.languages);
   const skills = useFilterStore((state) => state.skills);
 
+  const filteredGroups = projectGroups && projectGroups.data
+      ? projectGroups.data.filter((group) => {
+    return (
+        (!myGroupId || group.group_id !== myGroupId) &&
+        // (!membersNeeded || group.members.length < membersNeeded) &&
+        (numMembers <= 0 ||
+            group.members.length === numMembers) &&
+        (languages.length <= 0 ||
+            group.members.every((member) =>
+                member.languages.some((language) =>
+                    languages.includes(language)
+                )
+            )) &&
+        (skills.length <= 0 ||
+            group.members.every((member) =>
+                member.skills.some((skill) => skills.includes(skill))
+            ))
+    );
+  }) : [];
+
   const handleSwipeRight = async (targetGroupId: string) => {
     if (myGroupId) {
       const { data, error } = await isMatch(myGroupId as string, targetGroupId);
@@ -215,7 +235,7 @@ const GroupsTab = () => {
     <Text>Loading...</Text>
   ) : (
     <View style={{ flex: 1, position: "relative" }}>
-      {projectGroups && projectGroups.data && projectGroups.data.length > 0 ? (
+      {filteredGroups.length > 0 ? (
         <>
           <View
             style={{
@@ -271,7 +291,7 @@ const GroupsTab = () => {
           <TinderSwipe
             pressed={pressed}
             setPressed={setPressed}
-            groups={projectGroups?.data}
+            groups={filteredGroups}
             memberIndex={memberIndex}
             setMemberIndex={setMemberIndex}
             groupIndex={groupIndex}
@@ -280,9 +300,7 @@ const GroupsTab = () => {
           />
           <InfoSheet
             profile={
-              projectGroups && projectGroups.data
-                ? projectGroups.data[groupIndex].members[memberIndex]
-                : null
+              filteredGroups[groupIndex].members[memberIndex]
             }
           />
         </>
