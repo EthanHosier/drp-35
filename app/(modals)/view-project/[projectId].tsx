@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { AntDesign, FontAwesome6, Ionicons } from "@expo/vector-icons";
@@ -16,10 +16,8 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { formatHumanReadableDate } from "@/utils/utils";
 import {
-  Group,
   getProjectDetails,
   getProjectGroups,
-  type Project,
 } from "@/utils/api/project-details";
 import { useFilterStore } from "@/utils/store/filter-store";
 import LottieView from "lottie-react-native";
@@ -175,6 +173,7 @@ const GroupsTab = () => {
   const numMembers = useFilterStore((state) => state.numMembers);
   const languages = useFilterStore((state) => state.languages);
   const skills = useFilterStore((state) => state.skills);
+  const rating = useFilterStore((state) => state.rating);
 
   const filteredGroups = projectGroups && projectGroups.data
       ? projectGroups.data.filter((group) => {
@@ -192,7 +191,10 @@ const GroupsTab = () => {
         (skills.length <= 0 ||
             group.members.every((member) =>
                 member.skills.some((skill) => skills.includes(skill))
-            ))
+            )) &&
+        (rating <= 0 ||
+            group.members.every((member) => member.rating >= rating)
+        )
     );
   }) : [];
 
