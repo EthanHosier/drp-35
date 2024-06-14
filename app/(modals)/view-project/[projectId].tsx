@@ -99,43 +99,6 @@ const InfoTab = () => {
   );
 };
 
-const getGroupId = async (projectId: string) => {
-  const userId = await getUserId();
-  const { data, error } = await supabase
-    .from("groups")
-    .select(
-      `
-      group_id,
-      project_id,
-      group_members(
-        user_id
-      )
-      `
-    )
-    .eq("project_id", projectId)
-    .eq("group_members.user_id", userId!);
-
-  console.log({ data: data });
-
-  if (!error && data && data.length > 0) return data[0].group_id;
-  return null;
-};
-
-const getMembersNeeded = async (groupId: string, projectId: string) => {
-  const { data: project, error: maxError } = await supabase
-    .from("projects")
-    .select("max_group_size")
-    .eq("project_id", projectId)
-    .single();
-  if (maxError) return console.error(maxError);
-
-  await getGroupById(groupId as string).then((res) => {
-    if (res.data) return project.max_group_size - res.data.members.length;
-  });
-
-  return -1;
-};
-
 const GroupsTab = () => {
   const [myGroup, setMyGroup] = useState<Group | null>(null);
 
