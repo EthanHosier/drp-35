@@ -177,10 +177,10 @@ const ViewMembers = () => {
           <View
             style={{
               marginTop: 32,
-              gap: 12,
+              gap: 24,
               borderBottomColor: Colors.gray,
               borderBottomWidth: StyleSheet.hairlineWidth,
-              paddingBottom: 16,
+              paddingBottom: 24,
             }}
           >
             {group?.data?.members?.map((member, i) => (
@@ -219,7 +219,7 @@ const ViewMembers = () => {
             <Link
               href={`./view-interested?maxGroupSize=${maxGroupSize}`}
               asChild
-              style={{ marginTop: 16 }}
+              style={{ marginTop: 24 }}
             >
               <TouchableOpacity
                 style={{ flexDirection: "row", alignItems: "center" }}
