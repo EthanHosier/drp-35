@@ -3,7 +3,7 @@ import { DRPResponse } from "./error-types";
 import { getProfilePicUrl } from "./profile-pics";
 import { Profile } from "./profiles";
 import { getProjectPicUrl } from "./project-pics";
-import {getAverageRating} from "@/utils/api/reviews";
+import { getAverageRating } from "@/utils/api/reviews";
 
 export type Project = {
   description: string;
@@ -77,8 +77,9 @@ export const getProjectDetails: (
 };
 
 export const getProjectGroups: (
-  projectId: string
-) => Promise<DRPResponse<Group[]>> = async (projectId) => {
+  projectId: string,
+  myGroupId: string
+) => Promise<DRPResponse<Group[]>> = async (projectId, myGroupId) => {
   // Fetch groups and their members in a single query
   const { data, error } = await supabase
     .from("groups")
@@ -100,30 +101,36 @@ export const getProjectGroups: (
   // Handle any errors from the query
   if (error) return { data: null, error };
 
-  const ratings = await Promise.all(data.map(async (group) => {
-    return await Promise.all(group.group_members.map(async (member) => {
-      return (await getAverageRating(member.user_id)).data ?? 0;
-    }));
-  }));
+  const ratings = await Promise.all(
+    data.map(async (group) => {
+      return await Promise.all(
+        group.group_members.map(async (member) => {
+          return (await getAverageRating(member.user_id)).data ?? 0;
+        })
+      );
+    })
+  );
 
   // Transform the data to the desired structure
-  const groups = data.map((group, i) => {
-    return {
-      group_id: group.group_id,
-      description: group.description,
-      members: group.group_members.map((member, j) => {
-        const { user_id, ...profile } = member.profiles;
-        return {
-          ...profile,
-          imageUrl: getProfilePicUrl(user_id).data ?? "",
-          rating: ratings[i][j] ?? 0,
-          skills: profile.user_skills.map((skill) => skill.skill_name),
-          languages: profile.user_languages.map(
-            (language) => language.language_name
-          ),
-        };
-      }),
-    };
-  });
+  const groups = data
+    .filter((group) => group.group_id != myGroupId) // don't show my group
+    .map((group, i) => {
+      return {
+        group_id: group.group_id,
+        description: group.description,
+        members: group.group_members.map((member, j) => {
+          const { user_id, ...profile } = member.profiles;
+          return {
+            ...profile,
+            imageUrl: getProfilePicUrl(user_id).data ?? "",
+            rating: ratings[i][j] ?? 0,
+            skills: profile.user_skills.map((skill) => skill.skill_name),
+            languages: profile.user_languages.map(
+              (language) => language.language_name
+            ),
+          };
+        }),
+      };
+    });
   return { data: groups, error: null };
 };

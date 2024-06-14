@@ -148,19 +148,20 @@ const GroupsTab = () => {
 
   const [creatingGroup, setCreatingGroup] = useState<boolean>(false);
 
-  const { data: projectGroups, status: projectGroupsStatus } = useQuery({
-    queryKey: ["thisProjectGroups", projectId],
-    queryFn: () => getProjectGroups(projectId),
-    staleTime: Infinity,
-  });
-
   const { data: myGroupId, status: myGroupIdStatus } = useQuery({
     queryKey: ["myGroupId", projectId],
     queryFn: () => getGroupId(projectId),
     staleTime: Infinity,
   });
 
-  const { data: membersNeeded } = useQuery({
+  const { data: projectGroups, status: projectGroupsStatus } = useQuery({
+    queryKey: ["thisProjectGroups", projectId],
+    queryFn: () => getProjectGroups(projectId, myGroupId ?? ""),
+    staleTime: Infinity,
+    enabled: myGroupId != undefined,
+  });
+
+  const { data: membersNeeded, status: membersNeededStatus } = useQuery({
     queryKey: ["membersNeeded", projectId],
     queryFn: () => getMembersNeeded(myGroupId!, projectId),
     staleTime: Infinity,
@@ -207,7 +208,11 @@ const GroupsTab = () => {
     });
   };
 
-  return projectGroupsStatus != "pending" && myGroupIdStatus != "pending" ? (
+  return projectGroupsStatus === "pending" ||
+    myGroupIdStatus === "pending" ||
+    membersNeededStatus === "pending" ? (
+    <Text>Loading...</Text>
+  ) : (
     <View style={{ flex: 1, position: "relative" }}>
       {projectGroups && projectGroups.data && projectGroups.data.length > 0 ? (
         <>
@@ -265,28 +270,7 @@ const GroupsTab = () => {
           <TinderSwipe
             pressed={pressed}
             setPressed={setPressed}
-            groups={
-              projectGroups && projectGroups.data
-                ? projectGroups.data.filter((group) => {
-                    return (
-                      (!myGroupId || group.group_id !== myGroupId) &&
-                      (!membersNeeded || group.members.length < membersNeeded) &&
-                      (numMembers <= 0 ||
-                        group.members.length === numMembers) &&
-                      (languages.length <= 0 ||
-                        group.members.every((member) =>
-                          member.languages.some((language) =>
-                            languages.includes(language)
-                          )
-                        )) &&
-                      (skills.length <= 0 ||
-                        group.members.every((member) =>
-                          member.skills.some((skill) => skills.includes(skill))
-                        ))
-                    );
-                  })
-                : []
-            }
+            groups={projectGroups?.data}
             memberIndex={memberIndex}
             setMemberIndex={setMemberIndex}
             groupIndex={groupIndex}
@@ -384,8 +368,6 @@ const GroupsTab = () => {
         </>
       )}
     </View>
-  ) : (
-    <Text>Loading...</Text>
   );
 };
 
