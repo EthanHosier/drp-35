@@ -137,7 +137,7 @@ const ViewOrg = () => {
         </View>
         <Text
           style={{
-            marginTop: 32,
+            marginTop: 16,
             marginBottom: 4,
             fontSize: 24,
             fontWeight: "600",
@@ -145,7 +145,7 @@ const ViewOrg = () => {
         >
           Organisation Members
         </Text>
-        <View style={{ gap: 4 }}>
+        <View style={{ gap: 20, marginTop: 16 }}>
           {members?.data?.map((member, i) => (
             <TouchableOpacity
               key={i}
@@ -156,9 +156,9 @@ const ViewOrg = () => {
             >
               <Image
                 source={member.imageUrl}
-                style={{ width: 80, height: 80, borderRadius: 40 }}
+                style={{ width: 64, height: 64, borderRadius: 32 }}
               />
-              <Text style={{ marginLeft: 24, fontWeight: "600", fontSize: 16 }}>
+              <Text style={{ marginLeft: 24, fontWeight: "500", fontSize: 16 }}>
                 {member.full_name}
               </Text>
               <FontAwesome
