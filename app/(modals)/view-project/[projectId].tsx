@@ -188,23 +188,15 @@ const GroupsTab = () => {
     console.log({ filteredGroups });
   }, [filteredGroups]);
 
-  const updateFilteredGroups = async () => {
+  useEffect(() => {
     if (!projectGroups?.data) return;
     if (!languages && !skills && !rating) return;
-
-    const userId = await getUserId();
 
     console.log("Project groups 0:", projectGroups.data);
 
     // group id
     let newFilteredGroups = projectGroups.data.filter(
       (group) => group.group_id != myGroup?.group_id
-    );
-
-    console.log({ userId });
-    console.log(
-      "New filtered groups 1:",
-      newFilteredGroups.map((group) => group.members.map((member) => member.id))
     );
 
     // skills
@@ -215,21 +207,24 @@ const GroupsTab = () => {
         )
       );
     }
-    console.log("New filtered groups 2:", newFilteredGroups);
 
     // languages
     if (languages.length > 0) {
       newFilteredGroups = newFilteredGroups.filter((group) =>
-        group.members.every((member) => member.rating >= rating)
+        group.members.some((member) =>
+          member.languages.some((lang) => languages.includes(lang))
+        )
       );
     }
-    console.log("New filtered groups 3:", newFilteredGroups);
+
+    // rating
+    if (rating) {
+      newFilteredGroups = newFilteredGroups.filter((group) =>
+        group.members.some((member) => member.rating >= rating)
+      );
+    }
 
     setFilteredGroups(newFilteredGroups);
-  };
-
-  useEffect(() => {
-    updateFilteredGroups();
   }, [languages, skills, rating, myGroup, projectGroups]);
 
   const handleSwipeRight = async (targetGroupId: string) => {
@@ -271,35 +266,35 @@ const GroupsTab = () => {
     <Text>Loading...</Text>
   ) : (
     <View style={{ flex: 1, position: "relative" }}>
-      {filteredGroups.length > 0 ? (
-        <>
-          <View
+      <>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: 8,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => router.navigate("../filter/filter-main")}
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingHorizontal: 8,
+              alignSelf: "flex-end",
+              alignItems: "center",
+              justifyContent: "center",
+              height: 48,
+              width: 48,
+              borderRadius: 24,
+              backgroundColor: Colors.background,
+              marginTop: 12,
             }}
           >
-            <TouchableOpacity
-              onPress={() => router.navigate("../filter/filter-main")}
-              style={{
-                alignSelf: "flex-end",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 48,
-                width: 48,
-                borderRadius: 24,
-                backgroundColor: Colors.background,
-                marginTop: 12,
-              }}
-            >
-              <Ionicons
-                name="filter"
-                size={24}
-                color={Colors.gray}
-                style={{ marginTop: 2 }}
-              />
-            </TouchableOpacity>
+            <Ionicons
+              name="filter"
+              size={24}
+              color={Colors.gray}
+              style={{ marginTop: 2 }}
+            />
+          </TouchableOpacity>
+          {filteredGroups.length > 0 && (
             <TouchableOpacity
               onPress={() => {}}
               style={{
@@ -322,8 +317,11 @@ const GroupsTab = () => {
               />
               <Text style={{ color: Colors.background }}>New</Text>
             </TouchableOpacity>
-          </View>
-
+          )}
+        </View>
+      </>
+      {filteredGroups.length > 0 ? (
+        <>
           <TinderSwipe
             pressed={pressed}
             setPressed={setPressed}
