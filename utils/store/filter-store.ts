@@ -4,6 +4,9 @@ export type FilterStore = {
   numMembers: number;
   setNumMembers: (newNumMmebers: number) => void;
 
+  rating: number;
+  setRating: (newRating: number) => void;
+
   languages: string[];
   addLanguage: (language: string) => void;
   removeLanguage: (language: string) => void;
@@ -16,6 +19,9 @@ export type FilterStore = {
 export const useFilterStore = create<FilterStore>((set) => ({
   numMembers: 0,
   setNumMembers: (newNumMembers) => set({ numMembers: newNumMembers }),
+
+  rating: 0,
+  setRating: (newRating) => set({ rating: newRating }),
 
   languages: [],
   addLanguage: (language: string) => {

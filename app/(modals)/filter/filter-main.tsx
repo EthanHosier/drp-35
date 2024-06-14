@@ -11,6 +11,9 @@ const FilterMain = () => {
   const [numMembers, setNumMembers] = React.useState(
     useFilterStore((state) => state.numMembers.toString())
   );
+  const [rating, setRating] = React.useState(
+    useFilterStore((state) => state.rating.toString())
+  );
 
   return (
     <View style={{height: "100%"}}>
@@ -28,6 +31,19 @@ const FilterMain = () => {
               onChangeText={(text) => {
                 setNumMembers(text);
                 useFilterStore.setState({ numMembers: parseInt(text) });
+              }}
+          />
+        </View>
+        <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
+          <Text style={styles.fieldsTitle}>Rating</Text>
+          <TextInput
+              style={styles.textInput}
+              value={rating}
+              placeholderTextColor={Colors.gray}
+              placeholder={"0"}
+              onChangeText={(text) => {
+                setRating(text);
+                useFilterStore.setState({ rating: parseInt(text) });
               }}
           />
         </View>
