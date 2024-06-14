@@ -210,37 +210,51 @@ const OrganisationPicker = ({
 }) => {
   return (
     <>
-      <Text style={styles.fieldLabel}>Organisation</Text>
-      <SelectDropdown
-        data={orgs}
-        onSelect={(selectedItem: Organisation, index) => {
-          setOrganisation(selectedItem.org_id);
-        }}
-        renderButton={(selectedItem, isOpened) => (
-          <View style={dropdownStyles.dropdownButtonStyle}>
-            <Text style={styles.fieldInput}>
-              {(selectedItem && selectedItem.name) || "Select organisation"}
-            </Text>
-            <Ionicons
-              name={isOpened ? "chevron-up" : "chevron-down"}
-              style={dropdownStyles.dropdownButtonArrowStyle}
-              color={Colors.gray}
-            />
-          </View>
-        )}
-        renderItem={(item, index, isSelected) => (
-          <View
-            style={{
-              ...dropdownStyles.dropdownItemStyle,
-              ...(isSelected && { backgroundColor: "#D2D9DF" }),
+      {orgs.length > 0 && (
+        <>
+          <Text style={styles.fieldLabel}>Organisation</Text>
+
+          <SelectDropdown
+            data={orgs}
+            onSelect={(selectedItem: Organisation, index) => {
+              setOrganisation(selectedItem.org_id);
             }}
-          >
-            <Text style={dropdownStyles.dropdownItemTxtStyle}>{item.name}</Text>
-          </View>
-        )}
-        showsVerticalScrollIndicator={false}
-        dropdownStyle={dropdownStyles.dropdownMenuStyle}
-      />
+            dropdownOverlayColor="transparent"
+            renderButton={(selectedItem, isOpened) => (
+              <View
+                style={[dropdownStyles.dropdownButtonStyle, { marginTop: 8 }]}
+              >
+                <Text style={styles.fieldInput}>
+                  {(selectedItem && selectedItem.name) || "Select organisation"}
+                </Text>
+                <Ionicons
+                  name={isOpened ? "chevron-up" : "chevron-down"}
+                  style={dropdownStyles.dropdownButtonArrowStyle}
+                  color={Colors.gray}
+                />
+              </View>
+            )}
+            renderItem={(item, index, isSelected) => (
+              <View
+                style={{
+                  ...dropdownStyles.dropdownItemStyle,
+                }}
+              >
+                <Text
+                  style={[
+                    dropdownStyles.dropdownItemTxtStyle,
+                    isSelected && { fontWeight: "600" },
+                  ]}
+                >
+                  {item.name}
+                </Text>
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={dropdownStyles.dropdownMenuStyle}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -299,8 +313,8 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   fieldInput: {
-    fontSize: 16,
-    color: "black",
+    fontSize: 14,
+    color: Colors.gray,
     textAlignVertical: "top",
     textAlign: "justify",
   },
@@ -310,12 +324,12 @@ const dropdownStyles = StyleSheet.create({
   dropdownButtonStyle: {
     width: 200,
     height: 50,
-    backgroundColor: Colors.lightGray,
     borderRadius: 12,
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: Colors.lightGray,
   },
   dropdownButtonTxtStyle: {
     flex: 1,
@@ -324,15 +338,18 @@ const dropdownStyles = StyleSheet.create({
     color: "#151E26",
   },
   dropdownButtonArrowStyle: {
-    fontSize: 28,
+    fontSize: 16,
+    marginLeft: "auto",
   },
   dropdownButtonIconStyle: {
     fontSize: 28,
     marginRight: 8,
   },
   dropdownMenuStyle: {
-    backgroundColor: "#E9ECEF",
+    backgroundColor: "#fff",
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.lightGray,
   },
   dropdownItemStyle: {
     width: "100%",
@@ -344,9 +361,7 @@ const dropdownStyles = StyleSheet.create({
   },
   dropdownItemTxtStyle: {
     flex: 1,
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#151E26",
+    color: Colors.gray,
   },
   dropdownItemIconStyle: {
     fontSize: 28,
