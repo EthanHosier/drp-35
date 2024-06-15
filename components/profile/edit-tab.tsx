@@ -14,6 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getProfileByUserId } from "@/utils/api/profiles";
 import Skeleton from "../LoadingSkeleton";
 import { useProfileStore } from "@/utils/store/profile-store";
+import { useSkillsStore } from "@/utils/store/skills-store";
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const TEXT_FIELDS = [
   "Full Name",
@@ -61,6 +63,8 @@ const EditTab = () => {
       setGithub(profileRaw.data.github);
       setWebsite(profileRaw.data.website);
       setBio(profileRaw.data.bio);
+      setSkills(profileRaw.data.skills);
+      setLanguages(profileRaw.data.languages);
     }
   }, [profileRaw]);
 
@@ -88,6 +92,9 @@ const EditTab = () => {
     setImageFromPicker,
     setDetails,
   } = useProfileStore();
+
+  const { skills, setSkills } = useSkillsStore();
+  const { languages, setLanguages } = useLanguagesStore();
 
   const fieldValues = [
     fullName,
@@ -214,7 +221,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {profileRaw?.data?.skills.join(", ")}
+                {skills.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
@@ -238,7 +245,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {profileRaw?.data?.languages.join(", ")}
+                {languages.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>

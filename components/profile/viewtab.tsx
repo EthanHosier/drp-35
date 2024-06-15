@@ -6,6 +6,8 @@ import { getUserId } from "@/utils/supabase";
 import { getProfileByUserId } from "@/utils/api/profiles";
 import { getAverageRating } from "@/utils/api/reviews";
 import { useProfileStore } from "@/utils/store/profile-store";
+import { useSkillsStore } from "@/utils/store/skills-store";
+import { useLanguagesStore } from "@/utils/store/languages-store";
 
 const ViewTab = () => {
   const {
@@ -19,6 +21,9 @@ const ViewTab = () => {
     website,
     bio,
   } = useProfileStore();
+
+  const skills = useSkillsStore((state) => state.skills);
+  const languages = useLanguagesStore((state) => state.languages);
 
   const { data: rating } = useQuery({
     queryKey: ["rating"],
@@ -38,8 +43,8 @@ const ViewTab = () => {
       linkedin={linkedin}
       github={github}
       website={website}
-      skills={[]}
-      languages={[]}
+      skills={skills}
+      languages={languages}
       imageUrl={imageUri}
       bio={bio}
       rating={rating?.data ?? 0}
