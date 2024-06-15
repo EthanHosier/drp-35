@@ -4,17 +4,21 @@ import Profile from "./profile";
 import { useQuery } from "@tanstack/react-query";
 import { getUserId } from "@/utils/supabase";
 import { getProfileByUserId } from "@/utils/api/profiles";
-import {getAverageRating} from "@/utils/api/reviews";
+import { getAverageRating } from "@/utils/api/reviews";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 const ViewTab = () => {
-  const { data: profile } = useQuery({
-    queryKey: ["profile"],
-    queryFn: async () => {
-      const userId = await getUserId();
-      return getProfileByUserId(userId!);
-    },
-    staleTime: Infinity,
-  });
+  const {
+    imageUri,
+    fullName,
+    pronouns,
+    university,
+    course,
+    linkedin,
+    github,
+    website,
+    bio,
+  } = useProfileStore();
 
   const { data: rating } = useQuery({
     queryKey: ["rating"],
@@ -27,17 +31,17 @@ const ViewTab = () => {
 
   return (
     <Profile
-      fullName={profile?.data?.full_name ?? ""}
-      pronouns={profile?.data?.pronouns ?? ""}
-      university={profile?.data?.university ?? ""}
-      course={profile?.data?.course ?? ""}
-      linkedin={profile?.data?.linkedin ?? ""}
-      github={profile?.data?.github ?? ""}
-      website={profile?.data?.website ?? ""}
-      skills={profile?.data?.skills ?? []}
-      languages={profile?.data?.skills ?? []}
-      imageUrl={profile?.data?.imageUrl ?? ""}
-      bio={profile?.data?.bio ?? ""}
+      fullName={fullName}
+      pronouns={pronouns}
+      university={university}
+      course={course}
+      linkedin={linkedin}
+      github={github}
+      website={website}
+      skills={[]}
+      languages={[]}
+      imageUrl={imageUri}
+      bio={bio}
       rating={rating?.data ?? 0}
     />
   );
