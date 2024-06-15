@@ -20,6 +20,7 @@ type ProjectFieldsStore = {
   setStartDateTime: (startDateTime: Date) => void;
   endDateTime: Date;
   setEndDateTime: (endDateTime: Date) => void;
+  resetAddProjectStore: () => void;
 };
 
 export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
@@ -60,5 +61,19 @@ export const useProjectFieldsStore = create<ProjectFieldsStore>((set) => ({
   endDateTime: new Date(),
   setEndDateTime: (endDateTime: Date) => {
     set({ endDateTime });
+  },
+  resetAddProjectStore: () => {
+    set({
+      imageUri: "",
+      imageBase64: "",
+      imageMimeType: "",
+      name: "",
+      organisation: "",
+      description: "",
+      minGroupSize: "",
+      maxGroupSize: "",
+      startDateTime: new Date(),
+      endDateTime: new Date(),
+    });
   },
 }));

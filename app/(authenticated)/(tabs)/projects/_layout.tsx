@@ -29,6 +29,7 @@ const Layout = () => {
     startDateTime,
     endDateTime,
     organisation,
+    resetAddProjectStore,
   } = useProjectFieldsStore();
 
   const checkProjectFields: () => string = () => {
@@ -91,6 +92,7 @@ const Layout = () => {
     name: organisationName,
     subtitle,
     description: organisationDescription,
+    resetAddOrganisationStore,
   } = useOrganisationFieldsStore();
 
   const checkOrganisationFields: () => string = () => {
@@ -155,7 +157,13 @@ const Layout = () => {
           title: "Create",
           headerTitleAlign: "center",
           headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
+            <TouchableOpacity
+              onPress={() => {
+                resetAddProjectStore();
+                resetAddOrganisationStore();
+                router.back();
+              }}
+            >
               <Text
                 style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
               >

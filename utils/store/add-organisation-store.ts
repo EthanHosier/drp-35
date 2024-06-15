@@ -12,30 +12,43 @@ type OrganisationFieldsStore = {
   setSubtitle: (name: string) => void;
   description: string;
   setDescription: (description: string) => void;
+  resetAddOrganisationStore: () => void;
 };
 
-export const useOrganisationFieldsStore = create<OrganisationFieldsStore>((set) => ({
-  active: false,
-  imageUri: "",
-  imageBase64: "",
-  imageMimeType: "",
-  setImageFromPicker: (imagePickerAsset) => {
-    set({
-      imageUri: imagePickerAsset.uri,
-      imageBase64: imagePickerAsset.base64!,
-      imageMimeType: imagePickerAsset.mimeType,
-    });
-  },
-  name: "",
-  setName: (name: string) => {
-    set({ name });
-  },
-  subtitle: "",
-  setSubtitle: (subtitle: string) => {
-    set({ subtitle });
-  },
-  description: "",
-  setDescription: (description: string) => {
-    set({ description });
-  },
-}));
+export const useOrganisationFieldsStore = create<OrganisationFieldsStore>(
+  (set) => ({
+    active: false,
+    imageUri: "",
+    imageBase64: "",
+    imageMimeType: "",
+    setImageFromPicker: (imagePickerAsset) => {
+      set({
+        imageUri: imagePickerAsset.uri,
+        imageBase64: imagePickerAsset.base64!,
+        imageMimeType: imagePickerAsset.mimeType,
+      });
+    },
+    name: "",
+    setName: (name: string) => {
+      set({ name });
+    },
+    subtitle: "",
+    setSubtitle: (subtitle: string) => {
+      set({ subtitle });
+    },
+    description: "",
+    setDescription: (description: string) => {
+      set({ description });
+    },
+    resetAddOrganisationStore: () => {
+      set({
+        imageUri: "",
+        imageBase64: "",
+        imageMimeType: "",
+        name: "",
+        subtitle: "",
+        description: "",
+      });
+    },
+  })
+);
