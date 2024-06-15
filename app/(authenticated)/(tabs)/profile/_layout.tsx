@@ -2,18 +2,17 @@ import { Text, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
-import { supabase } from "@/utils/supabase";
+import { getUserId, supabase } from "@/utils/supabase";
 import { useProfileStore } from "@/utils/store/profile-store";
-import { useUserIdStore } from "@/utils/store/user-id-store";
 import { decode } from "base64-arraybuffer";
 import { useSkillsStore } from "@/utils/store/skills-store";
 import { useLanguagesStore } from "@/utils/store/languages-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 import { getProjectPicUrl } from "@/utils/api/project-pics";
+import { queryClient } from "@/app/_layout";
 
 const Layout = () => {
   const router = useRouter();
-  const userId = useUserIdStore((state) => state.userId);
   const imageBase64 = useProfileStore((state) => state.imageBase64);
   const imageMimeType = useProfileStore((state) => state.imageMimeType);
   const setImageUri = useProfileStore((state) => state.setImageUri);
@@ -26,12 +25,15 @@ const Layout = () => {
     github,
     website,
     bio,
+    resetProfileStore,
   } = useProfileStore();
 
   const skills = useSkillsStore((state) => state.skills);
   const languages = useLanguagesStore((state) => state.languages);
 
   const saveProfile = async () => {
+    const userId = (await getUserId())!;
+
     const { error } = await supabase.from("profiles").upsert({
       user_id: userId,
       full_name: fullName,
@@ -91,6 +93,8 @@ const Layout = () => {
     }
 
     if (imageBase64 === "") {
+      resetProfileStore();
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       router.back();
       return;
     }
@@ -104,6 +108,8 @@ const Layout = () => {
       alert(picError.message);
       return;
     }
+    resetProfileStore();
+    queryClient.invalidateQueries({ queryKey: ["profile"] });
     router.back();
   };
 
@@ -117,7 +123,13 @@ const Layout = () => {
           presentation: "fullScreenModal",
           headerTitleAlign: "center",
           headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
+            <TouchableOpacity
+              onPress={() => {
+                resetProfileStore();
+                queryClient.invalidateQueries({ queryKey: ["profile"] });
+                router.back();
+              }}
+            >
               <Text
                 style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
               >
@@ -142,15 +154,7 @@ const Layout = () => {
         options={{
           title: "",
           presentation: "fullScreenModal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Text
-                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-              >
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <></>,
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text
@@ -167,15 +171,7 @@ const Layout = () => {
         options={{
           title: "",
           presentation: "fullScreenModal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={router.back}>
-              <Text
-                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
-              >
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <></>,
           headerRight: () => (
             <TouchableOpacity onPress={router.back}>
               <Text

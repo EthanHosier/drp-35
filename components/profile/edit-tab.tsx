@@ -6,12 +6,14 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUserId } from "@/utils/supabase";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { useQuery } from "@tanstack/react-query";
 import { getProfileByUserId } from "@/utils/api/profiles";
+import Skeleton from "../LoadingSkeleton";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 const TEXT_FIELDS = [
   "Full Name",
@@ -25,7 +27,7 @@ const TEXT_FIELDS = [
 ];
 
 const EditTab = () => {
-  const { data: profile } = useQuery({
+  const { data: profileRaw, isLoading } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       const userId = await getUserId();
@@ -34,9 +36,69 @@ const EditTab = () => {
     staleTime: Infinity,
   });
 
+  if (isLoading) return <Skeleton />;
+
+  useEffect(() => {
+    // Calculate and set progress
+    if (profileRaw?.data) {
+      const newDetails = TEXT_FIELDS.map((field) => {
+        if (field === "Full Name") return profileRaw.data.full_name;
+        return profileRaw.data[
+          field.toLowerCase() as keyof typeof profileRaw.data
+        ];
+      });
+      setProgress(newDetails.filter((d) => d).length / TEXT_FIELDS.length);
+    }
+
+    // Set profile input fields
+    if (profileRaw?.data) {
+      setImageUri(profileRaw.data.imageUrl);
+      setFullName(profileRaw.data.full_name);
+      setPronouns(profileRaw.data.pronouns);
+      setUniversity(profileRaw.data.university);
+      setCourse(profileRaw.data.course);
+      setLinkedin(profileRaw.data.linkedin);
+      setGithub(profileRaw.data.github);
+      setWebsite(profileRaw.data.website);
+      setBio(profileRaw.data.bio);
+    }
+  }, [profileRaw]);
+
   const [progress, setProgress] = useState<number>(0);
 
-  const setImageFromPicker = (e: any) => {};
+  const {
+    imageUri,
+    setImageUri,
+    fullName,
+    setFullName,
+    pronouns,
+    setPronouns,
+    university,
+    setUniversity,
+    course,
+    setCourse,
+    linkedin,
+    setLinkedin,
+    github,
+    setGithub,
+    website,
+    setWebsite,
+    bio,
+    setBio,
+    setImageFromPicker,
+    setDetails,
+  } = useProfileStore();
+
+  const fieldValues = [
+    fullName,
+    pronouns,
+    university,
+    course,
+    linkedin,
+    github,
+    website,
+    bio,
+  ];
 
   const pickImage = async () => {
     const { assets, canceled } = await ImagePicker.launchImageLibraryAsync({
@@ -94,9 +156,8 @@ const EditTab = () => {
         <TouchableOpacity onPress={pickImage}>
           <Image
             source={
-              profile?.data
-                ? { uri: profile?.data.imageUrl }
-                : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
+              { uri: imageUri } ??
+              "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}
           />
@@ -120,24 +181,16 @@ const EditTab = () => {
                   padding: 8,
                   borderRadius: 12,
                 }}
-                value={
-                  profile?.data
-                    ? field === "Full Name"
-                      ? profile?.data?.full_name
-                      : (profile?.data?.[
-                          field.toLowerCase() as keyof typeof profile.data
-                        ] as string)
-                    : ""
-                }
+                value={fieldValues[i]}
                 placeholderTextColor={Colors.gray}
                 placeholder={field}
                 onChangeText={(text) => {
-                  // const newDetails = [...details];
-                  // newDetails[i] = text;
-                  // setDetails(newDetails);
-                  // setProgress(
-                  //   newDetails.filter((d) => d).length / TEXT_FIELDS.length
-                  // );
+                  const newDetails = [...fieldValues];
+                  newDetails[i] = text;
+                  setDetails(newDetails);
+                  setProgress(
+                    newDetails.filter((d) => d).length / TEXT_FIELDS.length
+                  );
                 }}
               />
             </View>
@@ -161,7 +214,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {profile?.data?.skills.join(", ")}
+                {profileRaw?.data?.skills.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
@@ -185,7 +238,7 @@ const EditTab = () => {
                 ellipsizeMode="tail"
                 style={styles.skillsText}
               >
-                {profile?.data?.languages.join(", ")}
+                {profileRaw?.data?.languages.join(", ")}
               </Text>
               <FontAwesome name="chevron-right" size={16} color={Colors.dark} />
             </View>
