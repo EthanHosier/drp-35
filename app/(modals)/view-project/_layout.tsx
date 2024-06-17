@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
@@ -27,9 +27,52 @@ const Layout = () => {
       <Stack.Screen
         name="filter-main"
         options={{
-          headerShown: false,
+          title: "Filter Groups",
           presentation: "fullScreenModal",
           animationDuration: 300,
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="languages"
+        options={{
+          title: "Languages",
+          presentation: "fullScreenModal",
+          animationDuration: 300,
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="skills"
+        options={{
+          title: "Skills",
+          presentation: "fullScreenModal",
+          animationDuration: 300,
+          headerRight: () => (
+            <TouchableOpacity onPress={router.back}>
+              <Text
+                style={{ color: Colors.primary, fontWeight: 500, fontSize: 16 }}
+              >
+                Done
+              </Text>
+            </TouchableOpacity>
+          ),
         }}
       />
     </Stack>
