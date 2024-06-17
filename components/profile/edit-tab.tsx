@@ -163,7 +163,7 @@ const EditTab = () => {
         <TouchableOpacity onPress={pickImage}>
           <Image
             source={
-              { uri: imageUri } ??
+              { uri: imageUri + "?t=" + new Date() } ??
               "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}

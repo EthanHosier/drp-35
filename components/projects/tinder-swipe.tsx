@@ -128,7 +128,7 @@ const TinderSwipe: React.FC<TinderSwipeProps> = ({
             width: "100%",
             borderRadius: 16,
           }}
-          source={member.imageUrl}
+          source={member.imageUrl + "?t=" + new Date()}
         />
         <TouchableOpacity
           onPress={(e) => {

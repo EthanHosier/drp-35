@@ -155,7 +155,7 @@ const ViewOrg = () => {
               }}
             >
               <Image
-                source={member.imageUrl}
+                source={member.imageUrl + "?t=" + new Date()}
                 style={{ width: 64, height: 64, borderRadius: 32 }}
               />
               <Text style={{ marginLeft: 24, fontWeight: "500", fontSize: 16 }}>

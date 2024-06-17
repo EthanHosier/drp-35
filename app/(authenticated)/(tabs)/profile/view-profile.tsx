@@ -74,7 +74,7 @@ const ViewProfile = () => {
           <Image
             source={
               profile?.data
-                ? { uri: profile?.data?.imageUrl ?? "" }
+                ? { uri: profile?.data?.imageUrl + "?t=" + new Date() ?? "" }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}

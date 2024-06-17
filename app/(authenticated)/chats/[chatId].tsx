@@ -159,7 +159,11 @@ const ChatId = () => {
                   groupChat.messages[index + 1].sender_id !==
                     item.sender_id) && (
                   <Image
-                    source={getProfilePicUrl(item.sender_id).data!}
+                    source={
+                      getProfilePicUrl(item.sender_id).data! +
+                      "?t=" +
+                      new Date()
+                    }
                     style={{
                       width: 36,
                       height: 36,

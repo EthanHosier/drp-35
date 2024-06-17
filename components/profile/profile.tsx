@@ -49,7 +49,7 @@ const Profile: React.FC<ProfileProps> = ({
           <Image
             source={
               imageUrl
-                ? { uri: imageUrl }
+                ? { uri: imageUrl + "?t=" + new Date() }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={[styles2.img]}
