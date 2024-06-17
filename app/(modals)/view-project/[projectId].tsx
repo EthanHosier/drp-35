@@ -204,7 +204,7 @@ const GroupsTab = () => {
         );
         if (error) return console.log(error);
         router.push({
-          pathname: "/(authenticated)/projects/view-project/match",
+          pathname: "/(modals)/view-project/match",
           params: { matchId: "123" }, // TODO: what is matchId?
         });
         return;
@@ -252,7 +252,11 @@ const GroupsTab = () => {
           }}
         >
           <TouchableOpacity
-            onPress={() => router.navigate("../filter/filter-main")}
+            onPress={() =>
+              router.push({
+                pathname: "/(modals)/view-project/filter-main",
+              })
+            }
             style={{
               alignSelf: "flex-end",
               alignItems: "center",

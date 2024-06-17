@@ -1,4 +1,4 @@
-import {TouchableOpacity} from "react-native";
+import { TouchableOpacity } from "react-native";
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
@@ -22,6 +22,14 @@ const Layout = () => {
               <Ionicons name="close" size={32} color={Colors.background} />
             </TouchableOpacity>
           ),
+        }}
+      />
+      <Stack.Screen
+        name="filter-main"
+        options={{
+          headerShown: false,
+          presentation: "fullScreenModal",
+          animationDuration: 300,
         }}
       />
     </Stack>
