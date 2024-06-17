@@ -17,6 +17,8 @@ import { RefreshControl } from "react-native-gesture-handler";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "@/app/_layout";
 import { getProjectDetails } from "@/utils/api/project-details";
+import { getProfileByUserId } from "@/utils/api/profiles";
+import { getUserId } from "@/utils/supabase";
 
 const ViewMembers = () => {
   const { groupId, maxGroupSize, projectId } = useLocalSearchParams();
@@ -38,6 +40,15 @@ const ViewMembers = () => {
   const { data: projectData } = useQuery({
     queryKey: ["project", projectId],
     queryFn: () => getProjectDetails(projectId as string),
+    staleTime: Infinity,
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const userId = await getUserId();
+      return getProfileByUserId(userId!);
+    },
     staleTime: Infinity,
   });
 
@@ -184,6 +195,7 @@ const ViewMembers = () => {
             }}
           >
             {group?.data?.members?.map((member, i) => (
+              member.id !== profile?.data?.id &&
               <TouchableOpacity
                 key={i}
                 style={{ flexDirection: "row", alignItems: "center" }}
