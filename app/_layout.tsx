@@ -6,6 +6,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
+import { Image } from "expo-image";
+
 import { supabase } from "@/utils/supabase";
 import { Session } from "@supabase/supabase-js";
 import { AppState } from "react-native";
@@ -92,6 +94,9 @@ function RootLayoutNav() {
   }, [router]);
 
   useEffect(() => {
+    Image.clearDiskCache();
+    Image.clearMemoryCache();
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
