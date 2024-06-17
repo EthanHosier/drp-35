@@ -52,7 +52,7 @@ const ReviewMember = () => {
         <Image
           source={{
             uri:
-              image + "?t=" + new Date() ||
+              image ||
               "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
           }}
           style={styles.img}

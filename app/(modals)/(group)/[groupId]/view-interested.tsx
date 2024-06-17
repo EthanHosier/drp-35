@@ -5,8 +5,7 @@ import Colors from "@/constants/Colors";
 import { Image } from "expo-image";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import {
-  acceptRequestToJoinGroup,
-  getGroupById,
+  acceptRequestToJoinGroup, getGroupById,
   getGroupRequests,
   rejectRequestToJoinGroup,
 } from "@/utils/api/groups";
@@ -15,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const ViewInterested = () => {
   const { groupId, maxGroupSize } = useLocalSearchParams();
-  const { data: group } = useQuery({
+  const {data: group} = useQuery({
     queryKey: ["myGroup", groupId],
     queryFn: () => getGroupById(groupId as string),
   });
@@ -28,11 +27,9 @@ const ViewInterested = () => {
   });
 
   const interested = rawInterested?.data?.filter(
-    (other) =>
-      group?.data &&
-      other.members.length + group.data.members.length <=
-        parseInt(maxGroupSize as string)
-  );
+      (other) =>
+          (group?.data) && other.members.length + group.data.members.length <= parseInt(maxGroupSize as string)
+  )
 
   const refresh = async () => {
     queryClient.invalidateQueries({ queryKey: ["interested", groupId] });
@@ -111,10 +108,7 @@ const ViewInterested = () => {
                     key={id}
                   >
                     <TouchableOpacity key={id} style={{ marginRight: 12 }}>
-                      <Image
-                        source={member.imageUrl + "?t=" + new Date()}
-                        style={styles.image}
-                      />
+                      <Image source={member.imageUrl} style={styles.image} />
                       <Text style={[styles.text, { marginTop: 8 }]}>
                         {member.full_name.split(" ")[0]}
                       </Text>

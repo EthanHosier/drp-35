@@ -210,7 +210,7 @@ const ViewMembers = () => {
                 }}
               >
                 <Image
-                  source={member.imageUrl + "?t=" + new Date()}
+                  source={member.imageUrl}
                   style={{ width: 80, height: 80, borderRadius: 40 }}
                 />
                 <Text
@@ -253,7 +253,6 @@ const ViewMembers = () => {
                         borderWidth: 2,
                       },
                     ]}
-                    cachePolicy={"none"}
                   />
                 ))}
                 <View
