@@ -120,6 +120,7 @@ const DiscoverProjects = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={{ paddingHorizontal: 24 }}>
+          {search === "" &&
             <TouchableOpacity
               style={{
                 alignSelf: "flex-end",
@@ -156,8 +157,8 @@ const DiscoverProjects = () => {
                   <Entypo name="plus" size={24} color={Colors.primary} />
                 </BlurView>
               </View>
-            </TouchableOpacity>
-            <View style={{ marginTop: 32 }}>
+            </TouchableOpacity>}
+            {search === "" && <View style={{ marginTop: 32 }}>
               <Text style={{ fontSize: 32, fontWeight: "bold" }}>
                 Hello, {profile?.data?.full_name}
               </Text>
@@ -170,7 +171,7 @@ const DiscoverProjects = () => {
               >
                 There are {allProjects?.length} new projects in your area.
               </Text>
-            </View>
+            </View>}
             <View
               style={[
                 defaultStyles.textInput,
@@ -212,13 +213,13 @@ const DiscoverProjects = () => {
                 {`Search results for: "${search}"`}
               </Text>
             )}
-            <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
+            {projectSearchResults.length > 0 && <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
               {search === ""
                 ? "Projects you might like"
                 : projectSearchResults &&
                   projectSearchResults.length > 0 &&
                   "Projects:"}
-            </Text>
+            </Text>}
           </View>
           <View>
             <ScrollView
@@ -260,33 +261,6 @@ const DiscoverProjects = () => {
               snapToStart={true}
             >
               {orgSearchResults}
-            </ScrollView>
-          </View>
-
-          <Text
-            style={{
-              marginTop: 56,
-              fontSize: 24,
-              fontWeight: "600",
-              marginLeft: 24,
-            }}
-          >
-            {search === ""
-              ? "Imperial Computing Projects"
-              : `Imperial Computing Projets`}
-          </Text>
-          <View>
-            <ScrollView
-              style={{ marginTop: 12 }}
-              horizontal
-              contentContainerStyle={{ paddingRight: 24 }}
-              showsHorizontalScrollIndicator={false}
-              decelerationRate={0}
-              snapToOffsets={generateSnapPoints(projectSearchResults.length)}
-              snapToAlignment={"center"}
-              snapToStart={true}
-            >
-              {projectSearchResults}
             </ScrollView>
           </View>
         </ScrollView>
