@@ -148,10 +148,6 @@ const GroupsTab = () => {
   }, [projectGroups]);
 
   useEffect(() => {
-    console.log({ filteredGroups });
-  }, [filteredGroups]);
-
-  useEffect(() => {
     if (!projectGroups?.data) return;
     if (!languages && !skills && !rating) return;
 
@@ -221,7 +217,7 @@ const GroupsTab = () => {
 
   const refresh = () => {
     queryClient.invalidateQueries({
-      queryKey: ["myGroupId", projectId],
+      queryKey: ["thisProjectGroups", projectId],
     });
   };
 
@@ -354,11 +350,9 @@ const GroupsTab = () => {
                 await createGroup(projectId, userId!);
 
                 queryClient.invalidateQueries({
-                  queryKey: ["projectGroups"],
+                  queryKey: ["allProjects"],
                 });
-                queryClient.invalidateQueries({
-                  queryKey: ["myGroups"],
-                });
+
                 refresh();
                 setCreatingGroup(false);
               }}
