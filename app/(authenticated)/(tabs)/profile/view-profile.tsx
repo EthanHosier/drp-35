@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
@@ -15,8 +15,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getMyGroups } from "@/utils/api/groups";
 import { queryClient } from "@/app/_layout";
 import { getProfileByUserId } from "@/utils/api/profiles";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 const ViewProfile = () => {
+  const { imageUri } = useProfileStore();
+
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -73,8 +76,8 @@ const ViewProfile = () => {
         >
           <Image
             source={
-              profile?.data
-                ? { uri: profile?.data?.imageUrl ?? "" }
+              profile?.data || imageUri
+                ? { uri: imageUri || (profile?.data?.imageUrl ?? "") }
                 : "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
             }
             style={styles.img}

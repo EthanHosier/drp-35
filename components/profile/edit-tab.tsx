@@ -54,7 +54,7 @@ const EditTab = () => {
 
     // Set profile input fields
     if (profileRaw?.data) {
-      setImageUri(profileRaw.data.imageUrl);
+      if (!imageUri) setImageUri(profileRaw.data.imageUrl);
       setFullName(profileRaw.data.full_name);
       setPronouns(profileRaw.data.pronouns);
       setUniversity(profileRaw.data.university);

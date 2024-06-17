@@ -10,6 +10,7 @@ import { useLanguagesStore } from "@/utils/store/languages-store";
 import { useMyGroupsStore } from "@/utils/store/my-groups-store";
 import { getProjectPicUrl } from "@/utils/api/project-pics";
 import { queryClient } from "@/app/_layout";
+import { Image } from "expo-image";
 
 const Layout = () => {
   const router = useRouter();
@@ -96,8 +97,12 @@ const Layout = () => {
       resetProfileStore();
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       router.back();
+
       return;
     }
+
+    const img = imageBase64;
+
     const { error: picError } = await supabase.storage
       .from("profilepics")
       .upload(userId, decode(imageBase64), {
@@ -110,6 +115,7 @@ const Layout = () => {
     }
     resetProfileStore();
     queryClient.invalidateQueries({ queryKey: ["profile"] });
+
     router.back();
   };
 

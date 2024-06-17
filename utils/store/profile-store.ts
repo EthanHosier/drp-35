@@ -25,11 +25,15 @@ type ProfileStore = {
   bio: string;
   setBio: (newBio: string) => void;
   resetProfileStore: () => void;
+  setImageBase64: (newImageBase64: string) => void;
 };
 
 export const useProfileStore = create<ProfileStore>((set) => ({
   imageUri: "",
   imageBase64: "",
+  setImageBase64: (newImageBase64) => {
+    set({ imageBase64: newImageBase64 });
+  },
   imageMimeType: "",
   setImageUri: (newImageUri) => {
     set({ imageUri: newImageUri });
@@ -88,7 +92,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
   },
   resetProfileStore: () => {
     set({
-      imageUri: "",
       imageBase64: "",
       imageMimeType: "",
       fullName: "",

@@ -6,6 +6,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import ExternalLink from "./external-link";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { toOneDecimalPlace } from "@/utils/utils";
+import { useProfileStore } from "@/utils/store/profile-store";
 
 interface ProfileProps {
   imageUrl: string;
