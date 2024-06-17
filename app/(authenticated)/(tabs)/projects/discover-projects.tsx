@@ -34,6 +34,7 @@ const DiscoverProjects = () => {
     queryKey: ["allProjects"],
     queryFn: async () => {
       const userId = await getUserId();
+      console.log("yeahhh");
       const { data, error } = await getAllProjectsExceptJoined(userId!);
       if (error) {
         alert(error.message);
@@ -93,7 +94,7 @@ const DiscoverProjects = () => {
     return arr;
   }
 
-  const refresh = () => async () => {
+  const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ["allProjects"] });
     queryClient.invalidateQueries({ queryKey: ["allOrgs"] });
   };
@@ -120,58 +121,61 @@ const DiscoverProjects = () => {
           showsVerticalScrollIndicator={false}
         >
           <View style={{ paddingHorizontal: 24 }}>
-          {search === "" &&
-            <TouchableOpacity
-              style={{
-                alignSelf: "flex-end",
-                marginTop: 12,
-              }}
-              onPress={() =>
-                router.navigate("/(authenticated)/projects/create")
-              }
-            >
-              <View style={{ borderRadius: 8, overflow: "hidden" }}>
-                <BlurView
-                  tint="extraLight"
-                  style={{
-                    backgroundColor: "rgba(0,0,0,0.05)",
-                    borderRadius: 8,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingLeft: 8,
-                    paddingVertical: 4,
-                    paddingRight: 4,
-                    gap: 4,
-                  }}
-                  intensity={50}
-                >
-                  <Text
-                    style={{
-                      color: Colors.dark,
-                      fontWeight: "bold",
-                      fontSize: 16,
-                    }}
-                  >
-                    Create
-                  </Text>
-                  <Entypo name="plus" size={24} color={Colors.primary} />
-                </BlurView>
-              </View>
-            </TouchableOpacity>}
-            {search === "" && <View style={{ marginTop: 32 }}>
-              <Text style={{ fontSize: 32, fontWeight: "bold" }}>
-                Hello, {profile?.data?.full_name}
-              </Text>
-              <Text
+            {search === "" && (
+              <TouchableOpacity
                 style={{
-                  fontSize: 32,
-                  fontWeight: "bold",
-                  color: Colors.primary,
+                  alignSelf: "flex-end",
+                  marginTop: 12,
                 }}
+                onPress={() =>
+                  router.navigate("/(authenticated)/projects/create")
+                }
               >
-                There are {allProjects?.length} new projects in your area.
-              </Text>
-            </View>}
+                <View style={{ borderRadius: 8, overflow: "hidden" }}>
+                  <BlurView
+                    tint="extraLight"
+                    style={{
+                      backgroundColor: "rgba(0,0,0,0.05)",
+                      borderRadius: 8,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingLeft: 8,
+                      paddingVertical: 4,
+                      paddingRight: 4,
+                      gap: 4,
+                    }}
+                    intensity={50}
+                  >
+                    <Text
+                      style={{
+                        color: Colors.dark,
+                        fontWeight: "bold",
+                        fontSize: 16,
+                      }}
+                    >
+                      Create
+                    </Text>
+                    <Entypo name="plus" size={24} color={Colors.primary} />
+                  </BlurView>
+                </View>
+              </TouchableOpacity>
+            )}
+            {search === "" && (
+              <View style={{ marginTop: 32 }}>
+                <Text style={{ fontSize: 32, fontWeight: "bold" }}>
+                  Hello, {profile?.data?.full_name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 32,
+                    fontWeight: "bold",
+                    color: Colors.primary,
+                  }}
+                >
+                  There are {allProjects?.length} new projects in your area.
+                </Text>
+              </View>
+            )}
             <View
               style={[
                 defaultStyles.textInput,
@@ -213,13 +217,15 @@ const DiscoverProjects = () => {
                 {`Search results for: "${search}"`}
               </Text>
             )}
-            {projectSearchResults.length > 0 && <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
-              {search === ""
-                ? "Projects you might like"
-                : projectSearchResults &&
-                  projectSearchResults.length > 0 &&
-                  "Projects:"}
-            </Text>}
+            {projectSearchResults.length > 0 && (
+              <Text style={{ marginTop: 56, fontSize: 24, fontWeight: "600" }}>
+                {search === ""
+                  ? "Projects you might like"
+                  : projectSearchResults &&
+                    projectSearchResults.length > 0 &&
+                    "Projects:"}
+              </Text>
+            )}
           </View>
           <View>
             <ScrollView
