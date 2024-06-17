@@ -172,7 +172,8 @@ const DiscoverProjects = () => {
                     color: Colors.primary,
                   }}
                 >
-                  There are {allProjects?.length} new projects in your area.
+                  There {allProjects?.length === 1 ? "is" : "are"}{" "}
+                  {allProjects?.length} new projects in your area.
                 </Text>
               </View>
             )}
