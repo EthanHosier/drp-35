@@ -221,7 +221,20 @@ const GroupsTab = () => {
     });
   };
 
-  return projectGroupsStatus === "pending" ? (
+  const createNewGroup = async () => {
+    setCreatingGroup(true);
+    const userId = await getUserId();
+    const response = await createGroup(projectId, userId!);
+
+    queryClient.invalidateQueries({
+      queryKey: ["allProjects"],
+    });
+
+    refresh();
+    setCreatingGroup(false);
+  };
+
+  return projectGroupsStatus === "pending" || creatingGroup ? (
     <Text>Loading...</Text>
   ) : (
     <View style={{ flex: 1, position: "relative" }}>
@@ -253,9 +266,9 @@ const GroupsTab = () => {
               style={{ marginTop: 2 }}
             />
           </TouchableOpacity>
-          {filteredGroups.length > 0 && (
+          {filteredGroups.length > 0 && !myGroup && (
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={createNewGroup}
               style={{
                 alignSelf: "flex-end",
                 alignItems: "center",
@@ -341,21 +354,10 @@ const GroupsTab = () => {
               </Text>
             </View>
           </ScrollView>
-          {!creatingGroup && (
+          {!creatingGroup && !myGroup && (
             <TouchableOpacity
               disabled={creatingGroup}
-              onPress={async () => {
-                setCreatingGroup(true);
-                const userId = await getUserId();
-                await createGroup(projectId, userId!);
-
-                queryClient.invalidateQueries({
-                  queryKey: ["allProjects"],
-                });
-
-                refresh();
-                setCreatingGroup(false);
-              }}
+              onPress={createNewGroup}
               style={[
                 defaultStyles.pillButton,
                 {
