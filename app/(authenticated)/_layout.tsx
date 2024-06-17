@@ -8,6 +8,7 @@ import { getGroupchat } from "@/utils/api/groupchats";
 import { useGroupchatStore } from "@/utils/store/groupchat-store";
 import { useQuery } from "@tanstack/react-query";
 import { getMyGroups } from "@/utils/api/groups";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 const Layout = () => {
   const { addGroupChat, addMessage, setGroupChats } = useGroupchatStore();
@@ -23,6 +24,8 @@ const Layout = () => {
     if (!myGroups || myGroups.length < 0) return;
     setGroupChats([]);
 
+    const subscriptions: RealtimeChannel[] = [];
+
     myGroups.forEach((group) => {
       getGroupchat(group.id).then((res) => {
         if (res.error) {
@@ -31,7 +34,7 @@ const Layout = () => {
         }
         addGroupChat(res.data);
       });
-      supabase
+      const unsub = supabase
         .channel(`channel:messages:group_id=${group.id}`)
         .on(
           "postgres_changes",
@@ -54,7 +57,14 @@ const Layout = () => {
           }
         )
         .subscribe();
+      subscriptions.push(unsub);
     });
+
+    return () => {
+      subscriptions.forEach((unsub) => {
+        unsub.unsubscribe();
+      });
+    };
   }, [myGroups]);
 
   return (

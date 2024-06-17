@@ -22,6 +22,7 @@ import {
   TouchableOpacity,
   PanGestureHandlerGestureEvent,
   FlatList,
+  RefreshControl,
 } from "react-native-gesture-handler";
 import ChatPreview from "@/components/chats/chat-preview";
 import Colors from "@/constants/Colors";
@@ -30,6 +31,7 @@ import { Stack } from "expo-router";
 import { defaultStyles } from "@/constants/DefaultStyles";
 import { useGroupchatStore } from "@/utils/store/groupchat-store";
 import { GroupChat } from "@/utils/api/groupchats";
+import { queryClient } from "@/app/_layout";
 
 const windowDimensions = Dimensions.get("window");
 const BUTTON_WIDTH = 80;
@@ -43,6 +45,12 @@ export default function MessagesList() {
   function onRemove() {
     Alert.alert("Removed");
   }
+
+  const refresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["myGroups"],
+    });
+  };
 
   return (
     <>
@@ -82,6 +90,9 @@ export default function MessagesList() {
           )}
         </ScrollView> */}
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={false} onRefresh={refresh} />
+          }
           ListHeaderComponent={
             <View style={{ paddingHorizontal: 16 }}>
               <TextInput
