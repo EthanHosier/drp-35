@@ -116,6 +116,8 @@ const Layout = () => {
     resetProfileStore();
     queryClient.invalidateQueries({ queryKey: ["profile"] });
 
+    await Promise.all([Image.clearDiskCache, Image.clearMemoryCache]);
+
     router.back();
   };
 
