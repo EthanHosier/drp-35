@@ -303,3 +303,14 @@ export const getMyGroups = async () => {
 
   return ret;
 };
+
+export const getSwipedGroups: (
+  myGroupId: string
+) => Promise<DRPResponse<string[]>> = async (myGroupId) => {
+  const { data, error } = await supabase
+    .from("group_requests")
+    .select("target_group_id")
+    .eq("request_group_id", myGroupId);
+  if (error) return { data: null, error };
+  return { data: data.map((group) => group.target_group_id), error: null };
+};
