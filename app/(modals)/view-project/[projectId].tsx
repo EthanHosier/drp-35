@@ -209,14 +209,10 @@ const GroupsTab = () => {
         });
         return;
       }
-      const userId = await getUserId();
-      await requestToJoinGroup(
-        targetGroupId,
-        myGroup.group_id,
-        projectId,
-        userId!
-      );
+      return;
     }
+    const userId = await getUserId();
+    await requestToJoinGroup(targetGroupId, null, projectId, userId!);
   };
 
   const refresh = () => {
