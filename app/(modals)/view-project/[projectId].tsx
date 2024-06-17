@@ -114,6 +114,8 @@ const GroupsTab = () => {
 
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
 
+  const [loading, setLoading] = useState(false);
+
   const { data: projectGroups, status: projectGroupsStatus } = useQuery({
     queryKey: ["thisProjectGroups", projectId],
     queryFn: () => getProjectGroups(projectId),
@@ -137,19 +139,20 @@ const GroupsTab = () => {
   const rating = useFilterStore((state) => state.rating);
 
   useEffect(() => {
+    setLoading(true);
     if (
       !projectGroups ||
       !projectGroups.data ||
       projectGroups.data.length === 0
     )
-      return;
+      return setLoading(false);
 
     findMyGroupAndSet(projectGroups.data);
   }, [projectGroups]);
 
   useEffect(() => {
-    if (!projectGroups?.data) return;
-    if (!languages && !skills && !rating) return;
+    if (!projectGroups?.data) return setLoading(false);
+    if (!languages && !skills && !rating) return setLoading(false);
 
     console.log("Project groups 0:", projectGroups.data);
 
@@ -184,6 +187,7 @@ const GroupsTab = () => {
     }
 
     setFilteredGroups(newFilteredGroups);
+    setLoading(false);
   }, [languages, skills, rating, myGroup, projectGroups]);
 
   const handleSwipeRight = async (targetGroupId: string) => {
@@ -231,10 +235,11 @@ const GroupsTab = () => {
     });
 
     refresh();
+    router.back();
     setCreatingGroup(false);
   };
 
-  return projectGroupsStatus === "pending" || creatingGroup ? (
+  return projectGroupsStatus === "pending" || creatingGroup || loading ? (
     <Text>Loading...</Text>
   ) : (
     <View style={{ flex: 1, position: "relative" }}>
@@ -292,7 +297,7 @@ const GroupsTab = () => {
           )}
         </View>
       </>
-      {filteredGroups.length > 0 ? (
+      {filteredGroups.length > 0 && !myGroup ? (
         <>
           <TinderSwipe
             pressed={pressed}
