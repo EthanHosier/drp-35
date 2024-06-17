@@ -1,4 +1,5 @@
 export const SKILLS = [
+  "Report writing",
   "Titration",
   "Distillation",
   "Chromatography",
