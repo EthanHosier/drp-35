@@ -36,7 +36,7 @@ const FilterMain = () => {
           />
         </View>
         <View style={[styles.fieldsContainer, { paddingBottom: 20 }]}>
-          <Text style={styles.fieldsTitle}>Rating</Text>
+          <Text style={styles.fieldsTitle}>Min Rating</Text>
           <TextInput
             keyboardType="number-pad"
             style={styles.textInput}
