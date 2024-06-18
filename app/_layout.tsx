@@ -111,9 +111,9 @@ function RootLayoutNav() {
       <ThemeProvider value={DefaultTheme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen
+            <Stack.Screen 
               name="(authenticated)"
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
             <Stack.Screen
