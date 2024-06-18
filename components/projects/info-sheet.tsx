@@ -114,10 +114,7 @@ const InfoSheet: React.FC<InfoSheetProps> = ({ profile }) => {
             <Text style={styles2.attributeText}>I study {profile?.course}</Text>
           </View>
           <Text style={{ marginTop: 24 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            {profile?.bio}
           </Text>
         </View>
         <View style={{ paddingHorizontal: 24, marginTop: 16 }}>
