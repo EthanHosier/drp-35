@@ -310,7 +310,7 @@ const GroupsTab = () => {
             onSwipeRight={handleSwipeRight}
           />
           <InfoSheet
-            profile={filteredGroups[groupIndex].members[memberIndex]}
+            profile={filteredGroups[groupIndex]?.members[memberIndex]}
           />
         </>
       ) : (
