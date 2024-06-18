@@ -158,7 +158,9 @@ const ViewProfile = () => {
                 />
                 <View style={{ marginLeft: 16 }}>
                   <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                    {group.projectName}
+                    {group.projectName.length > 25
+                    ? group.projectName.slice(0, 25) + "..."
+                  : group.projectName}
                   </Text>
                   <Text
                     style={{ fontSize: 14, color: Colors.gray, marginTop: 4 }}

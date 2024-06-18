@@ -285,7 +285,9 @@ function ListItemContent({ id, item }: { id: number; item: GroupChat }) {
     <ChatPreview
       unreadMessages={item.messages.length}
       id={item.group_id}
-      name={item.name}
+      name={item.name.length > 25
+        ? item.name.slice(0, 25) + "..."
+        : item.name}
       date={date}
       message={content}
       imgUrl={item.imgUri}
