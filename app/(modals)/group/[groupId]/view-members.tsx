@@ -195,12 +195,11 @@ const ViewMembers = () => {
             }}
           >
             {group?.data?.members?.map((member, i) => (
-              (member.id !== profile?.data?.id || !isOver) &&
               <TouchableOpacity
                 key={i}
                 style={{ flexDirection: "row", alignItems: "center" }}
                 onPress={() => {
-                  if (isOver) {
+                  if (isOver && member.id !== profile?.data?.id) {
                     router.navigate(
                       `/(modals)/review/${member.id}?projectId=${projectId}`
                     );
